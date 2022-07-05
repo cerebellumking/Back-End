@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "U53QTRHEBot4X0UfIKkc1D1mzH/fPXZL9ju0AxKscTyVz9qvUp3+XhGWgGWyd1syFiftSygBykSlcDYHjG941g==",
+  "dgSpecHash": "75jJhi5mVJHAGxuRFL+2dC9DWLppb46zDQxc2Tf9K8YqS+5qBOp1NTiL7SxZ43LyhZc4xpoj6hHYAMoVIzc61g==",
   "success": true,
   "projectFilePath": "C:\\Users\\18052\\Desktop\\Back-End\\Back-End\\Back-End.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\18052\\.nuget\\packages\\aliyun.oss.sdk.netcore\\2.13.0\\aliyun.oss.sdk.netcore.2.13.0.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.17\\microsoft.entityframeworkcore.5.0.17.nupkg.sha512",
