@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using Back_End.Models;
+using System.Net.Http;
+using Aliyun.OSS;
 
 namespace Back_End.Controllers
 {
@@ -22,19 +25,6 @@ namespace Back_End.Controllers
          public string Login(int user_id,string user_password)
         {
             LoginMessage message = new LoginMessage();
-            //var user = myContext.Users
-            //       .Single(b => b.UserId == user_id);
-            ////message.data.Add("user_id:", user_id);
-            ////message.data.Add("user_password:", user_password);
-            //if (user != null)
-            //{
-            //    message.errorCode = 200;
-            //    if (user.UserPassword == user_password)
-            //    {
-            //        message.status = true;
-            //        message.data["true_user_id"] = user_id;
-            //    }
-            //}
             try
             {
                 var user = myContext.Users
@@ -69,5 +59,26 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost("image")]
+        public string PushImage()
+        {
+            Message m = new Message();
+            var files = Request.Form.Files;
+            var text = files[0].OpenReadStream();
+            const string accessKeyId = "LTAI5tNHm9vkUTD9WshKKhvQ";
+            const string accessKeySecret = "wwaOqFeNa3iwkETmcIdYYCkweyAhAx";
+            const string endpoint = "http://oss-cn-shanghai.aliyuncs.com";
+            const string bucketName = "houniaoliuxue";
+            var filebyte = StreamHelp.StreamToBytes(text);
+            var client = new OssClient(endpoint, accessKeyId, accessKeySecret);
+            MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
+            client.PutObject(bucketName, files[0].FileName, stream);
+            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/"+ files[0].FileName);
+
+            return m.ReturnJson();
+        }
+
+
     }
 }
