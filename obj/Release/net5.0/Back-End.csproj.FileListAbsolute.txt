@@ -57,3 +57,4 @@ C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\Back-End.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\ref\Back-End.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\Back-End.pdb
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\Back-End.genruntimeconfig.cache
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\Aliyun.OSS.Core.dll

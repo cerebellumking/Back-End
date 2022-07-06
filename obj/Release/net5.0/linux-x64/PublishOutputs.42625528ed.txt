@@ -4,6 +4,7 @@ C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Back-End.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Back-End.runtimeconfig.json
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Back-End.pdb
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Aliyun.OSS.Core.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll

@@ -22,28 +22,6 @@ namespace Back_End.Controllers
         public string Register(string user_phone, string user_password)
         {
             RegisterMessage message = new RegisterMessage();
-            //myContext.DetachAll();
-            //User user = new User();
-            //user.UserGender = "m";
-            //user.UserName = "用户" + user_phone;
-            //user.UserPhone = user_phone;
-            //user.UserPassword = user_password;
-            //user.UserCreatetime = DateTime.Now;
-            //var count = myContext.Users.Count();
-            //Console.WriteLine(count);
-            //int id;
-            //if (count == 0)
-            //    id = 1;
-            //else
-            //{
-            //    id = myContext.Users.Select(b => b.UserId).Max() + 1;
-            //    Console.WriteLine(id);
-            //}
-            //user.UserId = id;
-            //myContext.Users.Add(user);
-            //myContext.SaveChanges();
-            //message.status = true;
-            //message.data["user_id"] = id;
             try
             {
                 myContext.DetachAll();
@@ -54,14 +32,12 @@ namespace Back_End.Controllers
                 user.UserPassword = user_password;
                 user.UserCreatetime = DateTime.Now;
                 var count = myContext.Users.Count();
-                Console.WriteLine(count);
                 int id;
                 if (count == 0)
                     id = 1;
                 else
                 {
                     id = myContext.Users.Select(b => b.UserId).Max() + 1;
-                    Console.WriteLine(id);
                 }
                 user.UserId = id;
                 myContext.Users.Add(user);

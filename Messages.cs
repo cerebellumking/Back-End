@@ -23,7 +23,7 @@ namespace Back_End
         public RegisterMessage()
         {
             data.Add("user_id", null);
-            errorCode = 300;
+            errorCode = 500;
             status = false;
         }
     }
@@ -32,9 +32,8 @@ namespace Back_End
     {
         public LoginMessage()
         {
-            errorCode = 300;
+            errorCode = 500;
             status = false;
-            //data.Add("true_user_id", null);
             data.Add("user_id", 0);
             data.Add("user_password", "none");
             data.Add("user_email", "none");
@@ -53,7 +52,37 @@ namespace Back_End
         }
     }
 
+    public class FollowMessage : Message
+    {
+        public FollowMessage()
+        {
+            errorCode = 500;
+            status = false;
+        }
+    }
 
+    public class UniversityMessage : Message
+    {
+        public UniversityMessage()
+        {
+            errorCode = 500;
+            status = false;
+            data.Add("university_id", 0);
+            data.Add("university_email", null);
+            data.Add("university_name", null);
+            data.Add("university_region", null);
+            data.Add("university_country", null);
+            data.Add("university_location", null);
+            data.Add("university_introduction", null);
+            data.Add("university_student_num", null);
+            data.Add("university_website", null);
+            data.Add("university_college", null);
+            data.Add("university_abbreviation", null);
+            data.Add("university_QS_rank", null);
+            data.Add("university_THE_rank", null);
+            data.Add("university_USNews_rank", null);
+        }
+    }
 
 
 

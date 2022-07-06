@@ -45,3 +45,4 @@ C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\Back-End.d
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\ref\Back-End.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\Back-End.pdb
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\Back-End.genruntimeconfig.cache
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Aliyun.OSS.Core.dll
