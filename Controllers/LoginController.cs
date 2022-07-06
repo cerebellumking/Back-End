@@ -61,7 +61,7 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("image")]
-        public string PushImage()
+        public string PushImage(int user_id)
         {
             Message m = new Message();
             var files = Request.Form.Files;
@@ -72,9 +72,10 @@ namespace Back_End.Controllers
             const string bucketName = "houniaoliuxue";
             var filebyte = StreamHelp.StreamToBytes(text);
             var client = new OssClient(endpoint, accessKeyId, accessKeySecret);
+            var type=files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
             MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
-            client.PutObject(bucketName, files[0].FileName, stream);
-            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/"+ files[0].FileName);
+            client.PutObject(bucketName, "user_profile/"+ user_id.ToString()+type, stream);
+            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user_id.ToString()+type);
 
             return m.ReturnJson();
         }
