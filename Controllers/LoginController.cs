@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Back_End.Models;
-using System.Net.Http;
+//using System.Net.Http;
 using Aliyun.OSS;
 
 namespace Back_End.Controllers
@@ -22,7 +22,7 @@ namespace Back_End.Controllers
         }
 
         [HttpPost]
-         public string Login(int user_id,string user_password)
+        public string Login(int user_id, string user_password)
         {
             LoginMessage message = new LoginMessage();
             try
@@ -72,10 +72,10 @@ namespace Back_End.Controllers
             const string bucketName = "houniaoliuxue";
             var filebyte = StreamHelp.StreamToBytes(text);
             var client = new OssClient(endpoint, accessKeyId, accessKeySecret);
-            var type=files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
+            var type = files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
             MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
-            client.PutObject(bucketName, "user_profile/"+ user_id.ToString()+type, stream);
-            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user_id.ToString()+type);
+            client.PutObject(bucketName, "user_profile/" + user_id.ToString() + type, stream);
+            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user_id.ToString() + type);
 
             return m.ReturnJson();
         }

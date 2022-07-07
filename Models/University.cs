@@ -15,7 +15,7 @@ namespace Back_End.Models
 
         public int UniversityId { get; set; }
         public string UniversityEmail { get; set; }
-        public byte[] UniversityBadge { get; set; }
+        public string UniversityBadge { get; set; }
         public string UniversityName { get; set; }
         public string UniversityRegion { get; set; }
         public string UniversityCountry { get; set; }
@@ -28,6 +28,7 @@ namespace Back_End.Models
         public short UniversityQsRank { get; set; }
         public short UniversityTheRank { get; set; }
         public short UniversityUsnewsRank { get; set; }
+        public short Year { get; set; }
 
         public virtual ICollection<Followuniversity> Followuniversities { get; set; }
         public virtual ICollection<Qualification> Qualifications { get; set; }

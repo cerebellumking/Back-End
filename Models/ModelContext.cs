@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
-using Back_End.Models;
 #nullable disable
 
 namespace Back_End.Models
@@ -88,7 +87,7 @@ namespace Back_End.Models
             {
                 entity.ToTable("Administrator");
 
-                entity.HasIndex(e => e.AdministratorName, "SYS_C0010839")
+                entity.HasIndex(e => e.AdministratorName, "SYS_C0011104")
                     .IsUnique();
 
                 entity.Property(e => e.AdministratorId)
@@ -136,7 +135,8 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.AdministratorProfile)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
                     .HasColumnName("ADMINISTRATOR_PROFILE");
             });
 
@@ -162,7 +162,7 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.AnswerContentpic)
-                    .HasMaxLength(64)
+                    .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("ANSWER_CONTENTPIC")
                     .HasDefaultValueSql("'none' ");
@@ -196,13 +196,13 @@ namespace Back_End.Models
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.AnswerUserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010861");
+                    .HasConstraintName("SYS_C0011126");
 
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Answers)
                     .HasForeignKey(d => d.QuestionId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010862");
+                    .HasConstraintName("SYS_C0011127");
             });
 
             modelBuilder.Entity<Answerchecking>(entity =>
@@ -246,12 +246,12 @@ namespace Back_End.Models
                     .WithMany(p => p.Answercheckings)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0010989");
+                    .HasConstraintName("SYS_C0011251");
 
                 entity.HasOne(d => d.Answer)
                     .WithOne(p => p.Answerchecking)
                     .HasForeignKey<Answerchecking>(d => d.AnswerId)
-                    .HasConstraintName("SYS_C0010988");
+                    .HasConstraintName("SYS_C0011250");
             });
 
             modelBuilder.Entity<Answercomment>(entity =>
@@ -304,19 +304,19 @@ namespace Back_End.Models
                     .WithMany(p => p.Answercomments)
                     .HasForeignKey(d => d.AnswerCommentFather)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010874");
+                    .HasConstraintName("SYS_C0011139");
 
                 entity.HasOne(d => d.AnswerCommentReplyNavigation)
                     .WithMany(p => p.InverseAnswerCommentReplyNavigation)
                     .HasForeignKey(d => d.AnswerCommentReply)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010873");
+                    .HasConstraintName("SYS_C0011138");
 
                 entity.HasOne(d => d.AnswerCommentUser)
                     .WithMany(p => p.Answercomments)
                     .HasForeignKey(d => d.AnswerCommentUserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010872");
+                    .HasConstraintName("SYS_C0011137");
             });
 
             modelBuilder.Entity<Answercommentreport>(entity =>
@@ -369,17 +369,17 @@ namespace Back_End.Models
                     .WithMany(p => p.Answercommentreports)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0011019");
+                    .HasConstraintName("SYS_C0011280");
 
                 entity.HasOne(d => d.AnswerComment)
                     .WithMany(p => p.Answercommentreports)
                     .HasForeignKey(d => d.AnswerCommentId)
-                    .HasConstraintName("SYS_C0011017");
+                    .HasConstraintName("SYS_C0011278");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Answercommentreports)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0011018");
+                    .HasConstraintName("SYS_C0011279");
             });
 
             modelBuilder.Entity<Answerreport>(entity =>
@@ -432,17 +432,17 @@ namespace Back_End.Models
                     .WithMany(p => p.Answerreports)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0011003");
+                    .HasConstraintName("SYS_C0011264");
 
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.Answerreports)
                     .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("SYS_C0011001");
+                    .HasConstraintName("SYS_C0011262");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Answerreports)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0011002");
+                    .HasConstraintName("SYS_C0011263");
             });
 
             modelBuilder.Entity<Blog>(entity =>
@@ -472,13 +472,20 @@ namespace Back_End.Models
                     .HasDefaultValueSql("SYSDATE ");
 
                 entity.Property(e => e.BlogImage)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
                     .HasColumnName("BLOG_IMAGE");
 
                 entity.Property(e => e.BlogLike)
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("BLOG_LIKE")
                     .HasDefaultValueSql("0");
+
+                entity.Property(e => e.BlogTag)
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .HasColumnName("BLOG_TAG")
+                    .HasDefaultValueSql("'none'");
 
                 entity.Property(e => e.BlogUserId)
                     .HasPrecision(10)
@@ -493,7 +500,7 @@ namespace Back_End.Models
                     .WithMany(p => p.Blogs)
                     .HasForeignKey(d => d.BlogUserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010867");
+                    .HasConstraintName("SYS_C0011132");
             });
 
             modelBuilder.Entity<Blogchecking>(entity =>
@@ -537,12 +544,12 @@ namespace Back_End.Models
                     .WithMany(p => p.Blogcheckings)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0010995");
+                    .HasConstraintName("SYS_C0011256");
 
                 entity.HasOne(d => d.Blog)
                     .WithOne(p => p.Blogchecking)
                     .HasForeignKey<Blogchecking>(d => d.BlogId)
-                    .HasConstraintName("SYS_C0010994");
+                    .HasConstraintName("SYS_C0011255");
             });
 
             modelBuilder.Entity<Blogcomment>(entity =>
@@ -595,19 +602,19 @@ namespace Back_End.Models
                     .WithMany(p => p.Blogcomments)
                     .HasForeignKey(d => d.BlogCommentFather)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010881");
+                    .HasConstraintName("SYS_C0011146");
 
                 entity.HasOne(d => d.BlogCommentReplyNavigation)
                     .WithMany(p => p.InverseBlogCommentReplyNavigation)
                     .HasForeignKey(d => d.BlogCommentReply)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010880");
+                    .HasConstraintName("SYS_C0011145");
 
                 entity.HasOne(d => d.BlogCommentUser)
                     .WithMany(p => p.Blogcomments)
                     .HasForeignKey(d => d.BlogCommentUserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010879");
+                    .HasConstraintName("SYS_C0011144");
             });
 
             modelBuilder.Entity<Blogcommentreport>(entity =>
@@ -660,17 +667,17 @@ namespace Back_End.Models
                     .WithMany(p => p.Blogcommentreports)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0011027");
+                    .HasConstraintName("SYS_C0011288");
 
                 entity.HasOne(d => d.BlogComment)
                     .WithMany(p => p.Blogcommentreports)
                     .HasForeignKey(d => d.BlogCommentId)
-                    .HasConstraintName("SYS_C0011025");
+                    .HasConstraintName("SYS_C0011286");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Blogcommentreports)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0011026");
+                    .HasConstraintName("SYS_C0011287");
             });
 
             modelBuilder.Entity<Blogreport>(entity =>
@@ -723,17 +730,17 @@ namespace Back_End.Models
                     .WithMany(p => p.Blogreports)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0011011");
+                    .HasConstraintName("SYS_C0011272");
 
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Blogreports)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("SYS_C0011009");
+                    .HasConstraintName("SYS_C0011270");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Blogreports)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0011010");
+                    .HasConstraintName("SYS_C0011271");
             });
 
             modelBuilder.Entity<Coinanswer>(entity =>
@@ -761,12 +768,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.Coinanswers)
                     .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("SYS_C0010954");
+                    .HasConstraintName("SYS_C0011218");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Coinanswers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010955");
+                    .HasConstraintName("SYS_C0011219");
             });
 
             modelBuilder.Entity<Coinblog>(entity =>
@@ -794,12 +801,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Coinblogs)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("SYS_C0010948");
+                    .HasConstraintName("SYS_C0011212");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Coinblogs)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010949");
+                    .HasConstraintName("SYS_C0011213");
             });
 
             modelBuilder.Entity<Followinstitution>(entity =>
@@ -833,12 +840,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Institution)
                     .WithMany(p => p.Followinstitutions)
                     .HasForeignKey(d => d.InstitutionId)
-                    .HasConstraintName("SYS_C0010975");
+                    .HasConstraintName("SYS_C0011239");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Followinstitutions)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010976");
+                    .HasConstraintName("SYS_C0011240");
             });
 
             modelBuilder.Entity<Followuniversity>(entity =>
@@ -872,12 +879,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.University)
                     .WithMany(p => p.Followuniversities)
                     .HasForeignKey(d => d.UniversityId)
-                    .HasConstraintName("SYS_C0010968");
+                    .HasConstraintName("SYS_C0011232");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Followuniversities)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010969");
+                    .HasConstraintName("SYS_C0011233");
             });
 
             modelBuilder.Entity<Followuser>(entity =>
@@ -911,19 +918,19 @@ namespace Back_End.Models
                 entity.HasOne(d => d.FollowUser)
                     .WithMany(p => p.FollowuserFollowUsers)
                     .HasForeignKey(d => d.FollowUserId)
-                    .HasConstraintName("SYS_C0010961");
+                    .HasConstraintName("SYS_C0011225");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.FollowuserUsers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010962");
+                    .HasConstraintName("SYS_C0011226");
             });
 
             modelBuilder.Entity<Institution>(entity =>
             {
                 entity.ToTable("INSTITUTION");
 
-                entity.HasIndex(e => e.InstitutionName, "SYS_C0010850")
+                entity.HasIndex(e => e.InstitutionName, "SYS_C0011115")
                     .IsUnique();
 
                 entity.Property(e => e.InstitutionId)
@@ -989,12 +996,14 @@ namespace Back_End.Models
 
                 entity.Property(e => e.InstitutionProfile)
                     .IsRequired()
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
                     .HasColumnName("INSTITUTION_PROFILE");
 
                 entity.Property(e => e.InstitutionQualify)
                     .IsRequired()
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
                     .HasColumnName("INSTITUTION_QUALIFY");
             });
 
@@ -1029,12 +1038,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.Likeanswers)
                     .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("SYS_C0010921");
+                    .HasConstraintName("SYS_C0011185");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Likeanswers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010922");
+                    .HasConstraintName("SYS_C0011186");
             });
 
             modelBuilder.Entity<Likeanswercomment>(entity =>
@@ -1068,12 +1077,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.AnswerComment)
                     .WithMany(p => p.Likeanswercomments)
                     .HasForeignKey(d => d.AnswerCommentId)
-                    .HasConstraintName("SYS_C0010928");
+                    .HasConstraintName("SYS_C0011192");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Likeanswercomments)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010929");
+                    .HasConstraintName("SYS_C0011193");
             });
 
             modelBuilder.Entity<Likeblog>(entity =>
@@ -1107,12 +1116,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Likeblogs)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("SYS_C0010935");
+                    .HasConstraintName("SYS_C0011199");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Likeblogs)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010936");
+                    .HasConstraintName("SYS_C0011200");
             });
 
             modelBuilder.Entity<Likeblogcomment>(entity =>
@@ -1146,12 +1155,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.BlogComment)
                     .WithMany(p => p.Likeblogcomments)
                     .HasForeignKey(d => d.BlogCommentId)
-                    .HasConstraintName("SYS_C0010942");
+                    .HasConstraintName("SYS_C0011206");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Likeblogcomments)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010943");
+                    .HasConstraintName("SYS_C0011207");
             });
 
             modelBuilder.Entity<Newsflash>(entity =>
@@ -1176,7 +1185,8 @@ namespace Back_End.Models
                     .HasDefaultValueSql("SYSDATE ");
 
                 entity.Property(e => e.NewsFlashImage)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
                     .HasColumnName("NEWS_FLASH_IMAGE");
 
                 entity.Property(e => e.NewsFlashRegion)
@@ -1205,7 +1215,7 @@ namespace Back_End.Models
             modelBuilder.Entity<Qualification>(entity =>
             {
                 entity.HasKey(e => e.IdentityId)
-                    .HasName("SYS_C0010827");
+                    .HasName("SYS_C0011092");
 
                 entity.ToTable("QUALIFICATION");
 
@@ -1221,7 +1231,7 @@ namespace Back_End.Models
                     .HasColumnName("IDENTITY");
 
                 entity.Property(e => e.IdentityQualificationImage)
-                    .HasMaxLength(64)
+                    .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("IDENTITY_QUALIFICATION_IMAGE");
 
@@ -1243,18 +1253,18 @@ namespace Back_End.Models
                 entity.HasOne(d => d.University)
                     .WithMany(p => p.Qualifications)
                     .HasForeignKey(d => d.UniversityId)
-                    .HasConstraintName("SYS_C0010829");
+                    .HasConstraintName("SYS_C0011094");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Qualifications)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010828");
+                    .HasConstraintName("SYS_C0011093");
             });
 
             modelBuilder.Entity<Qualificationchecking>(entity =>
             {
                 entity.HasKey(e => e.IdentityId)
-                    .HasName("SYS_C0010892");
+                    .HasName("SYS_C0011156");
 
                 entity.ToTable("QUALIFICATIONCHECKING");
 
@@ -1291,12 +1301,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Administrator)
                     .WithMany(p => p.Qualificationcheckings)
                     .HasForeignKey(d => d.AdministratorId)
-                    .HasConstraintName("SYS_C0010894");
+                    .HasConstraintName("SYS_C0011158");
 
                 entity.HasOne(d => d.Identity)
                     .WithOne(p => p.Qualificationchecking)
                     .HasForeignKey<Qualificationchecking>(d => d.IdentityId)
-                    .HasConstraintName("SYS_C0010893");
+                    .HasConstraintName("SYS_C0011157");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -1326,13 +1336,20 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.QuestionImage)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
                     .HasColumnName("QUESTION_IMAGE");
 
                 entity.Property(e => e.QuestionReward)
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("QUESTION_REWARD")
                     .HasDefaultValueSql("0");
+
+                entity.Property(e => e.QuestionTag)
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .HasColumnName("QUESTION_TAG")
+                    .HasDefaultValueSql("'none'");
 
                 entity.Property(e => e.QuestionTitle)
                     .IsRequired()
@@ -1355,7 +1372,7 @@ namespace Back_End.Models
                     .WithMany(p => p.Questions)
                     .HasForeignKey(d => d.QuestionUserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("SYS_C0010856");
+                    .HasConstraintName("SYS_C0011121");
             });
 
             modelBuilder.Entity<Questionchecking>(entity =>
@@ -1398,12 +1415,12 @@ namespace Back_End.Models
                     .WithMany(p => p.Questioncheckings)
                     .HasForeignKey(d => d.AdministratorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("SYS_C0010983");
+                    .HasConstraintName("SYS_C0011246");
 
                 entity.HasOne(d => d.Question)
                     .WithOne(p => p.Questionchecking)
                     .HasForeignKey<Questionchecking>(d => d.QuestionId)
-                    .HasConstraintName("SYS_C0010982");
+                    .HasConstraintName("SYS_C0011245");
             });
 
             modelBuilder.Entity<Staranswer>(entity =>
@@ -1437,12 +1454,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Answer)
                     .WithMany(p => p.Staranswers)
                     .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("SYS_C0010907");
+                    .HasConstraintName("SYS_C0011171");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Staranswers)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010908");
+                    .HasConstraintName("SYS_C0011172");
             });
 
             modelBuilder.Entity<Starblog>(entity =>
@@ -1476,12 +1493,12 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Blog)
                     .WithMany(p => p.Starblogs)
                     .HasForeignKey(d => d.BlogId)
-                    .HasConstraintName("SYS_C0010914");
+                    .HasConstraintName("SYS_C0011178");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Starblogs)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010915");
+                    .HasConstraintName("SYS_C0011179");
             });
 
             modelBuilder.Entity<Starquestion>(entity =>
@@ -1515,19 +1532,19 @@ namespace Back_End.Models
                 entity.HasOne(d => d.Question)
                     .WithMany(p => p.Starquestions)
                     .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("SYS_C0010900");
+                    .HasConstraintName("SYS_C0011164");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Starquestions)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("SYS_C0010901");
+                    .HasConstraintName("SYS_C0011165");
             });
 
             modelBuilder.Entity<University>(entity =>
             {
                 entity.ToTable("UNIVERSITY");
 
-                entity.HasIndex(e => e.UniversityName, "SYS_C0010821")
+                entity.HasIndex(e => e.UniversityName, "SYS_C0011087")
                     .IsUnique();
 
                 entity.Property(e => e.UniversityId)
@@ -1542,7 +1559,8 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.UniversityBadge)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_BADGE");
 
                 entity.Property(e => e.UniversityCollege)
@@ -1617,16 +1635,18 @@ namespace Back_End.Models
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_WEBSITE")
                     .HasDefaultValueSql("'none' ");
+
+                entity.Property(e => e.Year)
+                    .HasPrecision(5)
+                    .HasColumnName("YEAR")
+                    .HasDefaultValueSql("1970 ");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("USERS");
 
-                entity.HasIndex(e => e.UserPhone, "SYS_C0010805")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.UserName, "SYS_C0010806")
+                entity.HasIndex(e => e.UserPhone, "SYS_C0011071")
                     .IsUnique();
 
                 entity.Property(e => e.UserId)
@@ -1693,7 +1713,8 @@ namespace Back_End.Models
                     .HasColumnName("USER_PHONE");
 
                 entity.Property(e => e.UserProfile)
-                    .HasColumnType("BLOB")
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
                     .HasColumnName("USER_PROFILE");
 
                 entity.Property(e => e.UserSignature)

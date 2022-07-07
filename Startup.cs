@@ -40,18 +40,6 @@ namespace Back_End
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Back_End", Version = "v1" });
-                //var xmlPath = Path.Combine(AppContext.BaseDirectory, "Back-End.xml");
-                //if (File.Exists(xmlPath))
-                //{
-                //    c.IncludeXmlComments(xmlPath, true);
-                //}
-
-                //var dtoXmlFile = "Back-end.xml";
-                //var dtoXmlPath = Path.Combine(AppContext.BaseDirectory, dtoXmlFile);
-                //if (File.Exists(xmlPath))
-                //{
-                //    c.IncludeXmlComments(dtoXmlPath);
-                //}
             });
         }
 

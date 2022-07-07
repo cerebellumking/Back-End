@@ -16,7 +16,7 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
-        
+
         [HttpGet]
         public string getAnswerInfo(int answer_id)
         {

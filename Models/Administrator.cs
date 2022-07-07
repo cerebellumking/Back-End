@@ -24,7 +24,7 @@ namespace Back_End.Models
         public string AdministratorPhone { get; set; }
         public string AdministratorPassword { get; set; }
         public string AdministratorName { get; set; }
-        public byte[] AdministratorProfile { get; set; }
+        public string AdministratorProfile { get; set; }
         public string AdministratorGender { get; set; }
         public DateTime AdministratorCreatetime { get; set; }
 

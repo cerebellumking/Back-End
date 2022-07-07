@@ -18,9 +18,10 @@ namespace Back_End.Models
 
         public int BlogId { get; set; }
         public int? BlogUserId { get; set; }
+        public string BlogTag { get; set; }
         public DateTime BlogDate { get; set; }
         public string BlogContent { get; set; }
-        public byte[] BlogImage { get; set; }
+        public string BlogImage { get; set; }
         public decimal? BlogLike { get; set; }
         public decimal? BlogCoin { get; set; }
         public bool? BlogVisible { get; set; }

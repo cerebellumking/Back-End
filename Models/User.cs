@@ -39,7 +39,7 @@ namespace Back_End.Models
         public string UserPhone { get; set; }
         public string UserPassword { get; set; }
         public string UserName { get; set; }
-        public byte[] UserProfile { get; set; }
+        public string UserProfile { get; set; }
         public string UserGender { get; set; }
         public bool? UserState { get; set; }
         public string UserSignature { get; set; }

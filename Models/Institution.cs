@@ -16,8 +16,8 @@ namespace Back_End.Models
         public string InstitutionEmail { get; set; }
         public string InstitutionPhone { get; set; }
         public string InstitutionName { get; set; }
-        public byte[] InstitutionQualify { get; set; }
-        public byte[] InstitutionProfile { get; set; }
+        public string InstitutionQualify { get; set; }
+        public string InstitutionProfile { get; set; }
         public string InstitutionCity { get; set; }
         public string InstitutionLessons { get; set; }
         public string InstitutionIntroduction { get; set; }
