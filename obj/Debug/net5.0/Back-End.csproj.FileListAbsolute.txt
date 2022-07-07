@@ -61,3 +61,4 @@ C:\Users\18052\Desktop\Back-End\Back-End\bin\Debug\net5.0\Microsoft.AspNetCore.J
 C:\Users\18052\Desktop\Back-End\Back-End\bin\Debug\net5.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\18052\Desktop\Back-End\Back-End\bin\Debug\net5.0\Newtonsoft.Json.dll
 C:\Users\18052\Desktop\Back-End\Back-End\bin\Debug\net5.0\Newtonsoft.Json.Bson.dll
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Debug\net5.0\Back-End.csproj.AssemblyReference.cache
