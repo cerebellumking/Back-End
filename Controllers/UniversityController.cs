@@ -17,6 +17,38 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
 
+        [HttpGet]
+        public string getUniversityInfo(int university_id)
+        {
+            UniversityMessage message = new UniversityMessage();
+            try
+            {
+                University university = myContext.Universities.Single(b => b.UniversityId == university_id);
+                message.data["university_id"] = university_id;
+                message.data["university_email"] = university.UniversityEmail;
+                message.data["university_name"] = university.UniversityName;
+                message.data["university_region"] = university.UniversityRegion;
+                message.data["university_country"] = university.UniversityCountry;
+                message.data["university_location"] = university.UniversityLocation;
+                message.data["university_introduction"] = university.UniversityIntroduction;
+                message.data["university_student_num"] = university.UniversityStudentNum;
+                message.data["university_website"] = university.UniversityWebsite;
+                message.data["university_college"] = university.UniversityCollege;
+                message.data["university_abbreviation"] = university.UniversityAbbreviation;
+                message.data["university_QS_rank"] = university.UniversityQsRank;
+                message.data["university_THE_rank"] = university.UniversityTheRank;
+                message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+
+
         [HttpPost]
         public string addUniversity(string university_email,string university_name,string university_region,string university_country,string university_location,
         string university_introduction, int university_student_num,string university_website,string university_college,string university_abbreviation,

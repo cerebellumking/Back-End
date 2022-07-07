@@ -12,6 +12,11 @@ namespace Back_End
         public bool status { get; set; }
         public Dictionary<string, dynamic> data { get; set; } = new Dictionary<string, dynamic>();
 
+        public Message()
+        {
+            errorCode = 300;
+            status = false;
+        }
         public string ReturnJson()
         {
             return JsonSerializer.Serialize(this);
@@ -23,7 +28,7 @@ namespace Back_End
         public RegisterMessage()
         {
             data.Add("user_id", null);
-            errorCode = 500;
+            errorCode = 300;
             status = false;
         }
     }
@@ -32,7 +37,7 @@ namespace Back_End
     {
         public LoginMessage()
         {
-            errorCode = 500;
+            errorCode = 300;
             status = false;
             data.Add("user_id", 0);
             data.Add("user_password", "none");
@@ -56,7 +61,7 @@ namespace Back_End
     {
         public FollowMessage()
         {
-            errorCode = 500;
+            errorCode = 300;
             status = false;
         }
     }
