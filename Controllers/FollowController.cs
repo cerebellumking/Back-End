@@ -27,7 +27,7 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 int max_id = myContext.Users.Select(b => b.UserId).Max();
                 Followuser followuser = new Followuser();
-                if (!myContext.Followusers.Any(b => b.FollowUserId == follow_user_id && b.UserId == user_id&&b.Cancel==false) && user_id<= max_id && follow_user_id <= max_id)
+                if (!myContext.Followusers.Any(b => b.FollowUserId == follow_user_id && b.UserId == user_id&&b.Cancel==false)&&user_id!=follow_user_id && user_id<= max_id && follow_user_id <= max_id)
                 {
                     /*对User进行修改*/
                     user = myContext.Users.Single(b => b.UserId == user_id);
