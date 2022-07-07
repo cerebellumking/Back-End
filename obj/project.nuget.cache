@@ -1,11 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "75jJhi5mVJHAGxuRFL+2dC9DWLppb46zDQxc2Tf9K8YqS+5qBOp1NTiL7SxZ43LyhZc4xpoj6hHYAMoVIzc61g==",
+  "dgSpecHash": "fEvATSReHE2l6h38e5VyT65/gTKiz6i0J2LZ3v2ylKOPXRkcBZqNUFy+29yny01gj3kPncbuAASI/Kbb7ab0qA==",
   "success": true,
   "projectFilePath": "C:\\Users\\18052\\Desktop\\Back-End\\Back-End\\Back-End.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\18052\\.nuget\\packages\\aliyun.oss.sdk.netcore\\2.13.0\\aliyun.oss.sdk.netcore.2.13.0.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
+    "C:\\Users\\18052\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\5.0.17\\microsoft.aspnetcore.jsonpatch.5.0.17.nupkg.sha512",
+    "C:\\Users\\18052\\.nuget\\packages\\microsoft.aspnetcore.mvc.newtonsoftjson\\5.0.17\\microsoft.aspnetcore.mvc.newtonsoftjson.5.0.17.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.entityframeworkcore\\5.0.17\\microsoft.entityframeworkcore.5.0.17.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\5.0.17\\microsoft.entityframeworkcore.abstractions.5.0.17.nupkg.sha512",
@@ -27,6 +29,8 @@
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\18052\\.nuget\\packages\\newtonsoft.json\\12.0.2\\newtonsoft.json.12.0.2.nupkg.sha512",
+    "C:\\Users\\18052\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\oracle.entityframeworkcore\\5.21.61\\oracle.entityframeworkcore.5.21.61.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\oracle.manageddataaccess.core\\3.21.61\\oracle.manageddataaccess.core.3.21.61.nupkg.sha512",
     "C:\\Users\\18052\\.nuget\\packages\\swashbuckle.aspnetcore\\5.6.3\\swashbuckle.aspnetcore.5.6.3.nupkg.sha512",

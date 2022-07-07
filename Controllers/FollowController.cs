@@ -64,18 +64,15 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                if (myContext.Followusers.Any(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false))
-                {
-                    Followuser followuser = myContext.Followusers.Single(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
-                    User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
-                    User user = myContext.Users.Single(b => b.UserId == user_id);
-                    user.UserFollows--;
-                    follow_user.UserFollower--;
-                    followuser.Cancel = true;
-                    message.errorCode = 200;
-                    message.status = true;
-                    myContext.SaveChanges();
-                }
+                Followuser followuser = myContext.Followusers.Single(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
+                User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserFollows--;
+                follow_user.UserFollower--;
+                followuser.Cancel = true;
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
             }
             catch
             {
@@ -83,5 +80,21 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet]
+        public string whetherFollow(int user_id,int follow_user_id)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                bool flag = myContext.Followusers.Any(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
+                message.errorCode = 200;
+                message.status = flag;
+            }
+            catch
+            {
+            }
+
+            return message.ReturnJson();
+        }
     }
 }

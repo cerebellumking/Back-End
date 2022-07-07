@@ -12,6 +12,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Back_End.Models;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 namespace Back_End
 {
     public class Startup
@@ -26,6 +29,10 @@ namespace Back_End
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers().AddJsonOptions(cfg =>
+            {
+                cfg.JsonSerializerOptions.Encoder = JavaScriptEncoder.Create(UnicodeRanges.All);
+            });
             services.AddRouting(options => options.LowercaseUrls = true);
             services.AddScoped<ModelContext>();
             services.AddCors(c => c.AddPolicy("any", p => p.AllowAnyMethod().AllowAnyOrigin().AllowAnyHeader()));
@@ -33,18 +40,18 @@ namespace Back_End
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Back_End", Version = "v1" });
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, "Back-End.xml");
-                if (File.Exists(xmlPath))
-                {
-                    c.IncludeXmlComments(xmlPath, true);
-                }
+                //var xmlPath = Path.Combine(AppContext.BaseDirectory, "Back-End.xml");
+                //if (File.Exists(xmlPath))
+                //{
+                //    c.IncludeXmlComments(xmlPath, true);
+                //}
 
-                var dtoXmlFile = "Back-end.xml";
-                var dtoXmlPath = Path.Combine(AppContext.BaseDirectory, dtoXmlFile);
-                if (File.Exists(xmlPath))
-                {
-                    c.IncludeXmlComments(dtoXmlPath);
-                }
+                //var dtoXmlFile = "Back-end.xml";
+                //var dtoXmlPath = Path.Combine(AppContext.BaseDirectory, dtoXmlFile);
+                //if (File.Exists(xmlPath))
+                //{
+                //    c.IncludeXmlComments(dtoXmlPath);
+                //}
             });
         }
 

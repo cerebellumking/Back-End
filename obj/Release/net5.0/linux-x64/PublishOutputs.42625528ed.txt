@@ -5,12 +5,16 @@ C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Back-End.runtimeconfig.json
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Back-End.pdb
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Aliyun.OSS.Core.dll
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Abstractions.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.Extensions.DependencyInjection.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.OpenApi.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Microsoft.Win32.SystemEvents.dll
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Newtonsoft.Json.dll
+C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Newtonsoft.Json.Bson.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Oracle.EntityFrameworkCore.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Oracle.ManagedDataAccess.dll
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\PubTmp\Out\Swashbuckle.AspNetCore.Swagger.dll

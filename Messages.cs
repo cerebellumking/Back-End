@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 namespace Back_End
 {
     public class Message
@@ -19,7 +20,13 @@ namespace Back_End
         }
         public string ReturnJson()
         {
-            return JsonSerializer.Serialize(this);
+            var options = new JsonSerializerOptions
+            {
+                //Encoder = JavaScriptEncoder.Create(UnicodeRanges.CjkUnifiedIdeographs, UnicodeRanges.CjkUnifiedIdeographsExtensionA),
+                //Encoder = JavaScriptEncoder.Create(UnicodeRanges.BasicLatin, UnicodeRanges.CjkUnifiedIdeographs),
+                Encoder = JavaScriptEncoder.Create(UnicodeRanges.All,UnicodeRanges.All),
+            };
+            return JsonSerializer.Serialize(this,options);
         }
     }
 

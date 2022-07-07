@@ -46,3 +46,7 @@ C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\ref\Back-E
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\Back-End.pdb
 C:\Users\18052\Desktop\Back-End\Back-End\obj\Release\net5.0\linux-x64\Back-End.genruntimeconfig.cache
 C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Aliyun.OSS.Core.dll
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Newtonsoft.Json.dll
+C:\Users\18052\Desktop\Back-End\Back-End\bin\Release\net5.0\linux-x64\Newtonsoft.Json.Bson.dll

@@ -8,6 +8,15 @@ using Back_End.Models;
 
 namespace Back_End.Controllers
 {
+
+    public class IdentityInfo
+    {
+        //public int user_id { get; set; }
+        public string identity { get; set; }
+        public string university_name { get; set; }
+
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserInfoController : ControllerBase
@@ -24,13 +33,20 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                Qualification qualification = myContext.Qualifications.Single(b=>b.UserId==user_id);
-                message.data.Add("identity_id", qualification.IdentityId);
-                message.data.Add("identity", qualification.Identity);
-                User user = myContext.Users.Single(b => b.UserId == user_id);
-                message.data.Add("user_follower", user.UserFollower);
-                message.data.Add("user_follows", user.UserFollows);
-                message.data.Add("user_level", user.UserLevel);
+                var qualificationList = myContext.Qualifications.Where(a=>a.UserId==user_id&&a.Visible==true).Select(b => new { b.UserId, b.Identity, b.UniversityId }).ToList();
+                int count = 1;
+                message.data.Add("user_id", user_id);
+                foreach (var qualification in qualificationList)
+                {
+                    IdentityInfo identityInfo = new IdentityInfo();
+                    //identityInfo.user_id = qualification.UserId;
+                    identityInfo.identity = qualification.Identity;
+                    University university = myContext.Universities.Single(b => b.UniversityId == qualification.UniversityId);
+                    identityInfo.university_name = university.UniversityName;
+                    message.data.Add("identity" + count.ToString(), identityInfo);
+                    count++;
+                }
+                //Console.WriteLine(count);
                 message.status = true;
                 message.errorCode = 200;
             }
