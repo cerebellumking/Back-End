@@ -38,6 +38,7 @@ namespace Back_End.Controllers
                 message.data["university_QS_rank"] = university.UniversityQsRank;
                 message.data["university_THE_rank"] = university.UniversityTheRank;
                 message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
+                message.data["rank_year"] = university.Year;
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -52,7 +53,7 @@ namespace Back_End.Controllers
         [HttpPost]
         public string addUniversity(string university_email, string university_name, string university_region, string university_country, string university_location,
         string university_introduction, int university_student_num, string university_website, string university_college, string university_abbreviation,
-        short university_QS_rank, short university_THE_rank, short university_USNews_rank)
+        short university_QS_rank, short university_THE_rank, short university_USNews_rank,short rank_year)
         {
             Message message = new Message();
             try
@@ -72,6 +73,7 @@ namespace Back_End.Controllers
                 university.UniversityQsRank = university_QS_rank;
                 university.UniversityTheRank = university_THE_rank;
                 university.UniversityUsnewsRank = university_USNews_rank;
+                university.Year = rank_year;
                 var count = myContext.Universities.Count();
                 int id;
                 if (count == 0)

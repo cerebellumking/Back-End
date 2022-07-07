@@ -93,6 +93,7 @@ namespace Back_End
             data.Add("university_QS_rank", null);
             data.Add("university_THE_rank", null);
             data.Add("university_USNews_rank", null);
+            data.Add("rank_year", null);
         }
     }
 
