@@ -167,5 +167,23 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpGet("userlist")]
+        public string getFollowUserList(int user_id)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                var list = myContext.Followusers.Where(a => a.UserId == user_id && a.Cancel == false).Select(b => new { b.FollowUserId }).ToList();
+                message.data.Add("follows", list.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
     }
 }
