@@ -17,6 +17,38 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
         [HttpGet]
+        public string getQuestionInfo(int question_id)
+        {
+            Message message = new Message();
+            try
+            {
+                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
+                if (question.QuestionVisible==true)
+                {
+                    message.data.Add("question_id", question_id);
+                    message.data.Add("question_user_id", question.QuestionUserId);
+                    message.data.Add("question_tag", question.QuestionTag);
+                    message.data.Add("question_date", question.QuestionDate);
+                    message.data.Add("question_title", question.QuestionTitle);
+                    message.data.Add("question_description", question.QuestionDescription);
+                    message.data.Add("question_reward", question.QuestionReward);
+                    message.data.Add("question_apply", question.QuestionApply);
+                    message.data.Add("question_image", question.QuestionImage);
+                }
+                else
+                {
+                    message.data.Add("question_visible", question.QuestionVisible);
+                }
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+        [HttpGet("time")]
         public string showQuestionByTime()
         {
             Message message = new Message();
