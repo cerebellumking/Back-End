@@ -16,6 +16,13 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
+        [HttpGet]
+        public string showQuestionByTime()
+        {
+            Message message = new Message();
+
+            return message.ReturnJson();
+        }
 
         [HttpPost]
         public string raiseQuestion(int question_user_id,string question_tag,string question_title,string question_description,decimal question_reward)
