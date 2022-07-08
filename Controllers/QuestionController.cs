@@ -18,7 +18,7 @@ namespace Back_End.Controllers
         }
 
         [HttpPost]
-        public string raiseQuestion(int question_user_id,string question_tag,string question_title,string question_description,decimal question_reward,int question_apply)
+        public string raiseQuestion(int question_user_id,string question_tag,string question_title,string question_description,decimal question_reward)
         {
             Message message = new Message();
             try
@@ -40,7 +40,7 @@ namespace Back_End.Controllers
                 question.QuestionTitle = question_title;
                 question.QuestionDescription = question_description;
                 question.QuestionReward = question_reward;
-                question.QuestionApply = question_apply;
+                question.QuestionApply = 0;
                 question.QuestionVisible = true;
                 myContext.Questions.Add(question);
                 myContext.SaveChanges();

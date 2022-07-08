@@ -76,7 +76,6 @@ namespace Back_End.Controllers
             MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
             client.PutObject(bucketName, "user_profile/" + user_id.ToString() + type, stream);
             m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user_id.ToString() + type);
-
             return m.ReturnJson();
         }
 

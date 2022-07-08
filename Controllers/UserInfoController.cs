@@ -57,6 +57,44 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpPut("password")]
+        public string changePassword(int user_id,string user_password,string new_password)
+        {
+            Message message = new Message();
+            try
+            {
+                User user = myContext.Users.Single(b => b.UserId == user_id && b.UserPassword == user_password);
+                user.UserPassword = new_password;
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+        [HttpGet("id")]
+        public string findUserID(string user_phone,string user_password)
+        {
+            Message message = new Message();
+            try
+            {
+                User user = myContext.Users.Single(b => b.UserPhone == user_phone);
+                if (user.UserPassword == user_password)
+                {
+                    message.data.Add("user_id", user.UserId);
+                    message.status = true;
+                }
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
         [HttpPut("change")]
         public void changeInfo()
         {
@@ -65,12 +103,6 @@ namespace Back_End.Controllers
 
         [HttpDelete]
         public void deleteInfo()
-        {
-
-        }
-
-        [HttpPut]
-        public void changeVerification()
         {
 
         }
