@@ -7,6 +7,14 @@ using System.Threading.Tasks;
 using Back_End.Models;
 namespace Back_End.Controllers
 {
+    public class FollowUserInformation
+    {
+        public int user_id { get; set; }
+        public string user_profile { get; set; }
+        public string user_name { get; set; }
+        public string user_signature { get; set; }
+        public decimal user_level { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class FollowController : ControllerBase
@@ -164,6 +172,36 @@ namespace Back_End.Controllers
             }
             catch
             {
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("userlist")]
+        public string getFollowUserList(int user_id)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                var list = myContext.Followusers.Where(a => a.UserId == user_id && a.Cancel == false).Select(b =>new { b.FollowUserId}).ToList();
+                List < FollowUserInformation > followUserList= new List<FollowUserInformation>();
+                foreach(var val in list)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == val.FollowUserId);
+                    FollowUserInformation follow = new FollowUserInformation();
+                    follow.user_id = user.UserId;
+                    follow.user_level = user.UserLevel;
+                    follow.user_name = user.UserName;
+                    follow.user_profile = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user.UserId.ToString() + ".jpg";
+                    follow.user_signature = user.UserSignature;
+                    followUserList.Add(follow);
+                }
+                message.data.Add("follows", followUserList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch
+            {
+
             }
             return message.ReturnJson();
         }

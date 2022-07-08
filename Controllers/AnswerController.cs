@@ -24,12 +24,23 @@ namespace Back_End.Controllers
             try
             {
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
-                message.data.Add("answer_user_id", answer.AnswerUserId);
-                message.data.Add("question_id", answer.QuestionId);
-                message.data.Add("answer_date", answer.AnswerDate);
-                message.data.Add("answer_content", answer.AnswerContent);
-                message.data.Add("answer_coin", answer.AnswerCoin);
-                message.data.Add("answer_like", answer.AnswerLike);
+                if (answer.AnswerVisible == true)
+                {
+                    Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
+                    message.data.Add("answer_id", answer_id);
+                    message.data.Add("answer_user_id", answer.AnswerUserId);
+                    message.data.Add("question_id", answer.QuestionId);
+                    message.data.Add("tag", question.QuestionTag);
+                    message.data.Add("answer_date", answer.AnswerDate);
+                    message.data.Add("answer_content", answer.AnswerContent);
+                    message.data.Add("answer_contentpic", answer.AnswerContentpic);
+                    message.data.Add("answer_coin", answer.AnswerCoin);
+                    message.data.Add("answer_like", answer.AnswerLike);
+                }
+                else
+                {
+                    message.data.Add("answer_visible", answer.AnswerVisible);
+                }
                 message.status = true;
                 message.errorCode = 200;
             }
