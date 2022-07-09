@@ -78,6 +78,36 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("heat")]
+        public string showQuestionByHeat()
+        {
+            Message message = new Message();
+            try
+            {
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.Answers.Count()).Select(b => new
+                {
+                    b.Answers.Count,
+                    b.QuestionId,
+                    b.QuestionUserId,
+                    b.QuestionTitle,
+                    b.QuestionApply,
+                    b.QuestionReward,
+                    b.QuestionDate,
+                    b.QuestionDescription,
+                    b.QuestionTag
+                }).ToList();
+                if (question.Count > 2)
+                    question.RemoveRange(2, question.Count - 2);
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("question", question.ToArray());
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
         [HttpPost]
         public string raiseQuestion(int question_user_id,string question_tag,string question_title,string question_description,decimal question_reward)
         {
