@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using Back_End.Models;
-//using System.Net.Http;
 using Aliyun.OSS;
 
 namespace Back_End.Controllers
@@ -64,18 +63,39 @@ namespace Back_End.Controllers
         public string PushImage(int user_id)
         {
             Message m = new Message();
-            var files = Request.Form.Files;
-            var text = files[0].OpenReadStream();
-            const string accessKeyId = "LTAI5tNHm9vkUTD9WshKKhvQ";
-            const string accessKeySecret = "wwaOqFeNa3iwkETmcIdYYCkweyAhAx";
-            const string endpoint = "http://oss-cn-shanghai.aliyuncs.com";
-            const string bucketName = "houniaoliuxue";
-            var filebyte = StreamHelp.StreamToBytes(text);
-            var client = new OssClient(endpoint, accessKeyId, accessKeySecret);
-            var type = files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
-            MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
-            client.PutObject(bucketName, "user_profile/" + user_id.ToString() + type, stream);
-            m.data.Add("imageurl", "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user_id.ToString() + type);
+            try
+            {
+                var files = Request.Form.Files;
+                var text = files[0].OpenReadStream();
+
+                /*响应速度相对比较快*/
+                var filebyte = StreamHelp.StreamToBytes(text);
+                var client = OssHelp.createClient();
+                var type = files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
+                MemoryStream stream = new MemoryStream(filebyte, 0, filebyte.Length);
+                string path = "user_profile/" + user_id.ToString() + type;
+                client.PutObject(OssHelp.bucketName, path, stream);
+                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                m.data.Add("imageurl", imgurl);
+
+                /*响应速度不行*/
+                //var type = files[0].FileName.Substring(files[0].FileName.LastIndexOf('.'));
+                //string path = "user_profile/" + user_id.ToString() + type;
+                //string imgurl = OssHelp.uploadImage(text, path);
+                //m.data.Add("imageurl", imgurl);
+
+
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserProfile = imgurl;
+                myContext.SaveChanges();
+                m.errorCode = 200;
+                m.status = true;
+            }
+            catch
+            {
+
+            }
+            
             return m.ReturnJson();
         }
 
