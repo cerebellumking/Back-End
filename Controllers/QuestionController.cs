@@ -52,7 +52,29 @@ namespace Back_End.Controllers
         public string showQuestionByTime()
         {
             Message message = new Message();
+            try
+            {
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.QuestionDate).Select(b => new
+                {
+                    b.QuestionId,
+                    b.QuestionUserId,
+                    b.QuestionTitle,
+                    b.QuestionApply,
+                    b.QuestionReward,
+                    b.QuestionDate,
+                    b.QuestionDescription,
+                    b.QuestionTag
+                }).ToList();
+                if (question.Count > 2)
+                    question.RemoveRange(2, question.Count - 2);
+                message.errorCode =200;
+                message.status = true;
+                message.data.Add("question", question.ToArray());
+            }
+            catch
+            {
 
+            }
             return message.ReturnJson();
         }
 
@@ -81,7 +103,7 @@ namespace Back_End.Controllers
                 question.QuestionReward = question_reward;
                 question.QuestionApply = 0;
                 question.QuestionVisible = true;
-
+                question.QuestionDate = DateTime.Now;
                 Questionchecking questionchecking = new Questionchecking();
                 questionchecking.AdministratorId = 1;
                 questionchecking.QuestionId = id;

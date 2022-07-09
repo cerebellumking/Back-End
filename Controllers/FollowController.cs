@@ -49,6 +49,7 @@ namespace Back_End.Controllers
                         followuser.UserId = user_id;
                         followuser.User = user;
                         followuser.FollowUser = follow_user;
+                        followuser.FollowTime = DateTime.Now;
                         myContext.Followusers.Add(followuser);
                     }
                     else
@@ -84,6 +85,7 @@ namespace Back_End.Controllers
                         follow.UserId = user_id;
                         follow.User = myContext.Users.Single(b=>b.UserId==user_id);
                         follow.University = myContext.Universities.Single(b=>b.UniversityId==university_id);
+                        follow.FollowTime = DateTime.Now;
                         myContext.Followuniversities.Add(follow);
                     }
                     else
