@@ -81,6 +81,12 @@ namespace Back_End.Controllers
                 question.QuestionReward = question_reward;
                 question.QuestionApply = 0;
                 question.QuestionVisible = true;
+
+                Questionchecking questionchecking = new Questionchecking();
+                questionchecking.AdministratorId = 1;
+                questionchecking.QuestionId = id;
+                questionchecking.ReviewResult = "待审核";
+                myContext.Questioncheckings.Add(questionchecking);
                 myContext.Questions.Add(question);
                 myContext.SaveChanges();
                 message.data.Add("question_id", id);
