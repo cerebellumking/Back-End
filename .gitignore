@@ -1,4 +1,9 @@
-
+bin
+obj
+*.user
+*.csproj
+Properties
 *.dll
 *.pdb
-
+*.gitignore
+*.config
