@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using System.Linq;
+
 #nullable disable
 
 namespace Back_End.Models
@@ -49,27 +49,6 @@ namespace Back_End.Models
         public virtual DbSet<University> Universities { get; set; }
         public virtual DbSet<User> Users { get; set; }
 
-        public void DetachAll()
-        {
-            //循环遍历DbContext中所有被跟踪的实体
-            while (true)
-            {
-                //每次循环获取DbContext中一个被跟踪的实体
-                var currentEntry = ChangeTracker.Entries().FirstOrDefault();
-
-                //currentEntry不为null，就将其State设置为EntityState.Detached，即取消跟踪该实体
-                if (currentEntry != null)
-                {
-                    //设置实体State为EntityState.Detached，取消跟踪该实体，之后dbContext.ChangeTracker.Entries().Count()的值会减1
-                    currentEntry.State = EntityState.Detached;
-                }
-                //currentEntry为null，表示DbContext中已经没有被跟踪的实体了，则跳出循环
-                else
-                {
-                    break;
-                }
-            }
-        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -178,7 +157,7 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.AnswerSummary)
-                    .HasMaxLength(128)
+                    .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("ANSWER_SUMMARY");
 
@@ -487,7 +466,7 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.BlogSummary)
-                    .HasMaxLength(128)
+                    .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("BLOG_SUMMARY");
 
@@ -1205,7 +1184,7 @@ namespace Back_End.Models
                     .HasColumnName("NEWS_FLASH_REGION");
 
                 entity.Property(e => e.NewsFlashSummary)
-                    .HasMaxLength(128)
+                    .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("NEWS_FLASH_SUMMARY");
 
@@ -1361,7 +1340,7 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.QuestionSummary)
-                    .HasMaxLength(128)
+                    .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("QUESTION_SUMMARY");
 
