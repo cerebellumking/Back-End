@@ -43,6 +43,7 @@ namespace Back_End.Models
         public virtual DbSet<Qualificationchecking> Qualificationcheckings { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<Questionchecking> Questioncheckings { get; set; }
+        public virtual DbSet<Rank> Ranks { get; set; }
         public virtual DbSet<Staranswer> Staranswers { get; set; }
         public virtual DbSet<Starblog> Starblogs { get; set; }
         public virtual DbSet<Starquestion> Starquestions { get; set; }
@@ -1443,6 +1444,41 @@ namespace Back_End.Models
                     .HasConstraintName("SYS_C0011245");
             });
 
+            modelBuilder.Entity<Rank>(entity =>
+            {
+                entity.HasKey(e => new { e.UniversityId, e.RankYear })
+                    .HasName("RANK_PK");
+
+                entity.ToTable("RANK");
+
+                entity.Property(e => e.UniversityId)
+                    .HasPrecision(10)
+                    .HasColumnName("UNIVERSITY_ID")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.RankYear)
+                    .HasPrecision(5)
+                    .HasColumnName("RANK_YEAR")
+                    .HasDefaultValueSql("1970 ");
+
+                entity.Property(e => e.UniversityQsRank)
+                    .HasPrecision(5)
+                    .HasColumnName("UNIVERSITY_QS_RANK");
+
+                entity.Property(e => e.UniversityTheRank)
+                    .HasPrecision(5)
+                    .HasColumnName("UNIVERSITY_THE_RANK");
+
+                entity.Property(e => e.UniversityUsnewsRank)
+                    .HasPrecision(5)
+                    .HasColumnName("UNIVERSITY_USNEWS_RANK");
+
+                entity.HasOne(d => d.University)
+                    .WithMany(p => p.Ranks)
+                    .HasForeignKey(d => d.UniversityId)
+                    .HasConstraintName("SYS_C0011339");
+            });
+
             modelBuilder.Entity<Staranswer>(entity =>
             {
                 entity.HasKey(e => new { e.AnswerId, e.UserId })
@@ -1625,10 +1661,6 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_NAME")
                     .HasDefaultValueSql("'none' ");
 
-                entity.Property(e => e.UniversityQsRank)
-                    .HasPrecision(5)
-                    .HasColumnName("UNIVERSITY_QS_RANK");
-
                 entity.Property(e => e.UniversityRegion)
                     .IsRequired()
                     .HasMaxLength(64)
@@ -1641,25 +1673,12 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_STUDENT_NUM")
                     .HasDefaultValueSql("0 ");
 
-                entity.Property(e => e.UniversityTheRank)
-                    .HasPrecision(5)
-                    .HasColumnName("UNIVERSITY_THE_RANK");
-
-                entity.Property(e => e.UniversityUsnewsRank)
-                    .HasPrecision(5)
-                    .HasColumnName("UNIVERSITY_USNEWS_RANK");
-
                 entity.Property(e => e.UniversityWebsite)
                     .IsRequired()
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_WEBSITE")
                     .HasDefaultValueSql("'none' ");
-
-                entity.Property(e => e.Year)
-                    .HasPrecision(5)
-                    .HasColumnName("YEAR")
-                    .HasDefaultValueSql("1970 ");
             });
 
             modelBuilder.Entity<User>(entity =>

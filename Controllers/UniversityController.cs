@@ -35,10 +35,10 @@ namespace Back_End.Controllers
                 message.data["university_website"] = university.UniversityWebsite;
                 message.data["university_college"] = university.UniversityCollege;
                 message.data["university_abbreviation"] = university.UniversityAbbreviation;
-                message.data["university_QS_rank"] = university.UniversityQsRank;
-                message.data["university_THE_rank"] = university.UniversityTheRank;
-                message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
-                message.data["rank_year"] = university.Year;
+                //message.data["university_QS_rank"] = university.UniversityQsRank;
+                //message.data["university_THE_rank"] = university.UniversityTheRank;
+                //message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
+                //message.data["rank_year"] = university.Year;
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -70,10 +70,10 @@ namespace Back_End.Controllers
                 university.UniversityWebsite = university_website;
                 university.UniversityCollege = university_college;
                 university.UniversityAbbreviation = university_abbreviation;
-                university.UniversityQsRank = university_QS_rank;
-                university.UniversityTheRank = university_THE_rank;
-                university.UniversityUsnewsRank = university_USNews_rank;
-                university.Year = rank_year;
+                //university.UniversityQsRank = university_QS_rank;
+                //university.UniversityTheRank = university_THE_rank;
+                //university.UniversityUsnewsRank = university_USNews_rank;
+                //university.Year = rank_year;
                 var count = myContext.Universities.Count();
                 int id;
                 if (count == 0)
