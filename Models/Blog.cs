@@ -25,6 +25,7 @@ namespace Back_End.Models
         public decimal? BlogLike { get; set; }
         public decimal? BlogCoin { get; set; }
         public bool? BlogVisible { get; set; }
+        public string BlogSummary { get; set; }
 
         public virtual User BlogUser { get; set; }
         public virtual Blogchecking Blogchecking { get; set; }

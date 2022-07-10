@@ -23,6 +23,7 @@ namespace Back_End.Models
         public int? QuestionApply { get; set; }
         public string QuestionImage { get; set; }
         public bool? QuestionVisible { get; set; }
+        public string QuestionSummary { get; set; }
 
         public virtual User QuestionUser { get; set; }
         public virtual Questionchecking Questionchecking { get; set; }

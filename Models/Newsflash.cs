@@ -15,5 +15,6 @@ namespace Back_End.Models
         public string NewsFlashImage { get; set; }
         public string NewsFlashRegion { get; set; }
         public bool? NewsFlashVisible { get; set; }
+        public string NewsFlashSummary { get; set; }
     }
 }

@@ -25,6 +25,7 @@ namespace Back_End.Models
         public decimal? AnswerLike { get; set; }
         public decimal? AnswerCoin { get; set; }
         public bool? AnswerVisible { get; set; }
+        public string AnswerSummary { get; set; }
 
         public virtual User AnswerUser { get; set; }
         public virtual Question Question { get; set; }
