@@ -50,15 +50,17 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("bloglist")]
-        public string getBlogList()
+        public string getBlogList(int num)
         {
             Message message = new Message();
             try
             {
                 var bloglist = myContext.Blogs
                     .Where(a=>a.BlogVisible==true)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate})
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate,b.BlogImage})
                     .ToList();
+                if (bloglist.Count > num)
+                    bloglist.RemoveRange(num, bloglist.Count - num);
                 message.data.Add("blog", bloglist.ToArray());
                 message.status = true;
                 message.errorCode = 200;
