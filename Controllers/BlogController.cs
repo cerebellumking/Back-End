@@ -49,14 +49,15 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("bloglist")]
-        public string getBlogList(int num)
+        [HttpGet("tag")]
+        public string getBlogList(int num,string tag)
         {
             Message message = new Message();
             try
             {
                 var bloglist = myContext.Blogs
-                    .Where(a=>a.BlogVisible==true)
+                    .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
+                    .OrderByDescending(c=>c.Blogcomments.Count)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate,b.BlogImage})
                     .ToList();
                 if (bloglist.Count > num)
@@ -72,6 +73,53 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("time")]
+        public string getBlogListByTime(int num)
+        {
+            Message message = new Message();
+            try
+            {
+                var bloglist = myContext.Blogs
+                    .Where(a => a.BlogVisible == true )
+                    .OrderByDescending(c => c.BlogDate)
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage })
+                    .ToList();
+                if (bloglist.Count > num)
+                    bloglist.RemoveRange(num, bloglist.Count - num);
+                message.data.Add("blog", bloglist.ToArray());
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("heat")]
+        public string getBlogListByHeat(int num)
+        {
+            Message message = new Message();
+            try
+            {
+                var bloglist = myContext.Blogs
+                    .Where(a => a.BlogVisible == true)
+                    .OrderByDescending(c => c.Blogcomments.Count)
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage })
+                    .ToList();
+                if (bloglist.Count > num)
+                    bloglist.RemoveRange(num, bloglist.Count - num);
+                message.data.Add("blog", bloglist.ToArray());
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
 
         [HttpDelete("delete")]
         public void deleteBlog() { }

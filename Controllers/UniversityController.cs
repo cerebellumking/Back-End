@@ -24,6 +24,10 @@ namespace Back_End.Controllers
             try
             {
                 University university = myContext.Universities.Single(b => b.UniversityId == university_id);
+                var rank = myContext.Ranks
+                    .Where(a => a.UniversityId == university_id)
+                    .Select(b=>new {b.RankYear,b.UniversityQsRank,b.UniversityTheRank,b.UniversityUsnewsRank })
+                    .ToList();
                 message.data["university_id"] = university_id;
                 message.data["university_email"] = university.UniversityEmail;
                 message.data["university_name"] = university.UniversityName;
@@ -35,6 +39,7 @@ namespace Back_End.Controllers
                 message.data["university_website"] = university.UniversityWebsite;
                 message.data["university_college"] = university.UniversityCollege;
                 message.data["university_abbreviation"] = university.UniversityAbbreviation;
+                message.data["rank"] = rank.ToArray();
                 //message.data["university_QS_rank"] = university.UniversityQsRank;
                 //message.data["university_THE_rank"] = university.UniversityTheRank;
                 //message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
