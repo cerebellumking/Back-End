@@ -30,7 +30,7 @@ namespace Back_End.Controllers
                 if (!myContext.Starquestions.Any(b => b.QuestionId== question_id && b.UserId == user_id && b.Cancel == false)&& user_id <= max_id && question_id <= max_question_id)
                 {
                     user = myContext.Users.Single(b => b.UserId == user_id);
-                    /*判断该点赞是否取消过*/
+                    /*判断该收藏是否取消过*/
                     if (!myContext.Starquestions.Any(b => b.QuestionId == question_id && b.UserId == user_id && b.Cancel == true))
                     {
                         Starquestion starquestion = new Starquestion();
@@ -100,7 +100,7 @@ namespace Back_End.Controllers
                 if (!myContext.Staranswers.Any(b => b.AnswerId == answer_id && b.UserId == user_id && b.Cancel == false) && user_id <= max_id && answer_id <= max_question_id)
                 {
                     user = myContext.Users.Single(b => b.UserId == user_id);
-                    /*判断该点赞是否取消过*/
+                    /*判断该收藏是否取消过*/
                     if (!myContext.Staranswers.Any(b => b.AnswerId == answer_id && b.UserId == user_id && b.Cancel == true))
                     {
                         Staranswer staranswer = new Staranswer();
@@ -170,7 +170,7 @@ namespace Back_End.Controllers
                 if (!myContext.Starblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id && b.Cancel == false) && user_id <= max_id && blog_id <= max_question_id)
                 {
                     user = myContext.Users.Single(b => b.UserId == user_id);
-                    /*判断该点赞是否取消过*/
+                    /*判断该收藏是否取消过*/
                     if (!myContext.Starblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id && b.Cancel == true))
                     {
                         Starblog starblog = new Starblog();
