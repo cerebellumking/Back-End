@@ -11,6 +11,7 @@ namespace Back_End.Models
         {
             Followuniversities = new HashSet<Followuniversity>();
             Qualifications = new HashSet<Qualification>();
+            Ranks = new HashSet<Rank>();
         }
 
         public int UniversityId { get; set; }
@@ -25,12 +26,9 @@ namespace Back_End.Models
         public string UniversityWebsite { get; set; }
         public string UniversityCollege { get; set; }
         public string UniversityAbbreviation { get; set; }
-        public short UniversityQsRank { get; set; }
-        public short UniversityTheRank { get; set; }
-        public short UniversityUsnewsRank { get; set; }
-        public short Year { get; set; }
 
         public virtual ICollection<Followuniversity> Followuniversities { get; set; }
         public virtual ICollection<Qualification> Qualifications { get; set; }
+        public virtual ICollection<Rank> Ranks { get; set; }
     }
 }

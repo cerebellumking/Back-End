@@ -26,8 +26,34 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
-
         [HttpGet]
+        public string getUserInfo(int user_id)
+        {
+            Message message = new Message();
+            try
+            {
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                message.data["user_id"] = user_id;
+                message.data["user_email"] = user.UserEmail;
+                message.data["user_name"] = user.UserName;
+                message.data["user_profile"] = user.UserProfile;
+                message.data["user_birthday"] = user.UserBirthday;
+                message.data["user_gender"] = user.UserGender;
+                message.data["user_signature"] = user.UserSignature;
+                message.data["user_follower"] = user.UserFollower;
+                message.data["user_follows"] = user.UserFollows;
+                message.data["user_level"] = user.UserLevel;
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("identity")]
         public string getInfo(int user_id)
         {
             Message message = new Message();
