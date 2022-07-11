@@ -17,7 +17,7 @@ namespace Back_End.Models
         public int UniversityId { get; set; }
         public string UniversityEmail { get; set; }
         public string UniversityBadge { get; set; }
-        public string UniversityName { get; set; }
+        public string UniversityEnName { get; set; }
         public string UniversityRegion { get; set; }
         public string UniversityCountry { get; set; }
         public string UniversityLocation { get; set; }
@@ -26,6 +26,7 @@ namespace Back_End.Models
         public string UniversityWebsite { get; set; }
         public string UniversityCollege { get; set; }
         public string UniversityAbbreviation { get; set; }
+        public string UniversityChName { get; set; }
 
         public virtual ICollection<Followuniversity> Followuniversities { get; set; }
         public virtual ICollection<Qualification> Qualifications { get; set; }

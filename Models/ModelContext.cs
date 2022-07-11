@@ -1600,7 +1600,7 @@ namespace Back_End.Models
             {
                 entity.ToTable("UNIVERSITY");
 
-                entity.HasIndex(e => e.UniversityName, "SYS_C0011087")
+                entity.HasIndex(e => e.UniversityEnName, "SYS_C0011087")
                     .IsUnique();
 
                 entity.Property(e => e.UniversityId)
@@ -1618,6 +1618,12 @@ namespace Back_End.Models
                     .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_BADGE");
+
+                entity.Property(e => e.UniversityChName)
+                    .HasMaxLength(64)
+                    .IsUnicode(false)
+                    .HasColumnName("UNIVERSITY_CH_NAME")
+                    .HasDefaultValueSql("'none'");
 
                 entity.Property(e => e.UniversityCollege)
                     .IsRequired()
@@ -1640,6 +1646,13 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_EMAIL")
                     .HasDefaultValueSql("'none' ");
 
+                entity.Property(e => e.UniversityEnName)
+                    .IsRequired()
+                    .HasMaxLength(64)
+                    .IsUnicode(false)
+                    .HasColumnName("UNIVERSITY_EN_NAME")
+                    .HasDefaultValueSql("'none' ");
+
                 entity.Property(e => e.UniversityIntroduction)
                     .IsRequired()
                     .HasMaxLength(1024)
@@ -1652,13 +1665,6 @@ namespace Back_End.Models
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_LOCATION")
-                    .HasDefaultValueSql("'none' ");
-
-                entity.Property(e => e.UniversityName)
-                    .IsRequired()
-                    .HasMaxLength(64)
-                    .IsUnicode(false)
-                    .HasColumnName("UNIVERSITY_NAME")
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.UniversityRegion)
