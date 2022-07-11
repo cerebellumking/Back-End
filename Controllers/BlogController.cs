@@ -58,7 +58,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
                     .OrderByDescending(c=>c.Blogcomments.Count)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate,b.BlogImage})
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate,b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -82,7 +82,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true )
                     .OrderByDescending(c => c.BlogDate)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -106,7 +106,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
                     .OrderByDescending(c => c.Blogcomments.Count)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);

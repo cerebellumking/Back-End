@@ -52,9 +52,9 @@ namespace Back_End.Controllers
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
-                message.errorCode = 500;
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -91,11 +91,11 @@ namespace Back_End.Controllers
                 m.errorCode = 200;
                 m.status = true;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.ToString());
             }
-            
+
             return m.ReturnJson();
         }
 

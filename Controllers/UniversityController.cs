@@ -47,9 +47,9 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.errorCode = 200;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -94,10 +94,9 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.data.Add("university_id", id);
             }
-            catch
+            catch (Exception e)
             {
-                message.status = false;
-                message.errorCode = 500;
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }

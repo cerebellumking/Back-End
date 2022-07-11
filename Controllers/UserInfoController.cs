@@ -46,9 +46,9 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.errorCode = 200;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }

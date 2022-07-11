@@ -44,11 +44,58 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.errorCode = 200;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
+
+        [HttpGet("comment")]
+        public string getAnswerComment(int answer_id)
+        {
+            Message message = new Message();
+            try
+            {
+                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentFather == answer_id);
+                message.data["comment_num"] = answercomment.Count();
+                var list = answercomment
+                    .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike,b.InverseAnswerCommentReplyNavigation.Count,})
+                    .ToList();
+                message.data["comment_list"] = list.ToArray();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            return message.ReturnJson();
+        }
+
+        [HttpGet("reply")]
+        public string getAnswerCommentReply(int answer_comment_id)
+        {
+            Message message = new Message();
+            try
+            {
+                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id);
+                message.data["reply_num"] = answercomment.Count();
+                var list = answercomment
+                    .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike, b.InverseAnswerCommentReplyNavigation.Count, })
+                    .ToList();
+                message.data["reply_list"] = list.ToArray();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            return message.ReturnJson();
+        }
+
     }
 }

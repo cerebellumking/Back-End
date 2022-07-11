@@ -33,37 +33,36 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                int max_id = myContext.Users.Select(b => b.UserId).Max();
-                Followuser followuser = new Followuser();
-                if (!myContext.Followusers.Any(b => b.FollowUserId == follow_user_id && b.UserId == user_id && b.Cancel == false) && user_id != follow_user_id && user_id <= max_id && follow_user_id <= max_id)
+                /*对User进行修改*/
+                user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserFollows++;
+                User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
+                follow_user.UserFollower++;
+                object[] pk = { user_id, follow_user_id };
+                Followuser old_followuser = myContext.Followusers.Find(pk);
+                /*判断该关注是否取消过*/
+                if (old_followuser==null)
                 {
-                    /*对User进行修改*/
-                    user = myContext.Users.Single(b => b.UserId == user_id);
-                    user.UserFollows++;
-                    User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
-                    follow_user.UserFollower++;
-                    /*判断该关注是否取消过*/
-                    if (!myContext.Followusers.Any(b => b.FollowUserId == follow_user_id && b.UserId == user_id && b.Cancel == true))
-                    {
-                        followuser.FollowUserId = follow_user_id;
-                        followuser.UserId = user_id;
-                        followuser.User = user;
-                        followuser.FollowUser = follow_user;
-                        followuser.FollowTime = DateTime.Now;
-                        myContext.Followusers.Add(followuser);
-                    }
-                    else
-                    {
-                        followuser = myContext.Followusers.Single(b => b.UserId == user_id && b.FollowUserId == follow_user_id);
-                        followuser.Cancel = false;
-                    }
-                    message.errorCode = 200;
-                    message.status = true;
-                    myContext.SaveChanges();
+                    Followuser followuser = new Followuser();
+                    followuser.FollowUserId = follow_user_id;
+                    followuser.UserId = user_id;
+                    followuser.User = user;
+                    followuser.FollowUser = follow_user;
+                    followuser.FollowTime = DateTime.Now;
+                    myContext.Followusers.Add(followuser);
                 }
+                else
+                {
+                    old_followuser.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -71,35 +70,35 @@ namespace Back_End.Controllers
         public string followUniversity(int user_id,int university_id)
         {
             FollowMessage message = new FollowMessage();
-            Followuniversity follow = new Followuniversity();
-            int maxuser = myContext.Users.Count();
-            int maxuniversity = myContext.Universities.Count();
+           
             try
             {
-                if (!myContext.Followuniversities.Any(b => b.UserId == user_id && b.UniversityId == university_id && b.Cancel == false) && user_id <= maxuser && university_id <= maxuniversity)
+                object[] pk = { user_id, university_id };
+                Followuniversity old_follow = myContext.Followuniversities.Find(pk);
+                /*判断该关注是否取消过*/
+                if (old_follow==null)
                 {
-                    /*判断该关注是否取消过*/
-                    if (!myContext.Followuniversities.Any(b => b.UniversityId == university_id && b.UserId == user_id && b.Cancel == true))
-                    {
-                        follow.UniversityId= university_id;
-                        follow.UserId = user_id;
-                        follow.User = myContext.Users.Single(b=>b.UserId==user_id);
-                        follow.University = myContext.Universities.Single(b=>b.UniversityId==university_id);
-                        follow.FollowTime = DateTime.Now;
-                        myContext.Followuniversities.Add(follow);
-                    }
-                    else
-                    {
-                        follow = myContext.Followuniversities.Single(b => b.UserId == user_id && b.UniversityId == university_id);
-                        follow.Cancel = false;
-                    }
-                    message.errorCode = 200;
-                    message.status = true;
-                    myContext.SaveChanges();
+                    Followuniversity follow = new Followuniversity(); 
+                    follow.UniversityId = university_id;
+                    follow.UserId = user_id;
+                    follow.User = myContext.Users.Single(b => b.UserId == user_id);
+                    follow.University = myContext.Universities.Single(b => b.UniversityId == university_id);
+                    follow.FollowTime = DateTime.Now;
+                    myContext.Followuniversities.Add(follow);
                 }
+                else
+                {
+                    old_follow.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+
+
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -120,8 +119,9 @@ namespace Back_End.Controllers
                 message.status = true;
                 myContext.SaveChanges();
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -140,8 +140,9 @@ namespace Back_End.Controllers
                 message.status = true;
                 myContext.SaveChanges();
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -155,10 +156,10 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = flag;
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
-
             return message.ReturnJson();
         }
 
@@ -172,8 +173,9 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = flag;
             }
-            catch
+            catch (Exception e)
             {
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
@@ -201,9 +203,9 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = true;
             }
-            catch
+            catch (Exception e)
             {
-
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }

@@ -32,22 +32,22 @@ namespace Back_End.Controllers
                 user.UserPassword = user_password;
                 user.UserCreatetime = DateTime.Now;
                 var count = myContext.Users.Count();
-                int id;
-                if (count == 0)
-                    id = 1;
-                else
-                {
-                    id = myContext.Users.Select(b => b.UserId).Max() + 1;
-                }
+                int id= myContext.Users.Count() + 1;
+                //if (count == 0)
+                //    id = 1;
+                //else
+                //{
+                //    id = myContext.Users.Select(b => b.UserId).Max() + 1;
+                //}
                 user.UserId = id;
                 myContext.Users.Add(user);
                 myContext.SaveChanges();
                 message.status = true;
                 message.data["user_id"] = id;
             }
-            catch
+            catch (Exception e)
             {
-                message.errorCode = 500;
+                Console.Write(e.ToString());
             }
             return message.ReturnJson();
         }
