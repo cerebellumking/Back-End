@@ -69,7 +69,7 @@ namespace Back_End.Controllers
                     IdentityInfo identityInfo = new IdentityInfo();
                     identityInfo.identity = qualification.Identity;
                     University university = myContext.Universities.Single(b => b.UniversityId == qualification.UniversityId);
-                    identityInfo.university_name = university.UniversityName;
+                    identityInfo.university_name = university.UniversityChName;
                     infos.Add(identityInfo);
                 }
                 //以数组形式返回

@@ -30,7 +30,8 @@ namespace Back_End.Controllers
                     .ToList();
                 message.data["university_id"] = university_id;
                 message.data["university_email"] = university.UniversityEmail;
-                message.data["university_name"] = university.UniversityName;
+                message.data["university_chname"] = university.UniversityChName;
+                message.data["university_enname"] = university.UniversityEnName;
                 message.data["university_region"] = university.UniversityRegion;
                 message.data["university_country"] = university.UniversityCountry;
                 message.data["university_location"] = university.UniversityLocation;
@@ -56,7 +57,7 @@ namespace Back_End.Controllers
 
 
         [HttpPost]
-        public string addUniversity(string university_email, string university_name, string university_region, string university_country, string university_location,
+        public string addUniversity(string university_email, string university_chname, string university_enname, string university_region, string university_country, string university_location,
         string university_introduction, int university_student_num, string university_website, string university_college, string university_abbreviation,
         short university_QS_rank, short university_THE_rank, short university_USNews_rank,short rank_year)
         {
@@ -66,7 +67,8 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 University university = new University();
                 university.UniversityEmail = university_email;
-                university.UniversityName = university_name;
+                university.UniversityChName = university_chname;
+                university.UniversityEnName = university_enname;
                 university.UniversityRegion = university_region;
                 university.UniversityCountry = university_country;
                 university.UniversityLocation = university_location;
