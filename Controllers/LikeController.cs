@@ -86,6 +86,8 @@ namespace Back_End.Controllers
             try
             {
                 message.status = myContext.Likeanswers.Any(b => b.UserId == user_id && b.AnswerId == answer_id && b.Cancel == false);
+                int like_times = myContext.Likeanswers.Count(b => b.AnswerId == answer_id && b.Cancel == false);
+                message.data.Add("like_times", like_times);
                 message.errorCode = 200;
             }
             catch (Exception error)
@@ -163,6 +165,7 @@ namespace Back_End.Controllers
             try
             {
                 message.status = myContext.Likeanswercomments.Any(b => b.UserId == user_id && b.AnswerCommentId == answer_comment_id && b.Cancel == false);
+                int like_times = myContext.Likeanswercomments.Count(b => b.AnswerCommentId == answer_comment_id && b.Cancel == false);
                 message.errorCode = 200;
             }
             catch (Exception error)
@@ -239,6 +242,8 @@ namespace Back_End.Controllers
             try
             {
                 message.status = myContext.Likeblogs.Any(b => b.UserId == user_id && b.BlogId == blog_id && b.Cancel == false);
+                int like_times = myContext.Likeblogs.Count(b => b.BlogId == blog_id && b.Cancel == false);
+                message.data.Add("like_times", like_times);
                 message.errorCode = 200;
             }
             catch (Exception error)
@@ -314,6 +319,8 @@ namespace Back_End.Controllers
             try
             {
                 message.status = myContext.Likeblogcomments.Any(b => b.UserId == user_id && b.BlogCommentId == blog_comment_id && b.Cancel == false);
+                int like_times = myContext.Likeblogcomments.Count(b => b.BlogCommentId == blog_comment_id && b.Cancel == false);
+                message.data.Add("like_times", like_times);
                 message.errorCode = 200;
             }
             catch (Exception error)
