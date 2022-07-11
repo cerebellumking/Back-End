@@ -25,12 +25,30 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                
-
+                object[] pk = { answer_id, user_id }; // 根据主键查询
+                Likeanswer like_answer = myContext.Likeanswers.Find(pk);
+                if (like_answer == null)
+                {
+                    // 若不存在，则新建
+                    Likeanswer new_like_answer = new();
+                    new_like_answer.UserId = user_id;
+                    new_like_answer.AnswerId = answer_id;
+                    new_like_answer.LikeTime = DateTime.Now;
+                    myContext.Likeanswers.Add(new_like_answer);
+                }
+                else
+                {
+                    // 若存在，则将Cancel改为false
+                    like_answer.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
             }
-            catch
+            catch (Exception error)
             {
-
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
             }
             return message.ReturnJson();
         }
@@ -38,33 +56,121 @@ namespace Back_End.Controllers
         [HttpPut("answer")]
         public string cancelAnswerLike(int user_id, int answer_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                object[] pk = { answer_id, user_id };
+                Likeanswer like_answer = myContext.Likeanswers.Find(pk);
+                if (like_answer != null)
+                {
+                    // 若存在，则删除；若不存在则不管
+                    like_answer.Cancel = true;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         [HttpGet("answer")]
         public string whetherLikeAnswer(int user_id, int answer_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                message.status = myContext.Likeanswers.Any(b => b.UserId == user_id && b.AnswerId == answer_id && b.Cancel == false);
+                message.errorCode = 200;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
 
         // -----点赞问题评论相关----- //
         [HttpPost("answer_comment")]
-        public string likeAnswerComment(int user_id, int answercomment_id)
+        public string likeAnswerComment(int user_id, int answer_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                object[] pk = { answer_comment_id, user_id };
+                Likeanswercomment like_answer_comment = myContext.Likeanswercomments.Find(pk);
+                if (like_answer_comment == null)
+                {
+                    Likeanswercomment new_like_answer_comment = new();
+                    new_like_answer_comment.UserId = user_id;
+                    new_like_answer_comment.AnswerCommentId = answer_comment_id;
+                    new_like_answer_comment.LikeTime = DateTime.Now;
+                    myContext.Likeanswercomments.Add(new_like_answer_comment);
+                }
+                else
+                {
+                    like_answer_comment.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         [HttpPut("answer_comment")]
-        public string cancelAnswerCommentLike(int user_id, int answercomment_id)
+        public string cancelAnswerCommentLike(int user_id, int answer_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                object[] pk = { answer_comment_id, user_id };
+                Likeanswercomment like_answer_comment = myContext.Likeanswercomments.Find(pk);
+                if (like_answer_comment != null)
+                {
+                    like_answer_comment.Cancel = true;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         [HttpGet("answer_comment")]
-        public string whetherLikeAnswerComment(int user_id, int answercomment_id)
+        public string whetherLikeAnswerComment(int user_id, int answer_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                message.status = myContext.Likeanswercomments.Any(b => b.UserId == user_id && b.AnswerCommentId == answer_comment_id && b.Cancel == false);
+                message.errorCode = 200;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         // -----点赞动态相关----- //
@@ -75,30 +181,25 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                //object[] vs = new object[2];
-                //vs[0] = user_id;
-                //vs[1] = blog_id;
                 object[] pk = { blog_id, user_id };
-                Likeblog likeblog = myContext.Likeblogs.Find(pk);
-                if (likeblog == null)
+                Likeblog like_blog = myContext.Likeblogs.Find(pk);
+                if (like_blog == null)
                 {
-                    Console.WriteLine("没有找到，新建");
-                    Likeblog new_likeblog = new();
-                    new_likeblog.UserId = user_id;
-                    new_likeblog.BlogId = blog_id;
-                    new_likeblog.LikeTime = DateTime.Now;
-                    myContext.Likeblogs.Add(new_likeblog);
+                    Likeblog new_like_blog = new();
+                    new_like_blog.UserId = user_id;
+                    new_like_blog.BlogId = blog_id;
+                    new_like_blog.LikeTime = DateTime.Now;
+                    myContext.Likeblogs.Add(new_like_blog);
                 }
                 else
                 {
-                    Console.WriteLine("找到");
-                    likeblog.Cancel = false;
+                    like_blog.Cancel = false;
                 }
                 message.errorCode = 200;
                 message.status = true;
                 myContext.SaveChanges();
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.ToString());
                 message.errorCode = 300;
@@ -115,11 +216,7 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 object[] pk = { blog_id, user_id };
                 Likeblog likeblog = myContext.Likeblogs.Find(pk);
-                if(likeblog == null)
-                {
-                    Console.WriteLine("没有找到，无法删除");
-                }
-                else
+                if (likeblog != null)
                 {
                     likeblog.Cancel = true;
                 }
@@ -127,7 +224,7 @@ namespace Back_End.Controllers
                 message.status = true;
                 myContext.SaveChanges();
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.ToString());
                 message.errorCode = 300;
@@ -143,7 +240,6 @@ namespace Back_End.Controllers
             {
                 message.status = myContext.Likeblogs.Any(b => b.UserId == user_id && b.BlogId == blog_id && b.Cancel == false);
                 message.errorCode = 200;
-
             }
             catch (Exception error)
             {
@@ -155,21 +251,77 @@ namespace Back_End.Controllers
 
         // -----点赞动态评论相关----- //
         [HttpPost("blog_comment")]
-        public string likeBlogComment(int user_id, int blog_id)
+        public string likeBlogComment(int user_id, int blog_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                object[] pk = { blog_comment_id, user_id };
+                Likeblogcomment like_blog_comment = myContext.Likeblogcomments.Find(pk);
+                if (like_blog_comment == null)
+                {
+                    Likeblogcomment new_like_blog_comment = new();
+                    new_like_blog_comment.UserId = user_id;
+                    new_like_blog_comment.BlogCommentId = blog_comment_id;
+                    new_like_blog_comment.LikeTime = DateTime.Now;
+                    myContext.Likeblogcomments.Add(new_like_blog_comment);
+                }
+                else
+                {
+                    like_blog_comment.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         [HttpPut("blog_comment")]
-        public string cancelBlogCommentLike(int user_id, int blog_id)
+        public string cancelBlogCommentLike(int user_id, int blog_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                object[] pk = { blog_comment_id, user_id };
+                Likeblogcomment like_blog_comment = myContext.Likeblogcomments.Find(pk);
+                if (like_blog_comment != null)
+                {
+                    like_blog_comment.Cancel = true;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
 
         [HttpGet("blog_comment")]
-        public string whetherLikeBlogComment(int user_id, int blog_id)
+        public string whetherLikeBlogComment(int user_id, int blog_comment_id)
         {
-            return "";
+            Message message = new();
+            try
+            {
+                message.status = myContext.Likeblogcomments.Any(b => b.UserId == user_id && b.BlogCommentId == blog_comment_id && b.Cancel == false);
+                message.errorCode = 200;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+                message.errorCode = 300;
+            }
+            return message.ReturnJson();
         }
     }
 }
