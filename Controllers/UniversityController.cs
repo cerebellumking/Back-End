@@ -7,6 +7,19 @@ using System.Threading.Tasks;
 using Back_End.Models;
 namespace Back_End.Controllers
 {
+    public class UniversityList
+    {
+        public int university_id { get; set; }
+        public int university_qs_rank { get; set; }
+        public int university_the_rank { get; set; }
+        public int university_usnews_rank { get; set; }
+        public string university_badge { get; set; }
+        public string university_chname { get; set; }
+        public string university_enname { get; set; }
+        public decimal university_student_num { get; set; }
+        public string university_introduction { get; set; }
+        public string university_location { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class UniversityController : ControllerBase
@@ -101,6 +114,72 @@ namespace Back_End.Controllers
                 Console.Write(e.ToString());
             }
             
+            return message.ReturnJson();
+        }
+        /*tag:以哪个排行榜为主
+         0：qs，1：the，2：usnews
+         */
+        [HttpGet("rank")]
+        public string showQsRank(int rank_year,int tag,string university_country="")
+        {
+            Message message = new Message();
+            try
+            {
+                //var ranklist = myContext.Ranks
+                //    .Where(a => a.RankYear == rank_year&&a.University.UniversityCountry.Contains(university_country))
+                //    .OrderBy(b => b.UniversityQsRank)
+                //    .Select(b => new { b.UniversityId, b.UniversityQsRank, b.UniversityTheRank, b.UniversityUsnewsRank, b.University.UniversityBadge, b.University.UniversityChName, b.University.UniversityEnName, b.University.UniversityStudentNum, b.University.UniversityIntroduction, b.University.UniversityLocation })
+                //    .ToList();
+                List<Rank> ranklist = new List<Rank>();
+                List<UniversityList> lists = new List<UniversityList>();
+                if (tag == 0)
+                {
+                    ranklist = myContext.Ranks
+                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                        .OrderBy(b => b.UniversityQsRank)
+                        .ToList();
+                }
+                else if (tag == 1)
+                {
+                     ranklist = myContext.Ranks
+                       .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                       .OrderBy(b => b.UniversityTheRank)
+                       .ToList();
+                }
+                else
+                {
+                    ranklist = myContext.Ranks
+                       .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                       .OrderBy(b => b.UniversityUsnewsRank)
+                       
+                       .ToList();
+                }
+                foreach(var rank in ranklist)
+                {
+                    UniversityList list = new UniversityList();
+                    if(rank.University==null)
+                        rank.University = myContext.Universities.Single(b => b.UniversityId == rank.UniversityId);
+                    list.university_id = rank.UniversityId;
+                    list.university_badge = rank.University.UniversityBadge;
+                    list.university_chname = rank.University.UniversityChName;
+                    list.university_enname = rank.University.UniversityEnName;
+                    list.university_introduction = rank.University.UniversityIntroduction.Substring(0,60);
+                    list.university_location = rank.University.UniversityLocation;
+                    list.university_qs_rank = rank.UniversityQsRank;
+                    list.university_student_num = rank.University.UniversityStudentNum;
+                    list.university_the_rank = rank.UniversityTheRank;
+                    list.university_usnews_rank = rank.UniversityUsnewsRank;
+                    lists.Add(list);
+                }
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+                message.data["university_list"] = lists;
+                
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
             return message.ReturnJson();
         }
     }

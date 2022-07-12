@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 using Back_End.Models;
 namespace Back_End.Controllers
 {
+    public class BlogList
+    {
+        public int blog_id { get; set; }
+        public string blog_summary { get; set; }
+        public string blog_tag { get; set; }
+        public decimal blog_like { get; set; }
+        public decimal blog_coin { get; set; }
+        public int blog_user_id { get; set; }
+        public DateTime blog_date { get; set; }
+        public string blog_image { get; set; }
+        public int blog_comment_num { get; set; }
+    }
+
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class BlogController : ControllerBase
@@ -57,8 +72,8 @@ namespace Back_End.Controllers
             {
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
-                    .OrderByDescending(c=>c.Blogcomments.Count)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate,b.BlogImage, b.Blogcomments.Count })
+                    .OrderByDescending(c => c.Blogcomments.Count)
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
