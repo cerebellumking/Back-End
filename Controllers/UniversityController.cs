@@ -123,6 +123,7 @@ namespace Back_End.Controllers
         public string showQsRank(int rank_year,int tag,string university_country="")
         {
             Message message = new Message();
+            university_country = System.Web.HttpUtility.UrlDecode(university_country); // url解码
             try
             {
                 //var ranklist = myContext.Ranks
