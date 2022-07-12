@@ -75,6 +75,21 @@ namespace Back_End.Controllers
                     .OrderByDescending(c => c.Blogcomments.Count)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
+                foreach (var blog in bloglist)
+                {
+                    string[] tag_array = tag.Split(',');
+                    bool flag = true;
+                    foreach (var val in tag_array)
+                    {
+                        if (!blog.BlogTag.Contains(val))
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (!flag)
+                        bloglist.Remove(blog);
+                }
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
                 message.data.Add("blog", bloglist.ToArray());

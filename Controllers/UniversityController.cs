@@ -42,6 +42,7 @@ namespace Back_End.Controllers
                     .Select(b=>new {b.RankYear,b.UniversityQsRank,b.UniversityTheRank,b.UniversityUsnewsRank })
                     .ToList();
                 message.data["university_id"] = university_id;
+                message.data["university_badge"] = university.UniversityBadge;
                 message.data["university_email"] = university.UniversityEmail;
                 message.data["university_chname"] = university.UniversityChName;
                 message.data["university_enname"] = university.UniversityEnName;
@@ -54,10 +55,6 @@ namespace Back_End.Controllers
                 message.data["university_college"] = university.UniversityCollege;
                 message.data["university_abbreviation"] = university.UniversityAbbreviation;
                 message.data["rank"] = rank.ToArray();
-                //message.data["university_QS_rank"] = university.UniversityQsRank;
-                //message.data["university_THE_rank"] = university.UniversityTheRank;
-                //message.data["university_USNews_rank"] = university.UniversityUsnewsRank;
-                //message.data["rank_year"] = university.Year;
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -71,8 +68,7 @@ namespace Back_End.Controllers
 
         [HttpPost]
         public string addUniversity(string university_email, string university_chname, string university_enname, string university_region, string university_country, string university_location,
-        string university_introduction, int university_student_num, string university_website, string university_college, string university_abbreviation,
-        short university_QS_rank, short university_THE_rank, short university_USNews_rank,short rank_year)
+        string university_introduction, int university_student_num, string university_website, string university_college, string university_abbreviation)
         {
             Message message = new Message();
             try
@@ -90,10 +86,6 @@ namespace Back_End.Controllers
                 university.UniversityWebsite = university_website;
                 university.UniversityCollege = university_college;
                 university.UniversityAbbreviation = university_abbreviation;
-                //university.UniversityQsRank = university_QS_rank;
-                //university.UniversityTheRank = university_THE_rank;
-                //university.UniversityUsnewsRank = university_USNews_rank;
-                //university.Year = rank_year;
                 var count = myContext.Universities.Count();
                 int id;
                 if (count == 0)
@@ -117,10 +109,10 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         /*tag:以哪个排行榜为主
-         0：qs，1：the，2：usnews
+         QS_rank：qs，The_rank：the，USNews_rank：usnews
          */
         [HttpGet("rank")]
-        public string showQsRank(int rank_year,int tag,string university_country="")
+        public string showQsRank(int rank_year,string tag,string university_country="")
         {
             Message message = new Message();
             university_country = System.Web.HttpUtility.UrlDecode(university_country); // url解码
@@ -133,14 +125,14 @@ namespace Back_End.Controllers
                 //    .ToList();
                 List<Rank> ranklist = new List<Rank>();
                 List<UniversityList> lists = new List<UniversityList>();
-                if (tag == 0)
+                if (tag == "QS_rank")
                 {
                     ranklist = myContext.Ranks
                         .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                         .OrderBy(b => b.UniversityQsRank)
                         .ToList();
                 }
-                else if (tag == 1)
+                else if (tag == "THE_rank")
                 {
                      ranklist = myContext.Ranks
                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
@@ -164,7 +156,9 @@ namespace Back_End.Controllers
                     list.university_badge = rank.University.UniversityBadge;
                     list.university_chname = rank.University.UniversityChName;
                     list.university_enname = rank.University.UniversityEnName;
-                    list.university_introduction = rank.University.UniversityIntroduction.Substring(0,60);
+                    string temp = rank.University.UniversityIntroduction.Substring(0, 90);
+                    //list.university_introduction = temp;
+                    list.university_introduction = temp.Substring(0,temp.LastIndexOf('，'))+"......";
                     list.university_location = rank.University.UniversityLocation;
                     list.university_qs_rank = rank.UniversityQsRank;
                     list.university_student_num = rank.University.UniversityStudentNum;
