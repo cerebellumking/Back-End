@@ -166,6 +166,7 @@ namespace Back_End.Controllers
             {
                 message.status = myContext.Likeanswercomments.Any(b => b.UserId == user_id && b.AnswerCommentId == answer_comment_id && b.Cancel == false);
                 int like_times = myContext.Likeanswercomments.Count(b => b.AnswerCommentId == answer_comment_id && b.Cancel == false);
+                message.data.Add("like_times", like_times);
                 message.errorCode = 200;
             }
             catch (Exception error)
