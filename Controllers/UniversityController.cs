@@ -100,6 +100,7 @@ namespace Back_End.Controllers
             {
                 Console.Write(e.ToString());
             }
+            
             return message.ReturnJson();
         }
     }

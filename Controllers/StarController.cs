@@ -38,6 +38,7 @@ namespace Back_End.Controllers
                 }
                 else
                 {
+                    old_starquestion.StarTime = DateTime.Now;
                     old_starquestion.Cancel = false;
                 }
                 message.errorCode = 200;
@@ -104,6 +105,7 @@ namespace Back_End.Controllers
                 }
                 else
                 {
+                    old_staranswer.StarTime = DateTime.Now;
                     old_staranswer.Cancel = false;
                 }
                 message.errorCode = 200;
@@ -170,6 +172,7 @@ namespace Back_End.Controllers
                 }
                 else
                 {
+                    old_starblog.StarTime = DateTime.Now;
                     old_starblog.Cancel = false;
                 }
                 message.errorCode = 200;
