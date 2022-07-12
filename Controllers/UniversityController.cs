@@ -117,10 +117,10 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         /*tag:以哪个排行榜为主
-         0：qs，1：the，2：usnews
+         QS_rank：qs，The_rank：the，USNews_rank：usnews
          */
         [HttpGet("rank")]
-        public string showQsRank(int rank_year,int tag,string university_country="")
+        public string showQsRank(int rank_year,string tag,string university_country="")
         {
             Message message = new Message();
             try
@@ -132,14 +132,14 @@ namespace Back_End.Controllers
                 //    .ToList();
                 List<Rank> ranklist = new List<Rank>();
                 List<UniversityList> lists = new List<UniversityList>();
-                if (tag == 0)
+                if (tag == "QS_rank")
                 {
                     ranklist = myContext.Ranks
                         .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                         .OrderBy(b => b.UniversityQsRank)
                         .ToList();
                 }
-                else if (tag == 1)
+                else if (tag == "THE_rank")
                 {
                      ranklist = myContext.Ranks
                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))

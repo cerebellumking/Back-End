@@ -23,21 +23,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                if (myContext.Answers.Any(b => b.AnswerId == answer_id && b.AnswerUserId == user_id))
-                {
-                    message.errorCode = 200;
-                    message.status = false;
-                    message.data["error"] = "不能给自己投币！";
-                }
-                else
-                {
-                    message.errorCode = 200;
-                    message.status = myContext.Coinanswers.Any(b => b.AnswerId == answer_id && b.UserId == user_id);
-                    message.data["answer_coin"] = myContext.Answers.Single(b => b.AnswerId == answer_id).AnswerCoin;
-                }
-               
-                //message.status = myContext.Coinanswers.Any(b => b.AnswerId == answer_id && b.UserId == user_id) || myContext.Answers.Any(b => b.AnswerId == answer_id && b.AnswerUserId == user_id);
-                
+                 message.errorCode = 200;
+                 message.status = myContext.Coinanswers.Any(b => b.AnswerId == answer_id && b.UserId == user_id);
+                 message.data["answer_coin"] = myContext.Answers.Single(b => b.AnswerId == answer_id).AnswerCoin;   
             }catch(Exception e)
             {
                 Console.WriteLine(e.ToString());
@@ -53,30 +41,40 @@ namespace Back_End.Controllers
             {
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
-                if (user.UserCoin >= num)
-                {
-                    Coinanswer coinanswer = new Coinanswer();
-                    coinanswer.User = user;
-                    coinanswer.Answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
-                    coinanswer.CoinTime = DateTime.Now;
-                    coinanswer.UserId = user_id;
-                    coinanswer.AnswerId = answer_id;
-                    myContext.Coinanswers.Add(coinanswer);
-                    coinanswer.Answer.AnswerCoin += num;
-                    coinanswer.User.UserCoin -= num;
-                    myContext.SaveChanges();
-                    message.data["user_coin_left"] = coinanswer.User.UserCoin;
-                    message.data["answer_coin"] = coinanswer.Answer.AnswerCoin;
-                    message.errorCode = 200;
-                    message.status = true;
-                }
-                else
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
+                if (user.UserCoin <= 0 || user.UserCoin < num)
                 {
                     message.errorCode = 200;
                     message.status = false;
-                    message.data["error"] = "投币数额超过持有鸟币数";
+                    message.data["error"] = 1;
+                    message.data["user_coin_left"] = user.UserCoin;
+                    return message.ReturnJson();
                 }
-            }catch(Exception e)
+                
+                if (myContext.Answers.Any(b => b.AnswerId == answer_id && b.AnswerUserId == user_id))
+                {
+                    message.errorCode = 200;
+                    message.status = false;
+                    message.data["error"] = 2;
+                    return message.ReturnJson();
+                }
+                //正常操作
+                Coinanswer coinanswer = new Coinanswer();
+                coinanswer.User = user;
+                coinanswer.Answer = answer;
+                coinanswer.CoinTime = DateTime.Now;
+                coinanswer.UserId = user_id;
+                coinanswer.AnswerId = answer_id;
+                myContext.Coinanswers.Add(coinanswer);
+                coinanswer.Answer.AnswerCoin += num;
+                coinanswer.User.UserCoin -= num;
+                myContext.SaveChanges();
+                message.data["user_coin_left"] = user.UserCoin;
+                message.data["answer_coin"] = answer.AnswerCoin;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -90,19 +88,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                if (myContext.Blogs.Any(b => b.BlogId == blog_id && b.BlogUserId == user_id))
-                {
-                    message.errorCode = 200;
-                    message.status = false;
-                    message.data["error"] = "不能给自己投币！";
-                }
-                else
-                {
-                    message.errorCode = 200;
-                    message.status = myContext.Coinblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id);
-                    message.data["blog_coin"] = myContext.Blogs.Single(b => b.BlogId == blog_id).BlogCoin;
-                }
-                //message.status = myContext.Coinblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id)||myContext.Blogs.Any(b=>b.BlogId==blog_id&&b.BlogUserId==user_id);
+                message.errorCode = 200;
+                message.status = myContext.Coinblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id);
+                message.data["blog_coin"] = myContext.Blogs.Single(b => b.BlogId == blog_id).BlogCoin;
             }
             catch (Exception e)
             {
@@ -119,29 +107,38 @@ namespace Back_End.Controllers
             {
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
-                if (user.UserCoin >= num)
-                {
-                    Coinblog coinblog = new Coinblog();
-                    coinblog.User = user;
-                    coinblog.Blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
-                    coinblog.CoinTime = DateTime.Now;
-                    coinblog.UserId = user_id;
-                    coinblog.BlogId = blog_id;
-                    myContext.Coinblogs.Add(coinblog);
-                    coinblog.Blog.BlogCoin += num;
-                    coinblog.User.UserCoin -= num;
-                    myContext.SaveChanges();
-                    message.data["user_coin_left"] = coinblog.User.UserCoin;
-                    message.data["blog_coin"] = coinblog.Blog.BlogCoin;
-                    message.errorCode = 200;
-                    message.status = true;
-                }
-                else
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
+                if (user.UserCoin <= 0 || user.UserCoin < num)
                 {
                     message.errorCode = 200;
                     message.status = false;
-                    message.data["error"] = "投币数额超过持有鸟币数";
+                    message.data["error"] = 1;
+                    message.data["user_coin_left"] = user.UserCoin;
+                    return message.ReturnJson();
                 }
+                if (myContext.Blogs.Any(b => b.BlogId == blog_id && b.BlogUserId == user_id))
+                {
+                    message.errorCode = 200;
+                    message.status = false;
+                    message.data["error"] = 2;
+                    return message.ReturnJson();
+                }
+                //正常操作
+                Coinblog coinblog = new Coinblog();
+                coinblog.User = user;
+                coinblog.Blog = blog;
+                coinblog.CoinTime = DateTime.Now;
+                coinblog.UserId = user_id;
+                coinblog.BlogId = blog_id;
+                myContext.Coinblogs.Add(coinblog);
+                coinblog.Blog.BlogCoin += num;
+                coinblog.User.UserCoin -= num;
+                myContext.SaveChanges();
+                message.data["user_coin_left"] = coinblog.User.UserCoin;
+                message.data["blog_coin"] = coinblog.Blog.BlogCoin;
+                message.errorCode = 200;
+                message.status = true;
+
             }
             catch (Exception e)
             {
