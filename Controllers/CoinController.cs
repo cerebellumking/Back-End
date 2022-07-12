@@ -60,14 +60,14 @@ namespace Back_End.Controllers
                 }
                 //正常操作
                 Coinanswer coinanswer = new Coinanswer();
-                coinanswer.User = user;
-                coinanswer.Answer = answer;
                 coinanswer.CoinTime = DateTime.Now;
                 coinanswer.UserId = user_id;
                 coinanswer.AnswerId = answer_id;
+                answer.AnswerCoin += num;
+                user.UserCoin -= num;
+                coinanswer.User = user;
+                coinanswer.Answer = answer;
                 myContext.Coinanswers.Add(coinanswer);
-                coinanswer.Answer.AnswerCoin += num;
-                coinanswer.User.UserCoin -= num;
                 myContext.SaveChanges();
                 message.data["user_coin_left"] = user.UserCoin;
                 message.data["answer_coin"] = answer.AnswerCoin;
@@ -125,14 +125,14 @@ namespace Back_End.Controllers
                 }
                 //正常操作
                 Coinblog coinblog = new Coinblog();
-                coinblog.User = user;
-                coinblog.Blog = blog;
                 coinblog.CoinTime = DateTime.Now;
                 coinblog.UserId = user_id;
                 coinblog.BlogId = blog_id;
+                blog.BlogCoin += num;
+                user.UserCoin -= num;
+                coinblog.User = user;
+                coinblog.Blog = blog;
                 myContext.Coinblogs.Add(coinblog);
-                coinblog.Blog.BlogCoin += num;
-                coinblog.User.UserCoin -= num;
                 myContext.SaveChanges();
                 message.data["user_coin_left"] = coinblog.User.UserCoin;
                 message.data["blog_coin"] = coinblog.Blog.BlogCoin;

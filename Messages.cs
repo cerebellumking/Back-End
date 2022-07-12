@@ -90,10 +90,6 @@ namespace Back_End
             data.Add("university_website", null);
             data.Add("university_college", null);
             data.Add("university_abbreviation", null);
-            data.Add("university_QS_rank", null);
-            data.Add("university_THE_rank", null);
-            data.Add("university_USNews_rank", null);
-            data.Add("rank_year", null);
         }
     }
 
