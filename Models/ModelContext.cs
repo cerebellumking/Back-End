@@ -279,7 +279,7 @@ namespace Back_End.Models
                 entity.Property(e => e.AnswerCommentFather)
                     .HasPrecision(10)
                     .HasColumnName("ANSWER_COMMENT_FATHER")
-                    .HasDefaultValueSql("0 ");
+                    .HasDefaultValueSql("NULL ");
 
                 entity.Property(e => e.AnswerCommentLike)
                     .HasColumnType("NUMBER(38)")
@@ -289,7 +289,7 @@ namespace Back_End.Models
                 entity.Property(e => e.AnswerCommentReply)
                     .HasPrecision(10)
                     .HasColumnName("ANSWER_COMMENT_REPLY")
-                    .HasDefaultValueSql("0 ");
+                    .HasDefaultValueSql("NULL ");
 
                 entity.Property(e => e.AnswerCommentTime)
                     .HasColumnType("DATE")
@@ -967,26 +967,26 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.InstitutionIntroduction)
-                    .HasMaxLength(512)
+                    .HasMaxLength(2048)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_INTRODUCTION");
 
                 entity.Property(e => e.InstitutionLessons)
                     .IsRequired()
-                    .HasMaxLength(64)
+                    .HasMaxLength(512)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_LESSONS")
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.InstitutionLessonsCharacter)
                     .IsRequired()
-                    .HasMaxLength(64)
+                    .HasMaxLength(2048)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_LESSONS_CHARACTER")
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.InstitutionLocation)
-                    .HasMaxLength(64)
+                    .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_LOCATION")
                     .HasDefaultValueSql("'none' ");
@@ -1006,16 +1006,24 @@ namespace Back_End.Models
                     .HasDefaultValueSql("'none' ");
 
                 entity.Property(e => e.InstitutionProfile)
-                    .IsRequired()
                     .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_PROFILE");
 
+                entity.Property(e => e.InstitutionProvince)
+                    .HasMaxLength(64)
+                    .IsUnicode(false)
+                    .HasColumnName("INSTITUTION_PROVINCE");
+
                 entity.Property(e => e.InstitutionQualify)
-                    .IsRequired()
                     .HasMaxLength(256)
                     .IsUnicode(false)
                     .HasColumnName("INSTITUTION_QUALIFY");
+
+                entity.Property(e => e.InstitutionTarget)
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("INSTITUTION_TARGET");
             });
 
             modelBuilder.Entity<Likeanswer>(entity =>
@@ -1627,7 +1635,7 @@ namespace Back_End.Models
 
                 entity.Property(e => e.UniversityCollege)
                     .IsRequired()
-                    .HasMaxLength(64)
+                    .HasMaxLength(512)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_COLLEGE")
                     .HasDefaultValueSql("'none' ");
@@ -1655,7 +1663,7 @@ namespace Back_End.Models
 
                 entity.Property(e => e.UniversityIntroduction)
                     .IsRequired()
-                    .HasMaxLength(1024)
+                    .HasMaxLength(2048)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_INTRODUCTION")
                     .HasDefaultValueSql("'none'  ");

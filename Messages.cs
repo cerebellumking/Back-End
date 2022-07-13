@@ -97,19 +97,19 @@ namespace Back_End
     {
         public InstitutionMessage()
         {
-            errorCode = 500;
+            errorCode = 300;
             status = false;
-            data.Add("institution_id", 0);
-            data.Add("institution_name", null);
-            data.Add("institution_phone", null);
-            data.Add("institution_qualify", null);
-            data.Add("institution_introducion", null);
-            data.Add("institution_profile", null);
-            data.Add("institution_city", null);
-            data.Add("institution_email", null);
-            data.Add("institution_characteristic", null);
-            data.Add("institution_lessons", null);
-            data.Add("institution_createtime", null);
+            //data.Add("institution_id", 0);
+            //data.Add("institution_name", null);
+            //data.Add("institution_phone", null);
+            //data.Add("institution_qualify", null);
+            //data.Add("institution_introducion", null);
+            //data.Add("institution_profile", null);
+            //data.Add("institution_city", null);
+            //data.Add("institution_email", null);
+            //data.Add("institution_characteristic", null);
+            //data.Add("institution_lessons", null);
+            //data.Add("institution_createtime", null);
         }
     }
 

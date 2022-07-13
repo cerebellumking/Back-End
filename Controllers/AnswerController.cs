@@ -80,7 +80,7 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id);
+                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true);
                 message.data["reply_num"] = answercomment.Count();
                 var list = answercomment
                     .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike, b.InverseAnswerCommentReplyNavigation.Count, })
@@ -120,17 +120,6 @@ namespace Back_End.Controllers
                 answercomment.AnswerCommentId = id;
                 answercomment.AnswerCommentTime = DateTime.Now;
                 answercomment.AnswerCommentUserId = answer_comment_user_id;
-                
-                Answercommentreport answercommentreport = new Answercommentreport();
-                answercommentreport.AdministratorId = 1;
-                answercommentreport.Administrator = myContext.Administrators.Single(b => b.AdministratorId == 1);
-                answercommentreport.AnswerCommentId = id;
-                answercommentreport.AnswerComment = answercomment;
-                answercommentreport.ReportId = myContext.Answercommentreports.Count() + 1;
-                answercommentreport.User = user;
-                answercommentreport.UserId = answer_comment_user_id;
-
-                myContext.Answercommentreports.Add(answercommentreport);
                 myContext.Answercomments.Add(answercomment);
                 myContext.SaveChanges();
                 message.data.Add("answer_comment_id", id);
@@ -142,6 +131,28 @@ namespace Back_End.Controllers
             {
                 Console.WriteLine(e.ToString());
             }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("comment/reply")]
+        public string getReplyInfo(int answer_comment_id)
+        {
+            Message message = new Message();
+            try
+            {
+                Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == answer_comment_id);
+                message.data["reply_num"] = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true).Count();
+                //List<Answercomment> answercomments = new List<Answercomment>();
+                var reply_list = myContext.Answercomments
+                    .Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true)
+                    .Select(b => new {b.AnswerCommentId,b.AnswerCommentUserId,b.AnswerCommentContent,b.AnswerCommentFather,b.AnswerCommentLike,b.AnswerCommentTime,b.AnswerCommentReply})
+                    .ToList();
+                message.data["reply_list"] = reply_list.ToArray();
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
             return message.ReturnJson();
         }
     }

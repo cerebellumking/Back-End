@@ -28,12 +28,15 @@ namespace Back_End.Controllers
                 message.data["institution_phone"] = institution.InstitutionPhone;
                 message.data["institution_qualify"] = institution.InstitutionQualify;
                 message.data["institution_introducion"] = institution.InstitutionIntroduction;
+                message.data["institution_location"] = institution.InstitutionLocation;
                 message.data["institution_profile"] = institution.InstitutionProfile;
                 message.data["institution_city"] = institution.InstitutionCity;
+                message.data["institution_province"] = institution.InstitutionProvince;
                 message.data["institution_email"] = institution.InstitutionEmail;
                 message.data["institution_lessons_characteristic"] = institution.InstitutionLessonsCharacter;
                 message.data["institution_lessons"] = institution.InstitutionLessons;
                 message.data["institution_createtime"] = institution.InstitutionCreatetime;
+                message.data["institution_target"] = institution.InstitutionTarget;
                 message.status = true;
                 message.errorCode = 200;
             }

@@ -24,6 +24,8 @@ namespace Back_End.Models
         public string InstitutionLessonsCharacter { get; set; }
         public string InstitutionLocation { get; set; }
         public DateTime InstitutionCreatetime { get; set; }
+        public string InstitutionProvince { get; set; }
+        public string InstitutionTarget { get; set; }
 
         public virtual ICollection<Followinstitution> Followinstitutions { get; set; }
     }
