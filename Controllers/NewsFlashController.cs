@@ -17,15 +17,15 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
 
-        [HttpGet]
-        public string getNewsFlash()
+        [HttpGet("all")]
+        public string getNewsFlashs()
         {
             Message message = new();
             try
             {
                 myContext.DetachAll();
                 var newsflashs = myContext.Newsflashes.Where(c=>c.NewsFlashVisible == true)
-                    .OrderByDescending(a => a.NewsFlashDate)
+                    .OrderBy(a => a.NewsFlashDate)
                     .Select(b => new
                 {
                     b.NewsFlashId,
@@ -33,7 +33,8 @@ namespace Back_End.Controllers
                     b.NewsFlashTitle,
                     b.NewsFlashTag,
                     b.NewsFlashRegion,
-                    b.NewsFlashContent,
+                    b.NewsFlashSummary,
+                    //b.NewsFlashContent,
                     b.NewsFlashImage
                 }).ToList();
                 message.errorCode = 200;
@@ -48,5 +49,29 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         
+        [HttpGet("single")]
+        public string getNewsFlash(int newsflash_id)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                var newsflash = myContext.Newsflashes.Single(b => b.NewsFlashId == newsflash_id && b.NewsFlashVisible == true);
+                message.data.Add("NewsFlashId", newsflash.NewsFlashId);
+                message.data.Add("NewsFlashTitle", newsflash.NewsFlashTitle);
+                message.data.Add("NewsFlashDate", newsflash.NewsFlashDate);
+                message.data.Add("NewsFlashTag", newsflash.NewsFlashTag);
+                message.data.Add("NewsFlashRegion", newsflash.NewsFlashRegion);
+                message.data.Add("NewsFlashContent", newsflash.NewsFlashContent);
+                message.data.Add("NewsFlashImage", newsflash.NewsFlashImage);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
