@@ -27,7 +27,7 @@ namespace Back_End.Controllers
                 message.data["institution_name"] = institution.InstitutionName;
                 message.data["institution_phone"] = institution.InstitutionPhone;
                 message.data["institution_qualify"] = institution.InstitutionQualify;
-                message.data["institution_introducion"] = institution.InstitutionIntroduction;
+                message.data["institution_introduction"] = institution.InstitutionIntroduction;
                 message.data["institution_location"] = institution.InstitutionLocation;
                 message.data["institution_profile"] = institution.InstitutionProfile;
                 message.data["institution_city"] = institution.InstitutionCity;

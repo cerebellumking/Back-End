@@ -171,8 +171,8 @@ namespace Back_End.Controllers
                     b.QuestionDescription,
                     b.QuestionTag
                 }).ToList();
-                if (question.Count > 2)
-                    question.RemoveRange(2, question.Count - 2);
+                //if (question.Count > 2)
+                //    question.RemoveRange(2, question.Count - 2);
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
@@ -202,8 +202,8 @@ namespace Back_End.Controllers
                     b.QuestionDescription,
                     b.QuestionTag
                 }).ToList();
-                if (question.Count > 2)
-                    question.RemoveRange(2, question.Count - 2);
+                //if (question.Count > 2)
+                //    question.RemoveRange(2, question.Count - 2);
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
