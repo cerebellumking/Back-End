@@ -24,6 +24,8 @@ namespace Back_End.Controllers
             RegisterMessage message = new RegisterMessage();
             try
             {
+                user_phone = Request.Form["user_phone"];
+                user_password = Request.Form["user_password"];
                 myContext.DetachAll();
                 User user = new User();
                 user.UserGender = "m";
@@ -33,12 +35,6 @@ namespace Back_End.Controllers
                 user.UserCreatetime = DateTime.Now;
                 var count = myContext.Users.Count();
                 int id= myContext.Users.Count() + 1;
-                //if (count == 0)
-                //    id = 1;
-                //else
-                //{
-                //    id = myContext.Users.Select(b => b.UserId).Max() + 1;
-                //}
                 user.UserId = id;
                 myContext.Users.Add(user);
                 myContext.SaveChanges();

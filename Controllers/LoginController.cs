@@ -21,9 +21,11 @@ namespace Back_End.Controllers
         }
 
         [HttpPost]
-        public string Login(int user_id, string user_password)
+        public string Login()
         {
             LoginMessage message = new LoginMessage();
+            int user_id = int.Parse(Request.Form["user_id"]);
+            string user_password = Request.Form["user_password"];
             try
             {
                 var user = myContext.Users

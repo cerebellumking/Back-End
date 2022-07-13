@@ -29,7 +29,23 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
-
+        [HttpGet("id")]
+        public string getUniversityIDByName(string university_chname)
+        {
+            Message message = new Message();
+            try
+            {
+                University university = myContext.Universities.Single(b => b.UniversityChName == university_chname);
+                message.errorCode = 200;
+                message.data["university_id"] = university.UniversityId;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
         [HttpGet]
         public string getUniversityInfo(int university_id)
         {

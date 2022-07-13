@@ -39,6 +39,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                user_id = int.Parse(Request.Form["user_id"]);
+                answer_id = int.Parse(Request.Form["answer_id"]);
+                num = int.Parse(Request.Form["num"]);
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
@@ -105,6 +108,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                user_id = int.Parse(Request.Form["user_id"]);
+                blog_id = int.Parse(Request.Form["blog_id"]);
+                num = int.Parse(Request.Form["num"]);
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
