@@ -26,40 +26,50 @@ namespace Back_End.Controllers
                 Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
                 // 获取提问者相关信息
                 User user = myContext.Users.Single(b => b.UserId == question.QuestionUserId && b.UserState == true);
-                string qualification, university;
+                string qualification;
+                int university_id = -1;
                 var all_qualification = myContext.Qualifications.Where(c => c.UserId == user.UserId && c.Visible == true).Select(b => new { b.Identity,b.UniversityId });
                 if (all_qualification.Any(b => b.Identity == "博士"))
                 {
                     qualification = "博士";
-                    int university_id = all_qualification.Single(b => b.Identity == "博士").UniversityId;
-                    university = myContext.Universities.Single(b => b.UniversityId == university_id).UniversityChName;
+                    university_id = all_qualification.Single(b => b.Identity == "博士").UniversityId;
                 }
                 else if(all_qualification.Any(b => b.Identity == "硕士"))
                 {
                     qualification = "硕士";
-                    int university_id = all_qualification.Single(b => b.Identity == "硕士").UniversityId;
-                    university = myContext.Universities.Single(b => b.UniversityId == university_id).UniversityChName;
+                    university_id = all_qualification.Single(b => b.Identity == "硕士").UniversityId;
                 }
                 else if(all_qualification.Any(b => b.Identity == "本科"))
                 {
                     qualification = "本科";
-                    int university_id = all_qualification.Single(b => b.Identity == "本科").UniversityId;
-                    university = myContext.Universities.Single(b => b.UniversityId == university_id).UniversityChName;
+                    university_id = all_qualification.Single(b => b.Identity == "本科").UniversityId;
                 }
                 else
                 {
                     // 未进行学历认证
                     qualification = "null";
-                    university = "null";
+                    university_id = -1;
                 }
-
+                var university_info = myContext.Universities.Single(b => b.UniversityId == university_id);
+                
                 if (question.QuestionVisible==true)
                 {
                     message.data.Add("question_id", question_id);
                     message.data.Add("user_id", question.QuestionUserId);
                     message.data.Add("user_name", user.UserName);
+                    message.data.Add("user_profile", user.UserProfile);
                     message.data.Add("user_qualification", qualification);
-                    message.data.Add("user_university", university);
+                    if (university_id != -1)
+                    {
+                        message.data.Add("user_university", university_info.UniversityChName);
+                        message.data.Add("university_country", university_info.UniversityCountry);
+                    }
+                    else
+                    {
+                        // 没有认证学校
+                        message.data.Add("user_university", "null");
+                        message.data.Add("university_country", "null");
+                    }
                     message.data.Add("question_tag", question.QuestionTag);
                     message.data.Add("question_date", question.QuestionDate);
                     message.data.Add("question_title", question.QuestionTitle);
@@ -93,6 +103,8 @@ namespace Back_End.Controllers
                 {
                     b.AnswerId,
                     b.AnswerUserId,
+                    b.AnswerUser.UserName,
+                    b.AnswerUser.UserProfile,
                     b.QuestionId,
                     b.AnswerDate,
                     //b.AnswerContent,
