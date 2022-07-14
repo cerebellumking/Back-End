@@ -50,17 +50,18 @@ namespace Back_End.Controllers
                     qualification = "null";
                     university_id = -1;
                 }
-                var university_info = myContext.Universities.Single(b => b.UniversityId == university_id);
+                //var university_info = myContext.Universities.Single(b => b.UniversityId == university_id);
                 
+                    message.data.Add("question_id", question_id);
                 if (question.QuestionVisible==true)
                 {
-                    message.data.Add("question_id", question_id);
                     message.data.Add("user_id", question.QuestionUserId);
                     message.data.Add("user_name", user.UserName);
                     message.data.Add("user_profile", user.UserProfile);
                     message.data.Add("user_qualification", qualification);
                     if (university_id != -1)
                     {
+                        var university_info = myContext.Universities.Single(b => b.UniversityId == university_id);
                         message.data.Add("user_university", university_info.UniversityChName);
                         message.data.Add("university_country", university_info.UniversityCountry);
                     }
@@ -77,12 +78,13 @@ namespace Back_End.Controllers
                     message.data.Add("question_reward", question.QuestionReward);
                     message.data.Add("question_apply", question.QuestionApply);
                     message.data.Add("question_image", question.QuestionImage);
+                    message.status = true;
                 }
                 else
                 {
-                    message.data.Add("question_visible", question.QuestionVisible);
+                    //message.data.Add("question_visible", question.QuestionVisible);
+                    message.status = false;
                 }
-                message.status = true;
                 message.errorCode = 200;
             }
             catch (Exception e)
@@ -190,7 +192,7 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.Answers.Count()).Select(b => new
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.Answers.Count).Select(b => new
                 {
                     b.Answers.Count,
                     b.QuestionId,
