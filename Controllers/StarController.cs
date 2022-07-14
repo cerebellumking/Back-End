@@ -18,11 +18,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("question")]
-        public string starQuestion(int user_id,int question_id)
+        public string starQuestion(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int question_id = int.Parse(front_end_data.GetProperty("question_id").ToString());
+
                 object[] pk = { user_id, question_id };
                 Starquestion old_starquestion = myContext.Starquestions.Find(pk);
                 /*判断该收藏是否取消过*/
@@ -53,8 +56,11 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("question")]
-        public string cancelQuestionStar(int user_id,int question_id)
+        public string cancelQuestionStar(dynamic front_end_data)
         {
+            int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+            int question_id = int.Parse(front_end_data.GetProperty("question_id").ToString());
+
             Message message = new Message();
             try
             {
@@ -83,11 +89,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("answer")]
-        public string starAnswer(int user_id, int answer_id)
+        public string starAnswer(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { user_id, answer_id };
                 Staranswer old_staranswer = myContext.Staranswers.Find(pk);
@@ -120,11 +129,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("answer")]
-        public string cancelAnswerStar(int user_id, int answer_id)
+        public string cancelAnswerStar(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+
                 myContext.DetachAll();
                 Staranswer staranswer = myContext.Staranswers.Single(b => b.UserId == user_id && b.AnswerId == answer_id&&b.Cancel==false);
                 staranswer.Cancel = true;
@@ -150,11 +162,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("blog")]
-        public string starBlog(int user_id, int blog_id)
+        public string starBlog(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { user_id, blog_id };
                 Starblog old_starblog = myContext.Starblogs.Find(pk);
@@ -188,11 +203,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("blog")]
-        public string cancelBlogStar(int user_id, int blog_id)
+        public string cancelBlogStar(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+
                 myContext.DetachAll();
                 Starblog starblog = myContext.Starblogs.Single(b => b.UserId == user_id && b.BlogId == blog_id && b.Cancel == false);
                 starblog.Cancel = true;

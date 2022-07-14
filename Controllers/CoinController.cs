@@ -34,14 +34,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("answer")]
-        public string coinAnswer(int user_id,int answer_id,int num)
+        public string coinAnswer(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
-                user_id = int.Parse(Request.Form["user_id"]);
-                answer_id = int.Parse(Request.Form["answer_id"]);
-                num = int.Parse(Request.Form["num"]);
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+                int num = int.Parse(front_end_data.GetProperty("num").ToString());
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
@@ -103,14 +103,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("blog")]
-        public string coinBlog(int user_id, int blog_id, int num)
+        public string coinBlog(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
-                user_id = int.Parse(Request.Form["user_id"]);
-                blog_id = int.Parse(Request.Form["blog_id"]);
-                num = int.Parse(Request.Form["num"]);
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+                int num = int.Parse(front_end_data.GetProperty("num").ToString());
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);

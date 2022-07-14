@@ -98,15 +98,18 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("comment")]
-        public string sendComment(int answer_id, int answer_comment_user_id, string answer_comment_content)
+        public string sendComment(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
                 myContext.DetachAll();
-                answer_id = int.Parse(Request.Form["answer_id"]);
-                answer_comment_user_id = int.Parse(Request.Form["answer_comment_user_id"]);
-                answer_comment_content = Request.Form["answer_comment_content"];
+                //answer_id = int.Parse(Request.Form["answer_id"]);
+                //answer_comment_user_id = int.Parse(Request.Form["answer_comment_user_id"]);
+                //answer_comment_content = Request.Form["answer_comment_content"];
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+                int answer_comment_user_id = int.Parse(front_end_data.GetProperty("answer_comment_user_id").ToString());
+                string answer_comment_content = front_end_data.GetProperty("answer_comment_content").ToString();
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
                 User user = myContext.Users.Single(b => b.UserId == answer_comment_user_id);
                 int id = myContext.Answercomments.Count() + 1;
@@ -135,15 +138,15 @@ namespace Back_End.Controllers
         }
 
         [HttpPost("reply")]
-        public string sendReply()
+        public string sendReply(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
                 myContext.DetachAll();
-                int comment_id = int.Parse(Request.Form["comment_id"]);
-                int reply_user_id = int.Parse(Request.Form["reply_user_id"]);
-                string reply_content = Request.Form["reply_content"];
+                int comment_id = int.Parse(front_end_data.GetProperty("comment_id").ToString());
+                int reply_user_id = int.Parse(front_end_data.GetProperty("reply_user_id").ToString());
+                string reply_content = front_end_data.GetProperty("reply_content").ToString();
                 Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == comment_id);
                 User user = myContext.Users.Single(b => b.UserId == reply_user_id);
                 Answercomment new_comment = new Answercomment();

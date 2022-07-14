@@ -40,7 +40,7 @@ namespace Back_End.Controllers
                 message.data["university_id"] = university.UniversityId;
                 message.status = true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
@@ -55,7 +55,7 @@ namespace Back_End.Controllers
                 University university = myContext.Universities.Single(b => b.UniversityId == university_id);
                 var rank = myContext.Ranks
                     .Where(a => a.UniversityId == university_id)
-                    .Select(b=>new {b.RankYear,b.UniversityQsRank,b.UniversityTheRank,b.UniversityUsnewsRank })
+                    .Select(b => new { b.RankYear, b.UniversityQsRank, b.UniversityTheRank, b.UniversityUsnewsRank })
                     .ToList();
                 message.data["university_id"] = university_id;
                 message.data["university_badge"] = university.UniversityBadge;
@@ -90,9 +90,19 @@ namespace Back_End.Controllers
 
 
         [HttpPost]
-        public string addUniversity(string university_email, string university_chname, string university_enname, string university_region, string university_country, string university_location,
-        string university_introduction, int university_student_num, string university_website, string university_college, string university_abbreviation)
+        public string addUniversity(dynamic university_info)
         {
+            string university_email = university_info.GetProperty("university_email").ToString();
+            string university_chname = university_info.GetProperty("university_chname").ToString();
+            string university_enname = university_info.GetProperty("university_enname").ToString();
+            string university_region = university_info.GetProperty("university_region").ToString();
+            string university_country = university_info.GetProperty("university_country").ToString();
+            string university_location = university_info.GetProperty("university_location").ToString();
+            string university_introduction = university_info.GetProperty("university_introduction").ToString();
+            int university_student_num = int.Parse(university_info.GetProperty("university_student_num").ToString());
+            string university_website = university_info.GetProperty("university_website").ToString();
+            string university_college = university_info.GetProperty("university_college").ToString();
+            string university_abbreviation = university_info.GetProperty("university_abbreviation").ToString();
             Message message = new Message();
             try
             {
@@ -128,14 +138,14 @@ namespace Back_End.Controllers
             {
                 Console.Write(e.ToString());
             }
-            
+
             return message.ReturnJson();
         }
         /*tag:以哪个排行榜为主
          QS_rank：qs，The_rank：the，USNews_rank：usnews
          */
         [HttpGet("rank")]
-        public string showQsRank(int rank_year,string tag,string university_country="")
+        public string showQsRank(int rank_year, string tag, string university_country = "")
         {
             Message message = new Message();
             university_country = System.Web.HttpUtility.UrlDecode(university_country); // url解码
@@ -157,23 +167,23 @@ namespace Back_End.Controllers
                 }
                 else if (tag == "THE_rank")
                 {
-                     ranklist = myContext.Ranks
-                       .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
-                       .OrderBy(b => b.UniversityTheRank)
-                       .ToList();
+                    ranklist = myContext.Ranks
+                      .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                      .OrderBy(b => b.UniversityTheRank)
+                      .ToList();
                 }
                 else
                 {
                     ranklist = myContext.Ranks
                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                        .OrderBy(b => b.UniversityUsnewsRank)
-                       
+
                        .ToList();
                 }
-                foreach(var rank in ranklist)
+                foreach (var rank in ranklist)
                 {
                     UniversityList list = new UniversityList();
-                    if(rank.University==null)
+                    if (rank.University == null)
                         rank.University = myContext.Universities.Single(b => b.UniversityId == rank.UniversityId);
                     list.university_id = rank.UniversityId;
                     list.university_badge = rank.University.UniversityBadge;
@@ -181,7 +191,7 @@ namespace Back_End.Controllers
                     list.university_enname = rank.University.UniversityEnName;
                     string temp = rank.University.UniversityIntroduction.Substring(0, 90);
                     //list.university_introduction = temp;
-                    list.university_introduction = temp.Substring(0,temp.LastIndexOf('，'))+"......";
+                    list.university_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
                     list.university_location = rank.University.UniversityLocation;
                     list.university_qs_rank = rank.UniversityQsRank;
                     list.university_student_num = rank.University.UniversityStudentNum;
@@ -193,8 +203,9 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.errorCode = 200;
                 message.data["university_list"] = lists;
-                
-            }catch(Exception e)
+
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }

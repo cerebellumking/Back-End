@@ -19,11 +19,14 @@ namespace Back_End.Controllers
 
         // -----点赞问题相关----- //
         [HttpPost("answer")]
-        public string likeAnswer(int user_id, int answer_id)
+        public string likeAnswer(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { answer_id, user_id }; // 根据主键查询
                 Likeanswer like_answer = myContext.Likeanswers.Find(pk);
@@ -54,11 +57,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("answer")]
-        public string cancelAnswerLike(int user_id, int answer_id)
+        public string cancelAnswerLike(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { answer_id, user_id };
                 Likeanswer like_answer = myContext.Likeanswers.Find(pk);
@@ -101,11 +107,14 @@ namespace Back_End.Controllers
 
         // -----点赞问题评论相关----- //
         [HttpPost("answer_comment")]
-        public string likeAnswerComment(int user_id, int answer_comment_id)
+        public string likeAnswerComment(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_comment_id = int.Parse(front_end_data.GetProperty("answer_comment_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { answer_comment_id, user_id };
                 Likeanswercomment like_answer_comment = myContext.Likeanswercomments.Find(pk);
@@ -134,11 +143,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("answer_comment")]
-        public string cancelAnswerCommentLike(int user_id, int answer_comment_id)
+        public string cancelAnswerCommentLike(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_comment_id = int.Parse(front_end_data.GetProperty("answer_comment_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { answer_comment_id, user_id };
                 Likeanswercomment like_answer_comment = myContext.Likeanswercomments.Find(pk);
@@ -179,11 +191,14 @@ namespace Back_End.Controllers
 
         // -----点赞动态相关----- //
         [HttpPost("blog")]
-        public string likeBlog(int user_id, int blog_id)
+        public string likeBlog(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { blog_id, user_id };
                 Likeblog like_blog = myContext.Likeblogs.Find(pk);
@@ -212,11 +227,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("blog")]
-        public string cancelBlogLike(int user_id, int blog_id)
+        public string cancelBlogLike(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { blog_id, user_id };
                 Likeblog likeblog = myContext.Likeblogs.Find(pk);
@@ -257,11 +275,14 @@ namespace Back_End.Controllers
 
         // -----点赞动态评论相关----- //
         [HttpPost("blog_comment")]
-        public string likeBlogComment(int user_id, int blog_comment_id)
+        public string likeBlogComment(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_comment_id = int.Parse(front_end_data.GetProperty("blog_comment_id").ToString());
+
                 myContext.DetachAll();
                 object[] pk = { blog_comment_id, user_id };
                 Likeblogcomment like_blog_comment = myContext.Likeblogcomments.Find(pk);
@@ -290,11 +311,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("blog_comment")]
-        public string cancelBlogCommentLike(int user_id, int blog_comment_id)
+        public string cancelBlogCommentLike(dynamic front_end_data)
         {
             Message message = new();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_comment_id = int.Parse(front_end_data.GetProperty("blog_comment_id").ToString());
+
                 object[] pk = { blog_comment_id, user_id };
                 Likeblogcomment like_blog_comment = myContext.Likeblogcomments.Find(pk);
                 if (like_blog_comment != null)

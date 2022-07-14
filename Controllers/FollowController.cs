@@ -26,12 +26,15 @@ namespace Back_End.Controllers
         }
 
         [HttpPost]
-        public string followUser(int user_id, int follow_user_id)
+        public string followUser(dynamic front_end_data)
         {
+
             FollowMessage message = new FollowMessage();
             User user = new User();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int follow_user_id = int.Parse(front_end_data.GetProperty("follow_user_id").ToString());
                 myContext.DetachAll();
                 /*对User进行修改*/
                 user = myContext.Users.Single(b => b.UserId == user_id);
@@ -41,7 +44,7 @@ namespace Back_End.Controllers
                 object[] pk = { user_id, follow_user_id };
                 Followuser old_followuser = myContext.Followusers.Find(pk);
                 /*判断该关注是否取消过*/
-                if (old_followuser==null)
+                if (old_followuser == null)
                 {
                     Followuser followuser = new Followuser();
                     followuser.FollowUserId = follow_user_id;
@@ -67,18 +70,20 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPost("university")]
-        public string followUniversity(int user_id,int university_id)
+        public string followUniversity(dynamic front_end_data)
         {
             FollowMessage message = new FollowMessage();
-           
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int university_id = int.Parse(front_end_data.GetProperty("university_id").ToString());
+
                 object[] pk = { user_id, university_id };
                 Followuniversity old_follow = myContext.Followuniversities.Find(pk);
                 /*判断该关注是否取消过*/
-                if (old_follow==null)
+                if (old_follow == null)
                 {
-                    Followuniversity follow = new Followuniversity(); 
+                    Followuniversity follow = new Followuniversity();
                     follow.UniversityId = university_id;
                     follow.UserId = user_id;
                     follow.User = myContext.Users.Single(b => b.UserId == user_id);
@@ -103,11 +108,14 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPut]
-        public string cancelFollowUser(int user_id, int follow_user_id)
+        public string cancelFollowUser(dynamic front_end_data)
         {
             FollowMessage message = new FollowMessage();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int follow_user_id = int.Parse(front_end_data.GetProperty("follow_user_id").ToString());
+
                 myContext.DetachAll();
                 Followuser followuser = myContext.Followusers.Single(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
                 User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
@@ -126,11 +134,14 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPut("university")]
-        public string cancelFollowUniversity(int user_id,int university_id)
+        public string cancelFollowUniversity(dynamic front_end_data)
         {
             FollowMessage message = new FollowMessage();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int university_id = int.Parse(front_end_data.GetProperty("university_id").ToString());
+
                 myContext.DetachAll();
                 Followuniversity follow = myContext.Followuniversities.Single(b => b.UserId == user_id && b.UniversityId == university_id && b.Cancel == false);
                 University follow_university = myContext.Universities.Single(b => b.UniversityId == university_id);
@@ -164,7 +175,7 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("university")]
-        public string whetherFollowUniversity(int user_id,int university_id)
+        public string whetherFollowUniversity(int user_id, int university_id)
         {
             FollowMessage message = new FollowMessage();
             try
@@ -186,9 +197,9 @@ namespace Back_End.Controllers
             FollowMessage message = new FollowMessage();
             try
             {
-                var list = myContext.Followusers.Where(a => a.UserId == user_id && a.Cancel == false).Select(b =>new { b.FollowUserId}).ToList();
-                List < FollowUserInformation > followUserList= new List<FollowUserInformation>();
-                foreach(var val in list)
+                var list = myContext.Followusers.Where(a => a.UserId == user_id && a.Cancel == false).Select(b => new { b.FollowUserId }).ToList();
+                List<FollowUserInformation> followUserList = new List<FollowUserInformation>();
+                foreach (var val in list)
                 {
                     User user = myContext.Users.Single(b => b.UserId == val.FollowUserId);
                     FollowUserInformation follow = new FollowUserInformation();

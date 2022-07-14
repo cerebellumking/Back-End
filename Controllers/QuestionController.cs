@@ -217,11 +217,17 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPost]
-        public string raiseQuestion(int question_user_id,string question_tag,string question_title,string question_description,decimal question_reward)
+        public string raiseQuestion(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int question_user_id = int.Parse(front_end_data.GetProperty("question_user_id").ToString());
+                string question_tag = front_end_data.GetProperty("question_tag").ToString();
+                string question_title = front_end_data.GetProperty("question_title").ToString();
+                string question_description = front_end_data.GetProperty("question_description").ToString();
+                decimal question_reward = decimal.Parse(front_end_data.GetProperty("question_tag").ToString());
+
                 myContext.DetachAll();
                 Question question = new Question();
                 var count = myContext.Questions.Count();

@@ -19,13 +19,14 @@ namespace Back_End.Controllers
         }
 
         [HttpPost]
-        public string Register(string user_phone, string user_password)
+        public string Register(dynamic front_end_data)
         {
             RegisterMessage message = new RegisterMessage();
             try
             {
-                user_phone = Request.Form["user_phone"];
-                user_password = Request.Form["user_password"];
+                string user_phone = front_end_data.GetProperty("user_phone").ToString();
+                string user_password = front_end_data.GetProperty("user_password").ToString();
+
                 myContext.DetachAll();
                 User user = new User();
                 user.UserGender = "m";

@@ -84,11 +84,15 @@ namespace Back_End.Controllers
         }
 
         [HttpPut("password")]
-        public string changePassword(int user_id,string user_password,string new_password)
+        public string changePassword(dynamic front_end_data)
         {
             Message message = new Message();
             try
             {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                string user_password = front_end_data.GetProperty("user_password").ToString();
+                string new_password = front_end_data.GetProperty("new_password").ToString();
+
                 User user = myContext.Users.Single(b => b.UserId == user_id && b.UserPassword == user_password);
                 user.UserPassword = new_password;
                 message.errorCode = 200;

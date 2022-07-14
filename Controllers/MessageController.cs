@@ -103,9 +103,12 @@ namespace Back_End.Controllers
         /// <param name="targetUserID"></param>
         /// <returns></returns>
         [HttpPost("retrive")]
-        public string retriveMessage(int flag,int userID,int targetUserID)
+        public string retriveMessage(dynamic front_end_data)
         {
             MessageRecord test = new MessageRecord();
+            int flag = int.Parse(front_end_data.GetProperty("flag").ToString());
+            int userID = int.Parse(front_end_data.GetProperty("userID").ToString());
+            int targetUserID = int.Parse(front_end_data.GetProperty("targetUserID").ToString());
 
             if (flag == 1)
             {
