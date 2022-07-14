@@ -57,18 +57,18 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("list")]
-        public string showInstitutionList(string university_province="",string university_city="",string university_target="")
+        public string showInstitutionList(string institution_province="",string institution_city = "",string institution_target = "")
         {
             Message message = new Message();
             try
             {
                 //url解码
-                university_province = System.Web.HttpUtility.UrlDecode(university_province);
-                university_city = System.Web.HttpUtility.UrlDecode(university_city);
-                university_target = System.Web.HttpUtility.UrlDecode(university_target);
+                institution_province = System.Web.HttpUtility.UrlDecode(institution_province);
+                institution_city = System.Web.HttpUtility.UrlDecode(institution_city);
+                institution_target = System.Web.HttpUtility.UrlDecode(institution_target);
                 List<InstitutionInfo> institutionInfos = new List<InstitutionInfo>();
                 var institution_list = myContext.Institutions
-                    .Where(b => b.InstitutionProvince.Contains(university_province) && b.InstitutionCity.Contains(university_city) && b.InstitutionTarget.Contains(university_target))
+                    .Where(b => b.InstitutionProvince.Contains(institution_province) && b.InstitutionCity.Contains(institution_city) && b.InstitutionTarget.Contains(institution_target))
                     .OrderBy(b=>b.InstitutionId)
                     .ToList();
                 foreach (Institution institution in institution_list)
