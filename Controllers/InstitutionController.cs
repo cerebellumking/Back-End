@@ -46,6 +46,7 @@ namespace Back_End.Controllers
                 message.data["institution_lessons"] = institution.InstitutionLessons;
                 message.data["institution_createtime"] = institution.InstitutionCreatetime;
                 message.data["institution_target"] = institution.InstitutionTarget;
+                message.data["institution_photo"] = institution.InstitutionPhoto.Split(';');
                 message.status = true;
                 message.errorCode = 200;
             }

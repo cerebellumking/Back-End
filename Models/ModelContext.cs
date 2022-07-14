@@ -1005,6 +1005,11 @@ namespace Back_End.Models
                     .HasColumnName("INSTITUTION_PHONE")
                     .HasDefaultValueSql("'none' ");
 
+                entity.Property(e => e.InstitutionPhoto)
+                    .HasMaxLength(512)
+                    .IsUnicode(false)
+                    .HasColumnName("INSTITUTION_PHOTO");
+
                 entity.Property(e => e.InstitutionProfile)
                     .HasMaxLength(256)
                     .IsUnicode(false)
