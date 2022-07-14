@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Back_End.Models;
 using Aliyun.OSS;
+using System.Text.Json;
 
 namespace Back_End.Controllers
 {
@@ -20,12 +21,21 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
 
+        public class NewUser
+        {
+            public int user_id { get; set; }
+            public string user_password { get; set; }
+        }
+
         [HttpPost]
-        public string Login()
+        public string Login(dynamic new_user)
         {
             LoginMessage message = new LoginMessage();
-            int user_id = int.Parse(Request.Form["user_id"]);
-            string user_password = Request.Form["user_password"];
+
+            //JsonElement jsonElement = new();
+            //jsonElement.GetProperty().ToString();
+            int user_id = int.Parse(new_user.GetProperty("user_id").ToString());
+            string user_password = new_user.GetProperty("user_password").ToString();
             try
             {
                 var user = myContext.Users
