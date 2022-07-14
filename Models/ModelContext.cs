@@ -1622,12 +1622,23 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_ABBREVIATION")
                     .HasDefaultValueSql("'none' ");
 
+                entity.Property(e => e.UniversityAddressX)
+                    .HasColumnType("NUMBER(10,7)")
+                    .HasColumnName("UNIVERSITY_ADDRESS_X")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.UniversityAddressY)
+                    .HasColumnType("NUMBER(10,7)")
+                    .HasColumnName("UNIVERSITY_ADDRESS_Y")
+                    .HasDefaultValueSql("0 ");
+
                 entity.Property(e => e.UniversityBadge)
                     .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_BADGE");
 
                 entity.Property(e => e.UniversityChName)
+                    .IsRequired()
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("UNIVERSITY_CH_NAME")
@@ -1661,6 +1672,11 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_EN_NAME")
                     .HasDefaultValueSql("'none' ");
 
+                entity.Property(e => e.UniversityIeltsRequirement)
+                    .HasColumnType("NUMBER(2,1)")
+                    .HasColumnName("UNIVERSITY_IELTS_REQUIREMENT")
+                    .HasDefaultValueSql("0 ");
+
                 entity.Property(e => e.UniversityIntroduction)
                     .IsRequired()
                     .HasMaxLength(2048)
@@ -1675,6 +1691,13 @@ namespace Back_End.Models
                     .HasColumnName("UNIVERSITY_LOCATION")
                     .HasDefaultValueSql("'none' ");
 
+                entity.Property(e => e.UniversityPhoto)
+                    .IsRequired()
+                    .HasMaxLength(1024)
+                    .IsUnicode(false)
+                    .HasColumnName("UNIVERSITY_PHOTO")
+                    .HasDefaultValueSql("'SB' ");
+
                 entity.Property(e => e.UniversityRegion)
                     .IsRequired()
                     .HasMaxLength(64)
@@ -1686,6 +1709,21 @@ namespace Back_End.Models
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("UNIVERSITY_STUDENT_NUM")
                     .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.UniversityTeacherNum)
+                    .HasPrecision(5)
+                    .HasColumnName("UNIVERSITY_TEACHER_NUM")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.UniversityTofelRequirement)
+                    .HasPrecision(3)
+                    .HasColumnName("UNIVERSITY_TOFEL_REQUIREMENT")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.UniversityTuition)
+                    .HasMaxLength(64)
+                    .IsUnicode(false)
+                    .HasColumnName("UNIVERSITY_TUITION");
 
                 entity.Property(e => e.UniversityWebsite)
                     .IsRequired()

@@ -68,8 +68,15 @@ namespace Back_End.Controllers
                 message.data["university_introduction"] = university.UniversityIntroduction;
                 message.data["university_student_num"] = university.UniversityStudentNum;
                 message.data["university_website"] = university.UniversityWebsite;
-                message.data["university_college"] = university.UniversityCollege;
+                message.data["university_college"] = university.UniversityCollege.Split('\n');
                 message.data["university_abbreviation"] = university.UniversityAbbreviation;
+                message.data["university_address_x"] = university.UniversityAddressX;
+                message.data["university_address_y"] = university.UniversityAddressY;
+                message.data["university_teacher_num"] = university.UniversityTeacherNum;
+                message.data["university_tuition"] = university.UniversityTuition;
+                message.data["university_tofel_requirement"] = university.UniversityTofelRequirement;
+                message.data["university_ielts_requirement"] = university.UniversityIeltsRequirement;
+                message.data["university_photo"] = university.UniversityPhoto.Split(';');
                 message.data["rank"] = rank.ToArray();
                 message.status = true;
                 message.errorCode = 200;

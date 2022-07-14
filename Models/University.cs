@@ -27,6 +27,13 @@ namespace Back_End.Models
         public string UniversityCollege { get; set; }
         public string UniversityAbbreviation { get; set; }
         public string UniversityChName { get; set; }
+        public decimal UniversityAddressX { get; set; }
+        public decimal UniversityAddressY { get; set; }
+        public short UniversityTeacherNum { get; set; }
+        public string UniversityTuition { get; set; }
+        public byte UniversityTofelRequirement { get; set; }
+        public decimal UniversityIeltsRequirement { get; set; }
+        public string UniversityPhoto { get; set; }
 
         public virtual ICollection<Followuniversity> Followuniversities { get; set; }
         public virtual ICollection<Qualification> Qualifications { get; set; }
