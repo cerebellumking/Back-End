@@ -70,9 +70,10 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                tag = System.Web.HttpUtility.UrlDecode(tag);
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
-                    .OrderByDescending(c => c.Blogcomments.Count)
+                    .OrderByDescending(c => c.Blogcomments.Count * 3 + c.BlogLike * 3 + c.BlogCoin * 4)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 foreach (var blog in bloglist)
@@ -135,7 +136,8 @@ namespace Back_End.Controllers
             {
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
-                    .OrderByDescending(c => c.Blogcomments.Count)
+                    //.OrderByDescending(c => c.Blogcomments.Count)
+                    .OrderByDescending(c=>c.Blogcomments.Count*3+c.BlogLike*3+c.BlogCoin*4)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
