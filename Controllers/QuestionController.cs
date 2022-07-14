@@ -164,6 +164,7 @@ namespace Back_End.Controllers
             {
                 var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.QuestionDate).Select(b => new
                 {
+                    b.Answers.Count,
                     b.QuestionId,
                     b.QuestionUserId,
                     b.QuestionTitle,
