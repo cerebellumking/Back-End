@@ -134,25 +134,39 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("comment/reply")]
-        public string getReplyInfo(int answer_comment_id)
+        [HttpPost("reply")]
+        public string sendReply()
         {
             Message message = new Message();
             try
             {
-                Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == answer_comment_id);
-                message.data["reply_num"] = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true).Count();
-                //List<Answercomment> answercomments = new List<Answercomment>();
-                var reply_list = myContext.Answercomments
-                    .Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true)
-                    .Select(b => new {b.AnswerCommentId,b.AnswerCommentUserId,b.AnswerCommentContent,b.AnswerCommentFather,b.AnswerCommentLike,b.AnswerCommentTime,b.AnswerCommentReply})
-                    .ToList();
-                message.data["reply_list"] = reply_list.ToArray();
+                myContext.DetachAll();
+                int comment_id = int.Parse(Request.Form["comment_id"]);
+                int reply_user_id = int.Parse(Request.Form["reply_user_id"]);
+                string reply_content = Request.Form["reply_content"];
+                Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == comment_id);
+                User user = myContext.Users.Single(b => b.UserId == reply_user_id);
+                Answercomment new_comment = new Answercomment();
+                new_comment.AnswerCommentContent = reply_content;
+                new_comment.AnswerCommentFather = null;
+                new_comment.AnswerCommentReply = comment_id;
+                new_comment.AnswerCommentReplyNavigation = answercomment;
+                int id = myContext.Answercomments.Count() + 1;
+                new_comment.AnswerCommentId =id;
+                new_comment.AnswerCommentTime = DateTime.Now;
+                new_comment.AnswerCommentUserId = reply_user_id;
+                new_comment.AnswerCommentUser = user;
+                new_comment.AnswerCommentVisible = true;
+                myContext.Answercomments.Add(new_comment);
+                myContext.SaveChanges();
+                message.data["comment_id"] = id;
+                message.errorCode = 200;
+                message.status = true;
+
             }catch(Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
-
             return message.ReturnJson();
         }
     }

@@ -7,6 +7,15 @@ using Back_End.Models;
 
 namespace Back_End.Controllers
 {
+    public class InstitutionInfo
+    {
+        public int institution_id { get; set; }
+        public string institution_profile { get; set; }
+        public string institution_introduction { get; set; }
+
+        public string institution_name { get; set; }
+    }
+
     [Route("api/[controller]")]
     public class InstitutionController : Controller
     {
@@ -46,6 +55,44 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpGet("list")]
+        public string showInstitutionList(string university_province="",string university_city="",string university_target="")
+        {
+            Message message = new Message();
+            try
+            {
+                //url解码
+                university_province = System.Web.HttpUtility.UrlDecode(university_province);
+                university_city = System.Web.HttpUtility.UrlDecode(university_city);
+                university_target = System.Web.HttpUtility.UrlDecode(university_target);
+                List<InstitutionInfo> institutionInfos = new List<InstitutionInfo>();
+                var institution_list = myContext.Institutions
+                    .Where(b => b.InstitutionProvince.Contains(university_province) && b.InstitutionCity.Contains(university_city) && b.InstitutionTarget.Contains(university_target))
+                    .OrderBy(b=>b.InstitutionId)
+                    .ToList();
+                foreach (Institution institution in institution_list)
+                {
+                    InstitutionInfo institutionInfo = new InstitutionInfo();
+                    institutionInfo.institution_id = institution.InstitutionId;
+                    string temp = institution.InstitutionIntroduction;
+                    temp = temp.Substring(0, 140>temp.Length?temp.Length:140);
+                    institutionInfo.institution_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
+                    institutionInfo.institution_name = institution.InstitutionName;
+                    institutionInfo.institution_profile = institution.InstitutionProfile;
+                    institutionInfos.Add(institutionInfo);
+                }
+                message.data["institution_list"] = institutionInfos.ToArray();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
 
         [HttpPost]
         public string addInstitution(
