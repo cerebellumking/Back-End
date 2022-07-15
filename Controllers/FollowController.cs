@@ -56,6 +56,7 @@ namespace Back_End.Controllers
                 }
                 else
                 {
+                    old_followuser.FollowTime = DateTime.Now;
                     old_followuser.Cancel = false;
                 }
                 message.errorCode = 200;
@@ -93,6 +94,7 @@ namespace Back_End.Controllers
                 }
                 else
                 {
+                    old_follow.FollowTime = DateTime.Now;
                     old_follow.Cancel = false;
                 }
                 message.errorCode = 200;
@@ -115,7 +117,6 @@ namespace Back_End.Controllers
             {
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 int follow_user_id = int.Parse(front_end_data.GetProperty("follow_user_id").ToString());
-
                 myContext.DetachAll();
                 Followuser followuser = myContext.Followusers.Single(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
                 User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
@@ -141,7 +142,6 @@ namespace Back_End.Controllers
             {
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 int university_id = int.Parse(front_end_data.GetProperty("university_id").ToString());
-
                 myContext.DetachAll();
                 Followuniversity follow = myContext.Followuniversities.Single(b => b.UserId == user_id && b.UniversityId == university_id && b.Cancel == false);
                 University follow_university = myContext.Universities.Single(b => b.UniversityId == university_id);
@@ -206,7 +206,8 @@ namespace Back_End.Controllers
                     follow.user_id = user.UserId;
                     follow.user_level = user.UserLevel;
                     follow.user_name = user.UserName;
-                    follow.user_profile = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user.UserId.ToString() + ".jpg";
+                    follow.user_profile = user.UserProfile;
+                    //follow.user_profile = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + "user_profile/" + user.UserId.ToString() + ".jpg";
                     follow.user_signature = user.UserSignature;
                     followUserList.Add(follow);
                 }
