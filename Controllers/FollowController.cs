@@ -41,7 +41,7 @@ namespace Back_End.Controllers
                 user.UserFollows++;
                 User follow_user = myContext.Users.Single(b => b.UserId == follow_user_id);
                 follow_user.UserFollower++;
-                object[] pk = { user_id, follow_user_id };
+                object[] pk = { follow_user_id, user_id};
                 Followuser old_followuser = myContext.Followusers.Find(pk);
                 /*判断该关注是否取消过*/
                 if (old_followuser == null)
@@ -78,8 +78,7 @@ namespace Back_End.Controllers
             {
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 int university_id = int.Parse(front_end_data.GetProperty("university_id").ToString());
-
-                object[] pk = { user_id, university_id };
+                object[] pk = {  university_id, user_id };
                 Followuniversity old_follow = myContext.Followuniversities.Find(pk);
                 /*判断该关注是否取消过*/
                 if (old_follow == null)
