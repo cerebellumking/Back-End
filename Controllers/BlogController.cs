@@ -47,7 +47,6 @@ namespace Back_End.Controllers
                 User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                 message.data.Add("blog_user_name", user.UserName);
                 message.data.Add("blog_user_profile", user.UserProfile);
-                //message.data.Add("blog_user_name", blog.BlogUser.UserName);
                 message.data.Add("blog_tag", blog.BlogTag);
                 message.data.Add("blog_date", blog.BlogDate.AddHours(8));
                 message.data.Add("blog_content", blog.BlogContent);
@@ -73,7 +72,7 @@ namespace Back_End.Controllers
                 tag = System.Web.HttpUtility.UrlDecode(tag);
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
-                    .OrderByDescending(c => c.Blogcomments.Count * 3 + c.BlogLike * 3 + c.BlogCoin * 4)
+                    .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 foreach (var blog in bloglist)
@@ -137,7 +136,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
                     //.OrderByDescending(c => c.Blogcomments.Count)
-                    .OrderByDescending(c=>c.Blogcomments.Count*3+c.BlogLike*3+c.BlogCoin*4)
+                    .OrderByDescending(c=>c.Blogcomments.Count*2+c.BlogLike*3+c.BlogCoin*5)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
@@ -149,6 +148,128 @@ namespace Back_End.Controllers
             catch
             {
 
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("comment")]
+        public string getBlogComment(int blog_id)
+        {
+            Message message = new Message();
+            try
+            {
+                var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentFather == blog_id);
+                message.data["comment_num"] = blogcomment.Count();
+                var list = blogcomment
+                    .Select(b => new { b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
+                    .ToList();
+                message.data["comment_list"] = list.ToArray();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+
+        [HttpGet("reply")]
+        public string getBlogCommentReply(int blog_comment_id)
+        {
+            Message message = new Message();
+            try
+            {
+                var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentReply == blog_comment_id && b.BlogCommentVisible == true);
+                message.data["reply_num"] = blogcomment.Count();
+                var list = blogcomment
+                    .Select(b => new { b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
+                    .ToList();
+                message.data["reply_list"] = list.ToArray();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost("comment")]
+        public string sendComment(dynamic front_end_data)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                //answer_id = int.Parse(Request.Form["answer_id"]);
+                //answer_comment_user_id = int.Parse(Request.Form["answer_comment_user_id"]);
+                //answer_comment_content = Request.Form["answer_comment_content"];
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+                int blog_comment_user_id = int.Parse(front_end_data.GetProperty("blog_comment_user_id").ToString());
+                string blog_comment_content = front_end_data.GetProperty("blog_comment_content").ToString();
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
+                User user = myContext.Users.Single(b => b.UserId == blog_comment_user_id);
+                int id = myContext.Blogcomments.Count() + 1;
+                Blogcomment blogcomment = new Blogcomment();
+                blogcomment.BlogCommentUser = user;
+                blogcomment.BlogCommentVisible = true;
+                blogcomment.BlogCommentReply = null;
+                blogcomment.BlogCommentFather = blog_id;
+                blogcomment.BlogCommentContent = blog_comment_content;
+                blogcomment.BlogCommentFatherNavigation = blog;
+                blogcomment.BlogCommentId = id;
+                blogcomment.BlogCommentTime = DateTime.Now;
+                blogcomment.BlogCommentUserId = blog_comment_user_id;
+                myContext.Blogcomments.Add(blogcomment);
+                myContext.SaveChanges();
+                message.data.Add("blog_comment_id", id);
+                message.status = true;
+                message.errorCode = 200;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost("reply")]
+        public string sendReply(dynamic front_end_data)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                int comment_id = int.Parse(front_end_data.GetProperty("comment_id").ToString());
+                int reply_user_id = int.Parse(front_end_data.GetProperty("reply_user_id").ToString());
+                string reply_content = front_end_data.GetProperty("reply_content").ToString();
+                Blogcomment blogcomment = myContext.Blogcomments.Single(b => b.BlogCommentId == comment_id);
+                User user = myContext.Users.Single(b => b.UserId == reply_user_id);
+                Blogcomment new_comment = new Blogcomment();
+                new_comment.BlogCommentContent = reply_content;
+                new_comment.BlogCommentFather = null;
+                new_comment.BlogCommentReply = comment_id;
+                new_comment.BlogCommentReplyNavigation = blogcomment;
+                int id = myContext.Blogcomments.Count() + 1;
+                new_comment.BlogCommentId = id;
+                new_comment.BlogCommentTime = DateTime.Now;
+                new_comment.BlogCommentUserId = reply_user_id;
+                new_comment.BlogCommentUser = user;
+                new_comment.BlogCommentVisible = true;
+                myContext.Blogcomments.Add(new_comment);
+                myContext.SaveChanges();
+                message.data["comment_id"] = id;
+                message.errorCode = 200;
+                message.status = true;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
             return message.ReturnJson();
         }
