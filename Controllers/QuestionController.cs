@@ -93,7 +93,6 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
-        
 
         [HttpGet("answers")]
         public string getAnswersByQuestion(int question_id)
@@ -247,18 +246,18 @@ namespace Back_End.Controllers
                 question.QuestionDescription = question_description;
                 question.QuestionReward = question_reward;
                 question.QuestionApply = 0;
-                question.QuestionVisible = true;
+                question.QuestionVisible = false; // 未通过审核，不可见——lc改
                 question.QuestionDate = DateTime.Now;
                 Questionchecking questionchecking = new Questionchecking();
-                questionchecking.AdministratorId = 1;
+                questionchecking.AdministratorId = 0; // 零表示未审核——lc改
                 questionchecking.QuestionId = id;
                 questionchecking.ReviewResult = "待审核";
                 myContext.Questioncheckings.Add(questionchecking);
                 myContext.Questions.Add(question);
                 myContext.SaveChanges();
                 message.data.Add("question_id", id);
-                message.status = true;
                 message.errorCode = 200;
+                message.status = true;
             }
             catch (Exception e)
             {
