@@ -83,7 +83,7 @@ namespace Back_End.Controllers
             {
                 int question_id = int.Parse(front_end_data.GetProperty("question_id").ToString());
                 int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
-                bool review_result = front_end_data.GetProperty("review_result").ToString(); // 只能是通过/不通过
+                bool review_result = bool.Parse(front_end_data.GetProperty("review_result").ToString()); // 只能是通过/不通过
                 string review_reason = front_end_data.GetProperty("review_reason").ToString();
 
                 myContext.DetachAll();
