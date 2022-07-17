@@ -19,12 +19,12 @@ namespace Back_End.Controllers
         }
 
         [HttpGet]
-        public string getAdministratorInfo(int administrator_id)
+        public string getAdministratorInfo(int admin_id)
         {
             Message message = new();
             try
             {
-                Administrator administrator = myContext.Administrators.Single(b => b.AdministratorId == administrator_id);
+                Administrator administrator = myContext.Administrators.Single(b => b.AdministratorId == admin_id);
                 message.data.Add("AdministratorId", administrator.AdministratorId);
                 message.data.Add("AdministratorEmail", administrator.AdministratorEmail);
                 message.data.Add("AdministratorPhone", administrator.AdministratorPhone);
@@ -32,6 +32,8 @@ namespace Back_End.Controllers
                 message.data.Add("AdministratorProfile", administrator.AdministratorProfile);
                 message.data.Add("AdministratorGender", administrator.AdministratorGender);
                 message.data.Add("AdministratorCreatetime", administrator.AdministratorCreatetime);
+                message.status = true;
+                message.errorCode = 200;
             }
             catch(Exception error)
             {
