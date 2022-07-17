@@ -252,6 +252,7 @@ namespace Back_End.Controllers
                 questionchecking.AdministratorId = 0; // 零表示未审核——lc改
                 questionchecking.QuestionId = id;
                 questionchecking.ReviewResult = "待审核";
+                questionchecking.QuestionDate = question.QuestionDate;
                 myContext.Questioncheckings.Add(questionchecking);
                 myContext.Questions.Add(question);
                 myContext.SaveChanges();

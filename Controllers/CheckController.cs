@@ -90,12 +90,11 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 Questionchecking question_checking = myContext.Questioncheckings.Single(b => b.QuestionId == question_id);
                 question_checking.AdministratorId = administrator_id;
-                question_checking.QuestionDate = DateTime.Now;
+                question_checking.ReviewDate = DateTime.Now;
                 question_checking.ReviewResult = review_result ? "通过" : "不通过";
                 question_checking.ReviewReason = review_reason;
                 Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
                 question.QuestionVisible = review_result;
-
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
