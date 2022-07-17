@@ -26,7 +26,7 @@ namespace Back_End.Controllers
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 int question_id = int.Parse(front_end_data.GetProperty("question_id").ToString());
 
-                object[] pk = { user_id, question_id };
+                object[] pk = { question_id };
                 Starquestion old_starquestion = myContext.Starquestions.Find(pk);
                 /*判断该收藏是否取消过*/
                 if (old_starquestion==null)
@@ -98,7 +98,7 @@ namespace Back_End.Controllers
                 int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
 
                 myContext.DetachAll();
-                object[] pk = { user_id, answer_id };
+                object[] pk = { answer_id };
                 Staranswer old_staranswer = myContext.Staranswers.Find(pk);
                 /*判断该收藏是否取消过*/
                 if (old_staranswer==null)

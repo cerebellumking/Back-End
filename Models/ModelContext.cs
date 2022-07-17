@@ -466,11 +466,8 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.BlogContent)
-                    .IsRequired()
-                    .HasMaxLength(1024)
-                    .IsUnicode(false)
-                    .HasColumnName("BLOG_CONTENT")
-                    .HasDefaultValueSql("'none' ");
+                    .HasColumnType("BLOB")
+                    .HasColumnName("BLOG_CONTENT");
 
                 entity.Property(e => e.BlogDate)
                     .HasColumnType("DATE")
@@ -582,7 +579,7 @@ namespace Back_End.Models
                 entity.Property(e => e.BlogCommentFather)
                     .HasPrecision(10)
                     .HasColumnName("BLOG_COMMENT_FATHER")
-                    .HasDefaultValueSql("0 ");
+                    .HasDefaultValueSql("NULL ");
 
                 entity.Property(e => e.BlogCommentLike)
                     .HasColumnType("NUMBER(38)")
@@ -592,7 +589,7 @@ namespace Back_End.Models
                 entity.Property(e => e.BlogCommentReply)
                     .HasPrecision(10)
                     .HasColumnName("BLOG_COMMENT_REPLY")
-                    .HasDefaultValueSql("0 ");
+                    .HasDefaultValueSql("NULL ");
 
                 entity.Property(e => e.BlogCommentTime)
                     .HasColumnType("DATE")
@@ -1811,7 +1808,8 @@ namespace Back_End.Models
                 entity.Property(e => e.UserProfile)
                     .HasMaxLength(128)
                     .IsUnicode(false)
-                    .HasColumnName("USER_PROFILE");
+                    .HasColumnName("USER_PROFILE")
+                    .HasDefaultValueSql("'https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/default.png' ");
 
                 entity.Property(e => e.UserSignature)
                     .HasMaxLength(256)

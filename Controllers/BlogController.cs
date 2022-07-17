@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 using Back_End.Models;
 namespace Back_End.Controllers
 {
@@ -31,9 +32,6 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
-
-        [HttpPost()]
-        public void postBlog() { }
 
 
         [HttpGet()]
@@ -273,6 +271,48 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost]
+        public string sendBlog(dynamic front_end_data)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                byte[] content = Encoding.UTF8.GetBytes(front_end_data.getProperty["content"]);
+                int user_id = int.Parse(front_end_data.getProperty["content"].ToString());
+                string summary = front_end_data.getProperty["summary"].ToString();
+                Blog blog = new Blog();
+                blog.BlogUserId = user_id;
+                int id = myContext.Blogs.Count() + 1;
+                blog.BlogId = id;
+                blog.BlogUser = myContext.Users.Single(b => b.UserId == user_id);
+                blog.BlogContent = content;
+                blog.BlogDate = DateTime.Now;
+                blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
+                blog.BlogSummary = summary;
+                blog.BlogVisible = false;
+                Blogchecking blogchecking = new();
+                blogchecking.AdministratorId = 0;
+                blogchecking.BlogId = id;
+                blogchecking.BlogDate = blog.BlogDate;
+                blogchecking.ReviewResult = "未审核";
+                blogchecking.Blog = blog;
+                myContext.Blogs.Add(blog);
+                myContext.Blogcheckings.Add(blogchecking);
+                myContext.SaveChanges();
+                message.data["blog_id"] = id;
+                message.errorCode = 200;
+                message.status = true;
+            }catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+
+
 
         [HttpDelete("delete")]
         public void deleteBlog() { }
