@@ -26,7 +26,8 @@ namespace Back_End.Controllers
                 var question = myContext.Questioncheckings
                     .Where(b => (b.AdministratorId == 0 || b.AdministratorId == admin_id)) // 要么是未审核，要么该管理员审核过
                     .OrderByDescending(b => b.QuestionDate)
-                    .Select(b => new {
+                    .Select(b => new
+                    {
                         b.QuestionId,
                         b.Question.QuestionUserId,
                         b.AdministratorId,
@@ -34,7 +35,7 @@ namespace Back_End.Controllers
                         b.ReviewResult,
                         b.ReviewDate,
                         b.ReviewReason,
-                }).ToList();
+                    }).ToList();
                 // 如果未审核，ReviewResult是“待审核”，ReviewDate, ReviewReason都是null
                 // 如果审核通过，则ReviewResult是“通过”，否则“不通过”
                 message.errorCode = 200;
@@ -68,7 +69,7 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = true;
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.ToString());
             }
@@ -92,6 +93,9 @@ namespace Back_End.Controllers
                 question_checking.QuestionDate = DateTime.Now;
                 question_checking.ReviewResult = review_result ? "通过" : "不通过";
                 question_checking.ReviewReason = review_reason;
+                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
+                question.QuestionVisible = review_result;
+
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
