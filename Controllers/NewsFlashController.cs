@@ -73,5 +73,40 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost("release")]
+        public string releaseNewsFlash(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                string news_flash_title = front_end_data.GetProperty("news_flash_title").ToString();
+                string news_flash_region = front_end_data.GetProperty("news_flash_region").ToString();
+                string news_flash_content = front_end_data.GetProperty("news_flash_content").ToString();
+                string news_flash_tag = front_end_data.GetProperty("news_flash_tag").ToString();
+                //string news_flash_image = front_end_data.GetProperty("news_flash_image").ToString();
+                myContext.DetachAll();
+                Newsflash newsflash = new();
+                var count = myContext.Newsflashes.Count();
+                int id = 1;
+                if (count != 0)
+                {
+                    id = myContext.Newsflashes.Select(b => b.NewsFlashId).Max() + 1;
+                }
+                newsflash.NewsFlashId = id;
+                newsflash.NewsFlashTitle = news_flash_title;
+                newsflash.NewsFlashDate = DateTime.Now;
+                newsflash.NewsFlashRegion = news_flash_region;
+                newsflash.NewsFlashContent = news_flash_content;
+                newsflash.NewsFlashTag = news_flash_tag;
+                newsflash.NewsFlashVisible = true;
+                newsflash.NewsFlashSummary = news_flash_content.Substring(0, 100);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ToString();
+        }
     }
 }
