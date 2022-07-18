@@ -49,6 +49,69 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("all_blogs")]
+        public string getAllBlogsToCheck(int admin_id)
+        {
+            Message message = new();
+            try
+            {
+                var blog = myContext.Blogcheckings
+                    .Where(b => (b.AdministratorId == 0 || b.AdministratorId == admin_id))
+                    .OrderByDescending(b => b.BlogDate)
+                    .Select(b => new
+                    {
+                        b.BlogId,
+                        b.Blog.BlogUserId,
+                        b.AdministratorId,
+                        b.BlogDate,
+                        b.ReviewResult,
+                        b.ReviewDate,
+                        b.ReviewReason,
+                    }).ToList();
+                // 如果未审核，ReviewResult是“待审核”，ReviewDate, ReviewReason都是null
+                // 如果审核通过，则ReviewResult是“通过”，否则“不通过”
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("blog_list", blog.ToArray());
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("all_answers")]
+        public string getAllAnswersToCheck(int admin_id)
+        {
+            Message message = new();
+            try
+            {
+                var answer = myContext.Answercheckings
+                    .Where(b => (b.AdministratorId == 0 || b.AdministratorId == admin_id))
+                    .OrderByDescending(b => b.AnswerDate)
+                    .Select(b => new
+                    {
+                        b.AnswerId,
+                        b.Answer.AnswerUserId,
+                        b.AnswerDate,
+                        b.ReviewResult,
+                        b.ReviewDate,
+                        b.ReviewReason,
+                    }).ToList();
+                // 如果未审核，ReviewResult是“待审核”，ReviewDate, ReviewReason都是null
+                // 如果审核通过，则ReviewResult是“通过”，否则“不通过”
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("answer_list", answer.ToArray());
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpGet("single_question")]
         public string getSingleQuestionToCheck(int question_id)
         {
@@ -68,6 +131,57 @@ namespace Back_End.Controllers
                 message.data.Add("ReviewReason", question_checking.ReviewReason);
                 message.errorCode = 200;
                 message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("single_blog")]
+        public string getSingleBlogToCheck(int blog_id)
+        {
+            Message message = new();
+            try
+            {
+                Blogchecking blog_checking = myContext.Blogcheckings.Single(b => b.BlogId == blog_id);
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
+                message.data.Add("BlogId", blog_checking.BlogId);
+                message.data.Add("BlogTag", blog.BlogTag);
+                message.data.Add("BlogContent", blog.BlogContent);
+                message.data.Add("BlogUserId", blog.BlogUserId);
+                message.data.Add("AdministratorId", blog_checking.AdministratorId);
+                message.data.Add("BlogDate", blog_checking.BlogDate);
+                message.data.Add("ReviewResult", blog_checking.ReviewResult);
+                message.data.Add("ReviewDate", blog_checking.ReviewDate);
+                message.data.Add("ReviewReason", blog_checking.ReviewReason);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("single_answer")]
+        public string getSingleAnswerToCheck(int answer_id)
+        {
+            Message message = new();
+            try
+            {
+                Answerchecking answer_checking = myContext.Answercheckings.Single(b => b.AnswerId == answer_id);
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
+                message.data.Add("AnswerId", answer_checking.AnswerId);
+                message.data.Add("AnswerContent", answer.AnswerContent);
+                message.data.Add("AnswerUserId", answer.AnswerUserId);
+                message.data.Add("AdministratorId", answer_checking.AdministratorId);
+                message.data.Add("AnswerDate", answer_checking.AnswerDate);
+                message.data.Add("ReviewResult", answer_checking.ReviewResult);
+                message.data.Add("ReviewDate", answer_checking.ReviewDate);
+                message.data.Add("ReviewReason", answer_checking.ReviewReason);
             }
             catch (Exception error)
             {
@@ -106,5 +220,36 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpPost("submit_blog")]
+        public string submitBlogCheck(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost("submit_answer")]
+        public string submitAnswerCheck(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
