@@ -18,7 +18,7 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("all")]
-        public string getNewsFlashs()
+        public string getAllNewsFlashs()
         {
             Message message = new();
             try
@@ -50,7 +50,7 @@ namespace Back_End.Controllers
         }
         
         [HttpGet("single")]
-        public string getNewsFlash(int newsflash_id)
+        public string getSingleNewsFlash(int newsflash_id)
         {
             Message message = new();
             try
@@ -64,6 +64,39 @@ namespace Back_End.Controllers
                 message.data.Add("NewsFlashRegion", newsflash.NewsFlashRegion);
                 message.data.Add("NewsFlashContent", newsflash.NewsFlashContent);
                 message.data.Add("NewsFlashImage", newsflash.NewsFlashImage);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("search")]
+        public string getNewsFlashsBySearch(string keyword)
+        {
+            Message message = new();
+            keyword = System.Web.HttpUtility.UrlDecode(keyword);
+            try
+            {
+                var newsflashs = myContext.Newsflashes
+                    .Where(c => c.NewsFlashVisible == true && c.NewsFlashTitle.Contains(keyword))
+                    .OrderByDescending(b => b.NewsFlashDate)
+                    .Select(b => new
+                    {
+                        b.NewsFlashId,
+                        b.NewsFlashDate,
+                        b.NewsFlashTitle,
+                        b.NewsFlashTag,
+                        b.NewsFlashRegion,
+                        b.NewsFlashSummary,
+                        //b.NewsFlashContent,
+                        b.NewsFlashImage
+                    }).ToList();
+                message.data.Add("count", newsflashs.Count);
+                message.data.Add("newsflashs", newsflashs.ToArray());
                 message.errorCode = 200;
                 message.status = true;
             }
