@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text;
 using Back_End.Models;
+using System.Text.Json;
+using System.IO;
 namespace Back_End.Controllers
 {
     public class BlogList
@@ -21,7 +23,12 @@ namespace Back_End.Controllers
         public int blog_comment_num { get; set; }
     }
 
-
+    public class BlogContent
+    {
+        public int user_id { get; set; }
+        public byte[] content { get; set; }
+        public string summary { get; set; }
+    }
 
     [Route("api/[controller]")]
     [ApiController]
@@ -46,7 +53,7 @@ namespace Back_End.Controllers
                 message.data.Add("blog_user_name", user.UserName);
                 message.data.Add("blog_user_profile", user.UserProfile);
                 message.data.Add("blog_tag", blog.BlogTag);
-                message.data.Add("blog_date", blog.BlogDate.AddHours(8));
+                message.data.Add("blog_date", blog.BlogDate);
                 message.data.Add("blog_content", blog.BlogContent);
                 message.data.Add("blog_image", blog.BlogImage);
                 message.data.Add("blog_like", blog.BlogLike);
@@ -279,9 +286,9 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                byte[] content = Encoding.UTF8.GetBytes(front_end_data.getProperty["content"]);
-                int user_id = int.Parse(front_end_data.getProperty["content"].ToString());
-                string summary = front_end_data.getProperty["summary"].ToString();
+                byte[] content = Encoding.UTF8.GetBytes( front_end_data.GetProperty("content").ToString());
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                string summary = front_end_data.GetProperty("summary").ToString();
                 Blog blog = new Blog();
                 blog.BlogUserId = user_id;
                 int id = myContext.Blogs.Count() + 1;
@@ -291,7 +298,7 @@ namespace Back_End.Controllers
                 blog.BlogDate = DateTime.Now;
                 blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 blog.BlogSummary = summary;
-                blog.BlogVisible = false;
+                blog.BlogVisible = true;
                 Blogchecking blogchecking = new();
                 blogchecking.AdministratorId = 0;
                 blogchecking.BlogId = id;
@@ -311,8 +318,36 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-
-
+        [HttpPost("image")]
+        public string uploadImage(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                string img_base64 = front_end_data.GetProperty("img").ToString();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id && b.BlogUserId == user_id);
+                string type="."+img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                byte[] img_bytes = Convert.FromBase64String(img_base64);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                string path = "blog/" + blog_id.ToString() + type;
+                client.PutObject(OssHelp.bucketName, path, stream);
+                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                blog.BlogImage = imgurl;
+                myContext.SaveChanges();
+                message.data.Add("imageurl", imgurl);
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
 
         [HttpDelete("delete")]
         public void deleteBlog() { }
