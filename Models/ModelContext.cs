@@ -71,6 +71,7 @@ namespace Back_End.Models
                 }
             }
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -536,7 +537,7 @@ namespace Back_End.Models
                 entity.Property(e => e.ReviewDate)
                     .HasColumnType("DATE")
                     .HasColumnName("REVIEW_DATE")
-                    .HasDefaultValueSql("SYSDATE");
+                    .HasDefaultValueSql("null");
 
                 entity.Property(e => e.ReviewReason)
                     .HasMaxLength(64)
