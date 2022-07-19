@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
+
 #nullable disable
 
 namespace Back_End.Models
@@ -237,7 +238,7 @@ namespace Back_End.Models
                 entity.Property(e => e.ReviewDate)
                     .HasColumnType("DATE")
                     .HasColumnName("REVIEW_DATE")
-                    .HasDefaultValueSql("SYSDATE");
+                    .HasDefaultValueSql("null");
 
                 entity.Property(e => e.ReviewReason)
                     .HasMaxLength(64)
@@ -1308,7 +1309,7 @@ namespace Back_End.Models
                 entity.Property(e => e.ReviewDate)
                     .HasColumnType("DATE")
                     .HasColumnName("REVIEW_DATE")
-                    .HasDefaultValueSql("SYSDATE ");
+                    .HasDefaultValueSql("null");
 
                 entity.Property(e => e.ReviewReason)
                     .HasMaxLength(64)
