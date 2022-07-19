@@ -129,6 +129,43 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost("institution")]
+        public string followInstitution(dynamic front_end_data)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int institution_id = int.Parse(front_end_data.GetProperty("institution_id").ToString());
+                object[] pk = { institution_id, user_id };
+                Followinstitution old_follow = myContext.Followinstitutions.Find(pk);
+                /*判断该关注是否取消过*/
+                if (old_follow == null)
+                {
+                    Followinstitution follow = new Followinstitution();
+                    follow.InstitutionId = institution_id;
+                    follow.UserId = user_id;
+                    follow.User = myContext.Users.Single(b => b.UserId == user_id);
+                    follow.Institution = myContext.Institutions.Single(b => b.InstitutionId == institution_id);
+                    follow.FollowTime = DateTime.Now;
+                    myContext.Followinstitutions.Add(follow);
+                }
+                else
+                {
+                    old_follow.FollowTime = DateTime.Now;
+                    old_follow.Cancel = false;
+                }
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
         [HttpPut]
         public string cancelFollowUser(dynamic front_end_data)
         {
@@ -177,6 +214,30 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        [HttpPut("institution")]
+        public string cancelFollowInstitution(dynamic front_end_data)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int institution_id = int.Parse(front_end_data.GetProperty("institution_id").ToString());
+                myContext.DetachAll();
+                Followinstitution follow = myContext.Followinstitutions.Single(b => b.UserId == user_id && b.InstitutionId == institution_id && b.Cancel == false);
+                Institution follow_institution = myContext.Institutions.Single(b => b.InstitutionId == institution_id);
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                follow.Cancel = true;
+                message.errorCode = 200;
+                message.status = true;
+                myContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpGet]
         public string whetherFollowUser(int user_id, int follow_user_id)
         {
@@ -211,10 +272,27 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("userlist")]
+        [HttpGet("institution")]
+        public string whetherFollowInstitution(int user_id, int institution_id)
+        {
+            FollowMessage message = new FollowMessage();
+            try
+            {
+                bool flag = myContext.Followinstitutions.Any(b => b.UserId == user_id && b.InstitutionId == institution_id && b.Cancel == false);
+                message.errorCode = 200;
+                message.status = flag;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("follows")]
         public string getFollowUserList(int user_id)
         {
-            // 获取粉丝列表
+            // 获取用户的关注列表
             FollowMessage message = new FollowMessage();
             try
             {
@@ -243,10 +321,10 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("followuserlist")]
+        [HttpGet("follower")]
         public string getUserFollowList(int user_id)
         {
-            // 获取关注的用户列表
+            // 获取用户的粉丝列表
             Message message = new();
             try
             {
