@@ -302,7 +302,8 @@ namespace Back_End.Controllers
                     StarAnswerInfo star = new();
                     star.answer_id = answer.AnswerId;
                     star.question_id = answer.QuestionId;
-                    star.question_title = answer.Question.QuestionTitle;
+                    Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
+                    star.question_title = question.QuestionTitle;
                     star.answer_like = answer.AnswerLike;
                     star.answer_coin = answer.AnswerCoin;
                     star.answer_summary = answer.AnswerSummary;
