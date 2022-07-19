@@ -234,5 +234,134 @@ namespace Back_End.Controllers
             message.status = flag;
             return message.ReturnJson();
         }
+
+        public class StarQuestionInfo
+        {
+            public int question_id { get; set; }
+            public string question_tag { get; set; }
+            public DateTime question_date { get; set; }
+            public string question_title { get; set; }
+            public decimal? question_reward { get; set; }
+            public int? question_apply { get; set; }
+            public string question_summary { get; set; }
+        }
+
+        [HttpGet("question_list")]
+        public string getStarQuestionList(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var list = myContext.Starquestions.Where(a => a.UserId == user_id && a.Cancel == false);
+                List<StarQuestionInfo> starQuestionList = new();
+                foreach(var val in list)
+                {
+                    Question question = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
+                    StarQuestionInfo star = new();
+                    star.question_id = question.QuestionId;
+                    star.question_tag = question.QuestionTag;
+                    star.question_date = question.QuestionDate;
+                    star.question_title = question.QuestionTitle;
+                    star.question_reward = question.QuestionReward;
+                    star.question_apply = question.QuestionApply;
+                    star.question_summary = question.QuestionSummary;
+                    starQuestionList.Add(star);
+                }
+                message.data.Add("stars", starQuestionList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        public class StarAnswerInfo
+        {
+            public int answer_id { get; set; }
+            public int? question_id { get; set; }
+            public string question_title { get; set; }
+            public decimal? answer_like { get; set; }
+            public decimal? answer_coin { get; set; }
+            public string answer_summary { get; set; }
+        }
+
+        [HttpGet("answer_list")]
+        public string getStarAnswerList(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var list = myContext.Staranswers.Where(a => a.UserId == user_id && a.Cancel == false);
+                List<StarAnswerInfo> starAnswerList = new();
+                foreach(var val in list)
+                {
+                    Answer answer = myContext.Answers.Single(b => b.AnswerId == val.AnswerId);
+                    StarAnswerInfo star = new();
+                    star.answer_id = answer.AnswerId;
+                    star.question_id = answer.QuestionId;
+                    star.question_title = answer.Question.QuestionTitle;
+                    star.answer_like = answer.AnswerLike;
+                    star.answer_coin = answer.AnswerCoin;
+                    star.answer_summary = answer.AnswerSummary;
+                    starAnswerList.Add(star);
+                }
+                message.data.Add("stars", starAnswerList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+        public class StarBlogInfo
+        {
+            public int blog_id { get; set; }
+            public int? blog_user_id { get; set; }
+            public string blog_user_name { get; set; }
+            public string blog_tag { get; set; }
+            public DateTime blog_date { get; set; }
+            public decimal? blog_like { get; set; }
+            public decimal? blog_coin { get; set; }
+            public string blog_summary { get; set; }
+        }
+
+        [HttpGet("blog_list")]
+        public string getStarBlogList(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var list = myContext.Starblogs.Where(a => a.UserId ==user_id && a.Cancel == false);
+                List<StarBlogInfo> starBlogList = new();
+                foreach(var val in list)
+                {
+                    Blog blog = myContext.Blogs.Single(b => b.BlogId == val.BlogId);
+                    StarBlogInfo star = new();
+                    star.blog_id = blog.BlogId;
+                    star.blog_user_id = blog.BlogUserId;
+                    User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
+                    star.blog_user_name = user.UserName;
+                    star.blog_tag = blog.BlogTag;
+                    star.blog_date = blog.BlogDate;
+                    star.blog_like = blog.BlogLike;
+                    star.blog_coin = blog.BlogCoin;
+                    star.blog_summary = blog.BlogSummary;
+                    starBlogList.Add(star);
+                }
+                message.data.Add("stars", starBlogList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
