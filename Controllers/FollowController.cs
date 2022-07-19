@@ -15,6 +15,27 @@ namespace Back_End.Controllers
         public string user_signature { get; set; }
         public decimal user_level { get; set; }
     }
+
+    public class FollowUniversityInformation
+    {
+        public int university_id { get; set; }
+        public string university_badge { get; set; }
+        public string university_chname { get; set; }
+        public string university_enname { get; set; }
+        public string university_region { get; set; }
+        public string university_country { get; set; }
+    }
+
+    public class FollowInstitutionInformation
+    {
+        public int institution_id { get; set; }
+        public string institution_name { get; set; }
+        public string institution_profile { get; set; }
+        public string institution_province { get; set; }
+        public string institution_city { get; set; }
+        public string institution_target { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class FollowController : ControllerBase
@@ -193,6 +214,7 @@ namespace Back_End.Controllers
         [HttpGet("userlist")]
         public string getFollowUserList(int user_id)
         {
+            // 获取粉丝列表
             FollowMessage message = new FollowMessage();
             try
             {
@@ -217,6 +239,101 @@ namespace Back_End.Controllers
             catch (Exception e)
             {
                 Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("followuserlist")]
+        public string getUserFollowList(int user_id)
+        {
+            // 获取关注的用户列表
+            Message message = new();
+            try
+            {
+                var list = myContext.Followusers.Where(a => a.FollowUserId == user_id && a.Cancel == false).Select(b => new { b.UserId }).ToList();
+                List<FollowUserInformation> followUserList = new();
+                foreach(var val in list)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == val.UserId);
+                    FollowUserInformation follow = new FollowUserInformation();
+                    follow.user_id = user.UserId;
+                    follow.user_level = user.UserLevel;
+                    follow.user_name = user.UserName;
+                    follow.user_profile = user.UserProfile;
+                    follow.user_signature = user.UserSignature;
+                    followUserList.Add(follow);
+                }
+                message.data.Add("follows", followUserList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("followuniversitylist")]
+        public string getUniversityFollowList(int user_id)
+        {
+            // 获取关注的高校列表
+            Message message = new();
+            try
+            {
+                var list = myContext.Followuniversities.Where(a => a.UserId == user_id && a.Cancel == false).Select(b => new { b.UniversityId }).ToList();
+                List<FollowUniversityInformation> followUniversityList = new();
+                foreach(var val in list)
+                {
+                    University university = myContext.Universities.Single(b => b.UniversityId == val.UniversityId);
+                    FollowUniversityInformation follow = new();
+                    follow.university_id = university.UniversityId;
+                    follow.university_badge = university.UniversityBadge;
+                    follow.university_enname = university.UniversityEnName;
+                    follow.university_chname = university.UniversityChName;
+                    follow.university_country = university.UniversityCountry;
+                    follow.university_region = university.UniversityRegion;
+                    followUniversityList.Add(follow);
+                }
+                message.data.Add("follows", followUniversityList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("followinstitutionlist")]
+        public string getInstitutionFollowList(int user_id)
+        {
+            // 获取关注的机构列表
+            Message message = new();
+            try
+            {
+                var list = myContext.Followinstitutions.Where(a => a.UserId == user_id && a.Cancel == false).Select(b => new { b.InstitutionId }).ToList();
+                List<FollowInstitutionInformation> followInstitutionList = new();
+                foreach (var val in list)
+                {
+                    Institution institution = myContext.Institutions.Single(b => b.InstitutionId == val.InstitutionId);
+                    FollowInstitutionInformation follow = new();
+                    follow.institution_id = institution.InstitutionId;
+                    follow.institution_profile = institution.InstitutionProfile;
+                    follow.institution_name = institution.InstitutionName;
+                    follow.institution_province = institution.InstitutionProvince;
+                    follow.institution_city = institution.InstitutionCity;
+                    follow.institution_target = institution.InstitutionTarget;
+                    followInstitutionList.Add(follow);
+                }
+                message.data.Add("follows", followInstitutionList.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
             }
             return message.ReturnJson();
         }
