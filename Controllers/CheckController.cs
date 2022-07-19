@@ -56,7 +56,7 @@ namespace Back_End.Controllers
             try
             {
                 var blog = myContext.Blogcheckings
-                    .Where(b => (b.AdministratorId == 0 || b.AdministratorId == admin_id))
+                    .Where(b => b.AdministratorId == 0 || b.AdministratorId == admin_id)
                     .OrderByDescending(b => b.BlogDate)
                     .Select(b => new
                     {
@@ -104,6 +104,37 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("answer_list", answer.ToArray());
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("all_qualifications")]
+        public string getAllQualificationToCheck(int admin_id)
+        {
+            Message message = new();
+            try
+            {
+                var qualification = myContext.Qualificationcheckings
+                    .Where(b => b.AdministratorId == 0 || b.AdministratorId == admin_id)
+                    .OrderByDescending(b => b.SummitDate)
+                    .Select(b => new
+                    {
+                        b.Identity.UserId,
+                        b.Identity.UniversityId,
+                        b.Identity.Identity,
+                        b.Identity.IdentityQualificationImage,
+                        b.ReviewResult,
+                        b.SummitDate,
+                        b.ReviewDate,
+                        b.ReviewReason,
+                    }).ToList();
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("qualification_list", qualification.ToArray());
             }
             catch (Exception error)
             {
@@ -182,8 +213,36 @@ namespace Back_End.Controllers
                 message.data.Add("ReviewResult", answer_checking.ReviewResult);
                 message.data.Add("ReviewDate", answer_checking.ReviewDate);
                 message.data.Add("ReviewReason", answer_checking.ReviewReason);
+                message.errorCode = 200;
+                message.status = true;
             }
             catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("single_qualification")]
+        public string getSingleQualificationToCheck(int identity_id)
+        {
+            Message message = new();
+            try
+            {
+                Qualificationchecking qualification_checking = myContext.Qualificationcheckings.Single(b => b.IdentityId == identity_id);
+                Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
+                message.data.Add("IdentityId", qualification_checking.IdentityId);
+                message.data.Add("UniversityId", qualification.UniversityId);
+                message.data.Add("Identity", qualification.Identity);
+                message.data.Add("IdentityImage", qualification.IdentityQualificationImage);
+                message.data.Add("SummitDate", qualification_checking.SummitDate);
+                message.data.Add("ReviewResult", qualification_checking.ReviewResult);
+                message.data.Add("ReviewDate", qualification_checking.ReviewDate);
+                message.data.Add("ReviewReason", qualification_checking.ReviewReason);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
             {
                 Console.WriteLine(error.ToString());
             }
