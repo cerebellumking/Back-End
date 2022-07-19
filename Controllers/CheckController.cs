@@ -310,5 +310,21 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost("submit_qualification")]
+        public string submitQualificationCheck(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
