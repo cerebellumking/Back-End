@@ -225,7 +225,7 @@ namespace Back_End.Controllers
                     b.UniversityTheRank,
                     b.UniversityUsnewsRank,
                 }).ToList();
-                message.data.Add("rank", rank);
+                message.data.Add("rank", rank.ToArray());
                 message.errorCode = 200;
                 message.status = true;
             }
