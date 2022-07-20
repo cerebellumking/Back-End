@@ -47,6 +47,7 @@ namespace Back_End.Controllers
                     return message.ReturnJson();
                 }
                 user.UserCoin += num;
+                message.data["user_coin"] = user.UserCoin;
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;
