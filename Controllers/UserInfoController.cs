@@ -151,6 +151,84 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("questions")]
+        public string getUserQuestions(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var questions = myContext.Questions
+                    .Where(c => c.QuestionUserId == user_id && c.QuestionVisible == true)
+                    .Select(b => new
+                    {
+                        b.QuestionId,
+                        b.QuestionTag,
+                        b.QuestionDate,
+                        b.QuestionTitle,
+                        b.QuestionSummary,
+                    }).ToList();
+                message.data.Add("question_list", questions.ToArray()); ;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("answers")]
+        public string getUserAnswers(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var answers = myContext.Answers
+                    .Where(c => c.AnswerUserId == user_id && c.AnswerVisible == true)
+                    .Select(b => new
+                    {
+                        b.AnswerId,
+                        b.AnswerLike,
+                        b.AnswerDate,
+                        b.AnswerSummary,
+                    }).ToList();
+                message.data.Add("answer_list", answers.ToArray()); ;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("blogs")]
+        public string getUserBlogs(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var blogs = myContext.Blogs
+                    .Where(c => c.BlogUserId == user_id && c.BlogVisible == true)
+                    .Select(b => new
+                    {
+                        b.BlogId,
+                        b.BlogSummary,
+                        b.BlogDate,
+                    }).ToList();
+                message.data.Add("blog_list", blogs.ToArray()); ;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpPut("password")]
         public string changePassword(dynamic front_end_data)
         {
