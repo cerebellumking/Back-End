@@ -303,7 +303,7 @@ namespace Back_End.Controllers
                 blogchecking.AdministratorId = 0;
                 blogchecking.BlogId = id;
                 blogchecking.BlogDate = blog.BlogDate;
-                blogchecking.ReviewResult = "未审核";
+                blogchecking.ReviewResult = "待审核";
                 blogchecking.Blog = blog;
                 myContext.Blogs.Add(blog);
                 myContext.Blogcheckings.Add(blogchecking);

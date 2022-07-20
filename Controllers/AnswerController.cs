@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 using Back_End.Models;
+using System.IO;
 namespace Back_End.Controllers
 {
     [Route("api/[controller]")]
@@ -167,6 +169,78 @@ namespace Back_End.Controllers
                 message.status = true;
 
             }catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost]
+        public string sendAnswer(dynamic front_end_data)
+        {
+            //还未将content换成blob
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                byte[] content = Encoding.UTF8.GetBytes(front_end_data.GetProperty("content").ToString());
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                string summary = front_end_data.GetProperty("summary").ToString();
+                Answer answer = new();
+                answer.AnswerUserId = user_id;
+                int id = myContext.Answers.Count() + 1;
+                answer.AnswerId = id;
+                answer.AnswerUser = myContext.Users.Single(b => b.UserId == user_id);
+                //answer.AnswerContent = content;
+                answer.AnswerDate = DateTime.Now;
+                answer.AnswerContentpic = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
+                answer.AnswerSummary = summary;
+                answer.AnswerVisible = false;
+                Answerchecking answerchecking = new();
+                answerchecking.AdministratorId = 0;
+                answerchecking.AnswerId = id;
+                answerchecking.AnswerDate = answer.AnswerDate;
+                answerchecking.ReviewResult = "待审核";
+                answerchecking.Answer = answer;
+                myContext.Answers.Add(answer);
+                myContext.Answercheckings.Add(answerchecking);
+                myContext.SaveChanges();
+                message.data["answer_id"] = id;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost("image")]
+        public string uploadImage(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                string img_base64 = front_end_data.GetProperty("img").ToString();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id && b.AnswerUserId == user_id);
+                string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                byte[] img_bytes = Convert.FromBase64String(img_base64);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                string path = "answer/" + answer_id.ToString() + type;
+                client.PutObject(OssHelp.bucketName, path, stream);
+                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                answer.AnswerContentpic = imgurl;
+                myContext.SaveChanges();
+                message.data.Add("imageurl", imgurl);
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
