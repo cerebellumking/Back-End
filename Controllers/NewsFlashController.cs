@@ -141,5 +141,25 @@ namespace Back_End.Controllers
             }
             return message.ToString();
         }
+
+        [HttpDelete]
+        public string deleteNewsFlash(int newsflash_id)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                var newsflash = myContext.Newsflashes.Single(b => b.NewsFlashId == newsflash_id);
+                newsflash.NewsFlashVisible = false;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
