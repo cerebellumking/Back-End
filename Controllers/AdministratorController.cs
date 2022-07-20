@@ -41,5 +41,34 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpPost]
+        public string updateAdministratorInfo(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                int admin_id = int.Parse(front_end_data.GetProperty("admin_id").ToString());
+                string admin_name = front_end_data.GetProperty("admin_name").ToString();
+                string admin_gender = front_end_data.GetProperty("admin_gender").ToString();
+                string admin_phone = front_end_data.GetProperty("admin_phone").ToString();
+                string admin_email = front_end_data.GetProperty("admin_email").ToString();
+
+                myContext.DetachAll();
+                Administrator administrator = myContext.Administrators.Single(b => b.AdministratorId == admin_id);
+                administrator.AdministratorName = admin_name;
+                administrator.AdministratorGender = admin_gender;
+                administrator.AdministratorPhone = admin_phone;
+                administrator.AdministratorEmail = admin_email;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
