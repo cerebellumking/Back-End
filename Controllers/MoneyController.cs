@@ -85,7 +85,7 @@ namespace Back_End.Controllers
                 foreach(var coin_blog in list2)
                 {
                     RecordInfo record = new();
-                    record.change_reason = "用户打赏动态";
+                    record.change_reason = "用户打赏动态"+coin_blog.BlogId.ToString();
                     record.change_num = coin_blog.CoinNum;
                     record.change_time = coin_blog.CoinTime;
                     recordInfos.Add(record);
@@ -97,7 +97,7 @@ namespace Back_End.Controllers
                 foreach (var coin_answer in list3)
                 {
                     RecordInfo record = new();
-                    record.change_reason = "用户打赏回答";
+                    record.change_reason = "用户打赏回答"+coin_answer.AnswerId.ToString();
                     record.change_num = coin_answer.CoinNum;
                     record.change_time = coin_answer.CoinTime;
                     recordInfos.Add(record);
@@ -105,15 +105,28 @@ namespace Back_End.Controllers
                 //用户回答收获悬赏鸟币
                 var list4 = myContext.Answers
                     .Where(b => b.Question.QuestionApply == b.AnswerId&&b.AnswerUserId==user_id)
-                    .Select(b => new RecordInfo { change_num = (int)b.Question.QuestionReward, change_time = (DateTime)b.AnswerDate, change_reason = "最佳回答奖励" })
+                    .Select(b => new RecordInfo { change_num = (int)b.Question.QuestionReward, change_time = (DateTime)b.AnswerDate, change_reason = "回答"+b.AnswerId.ToString()+"获得最佳回答奖励" })
                     .ToList();
                 recordInfos.AddRange(list4);
                 //用户提问悬赏鸟币
                 var list5 = myContext.Questions
                    .Where(b => b.QuestionUserId ==user_id)
-                   .Select(b => new RecordInfo { change_num = -(int)b.QuestionReward, change_time = (DateTime)b.QuestionDate, change_reason = "提问悬赏" })
+                   .Select(b => new RecordInfo { change_num = -(int)b.QuestionReward, change_time = (DateTime)b.QuestionDate, change_reason = "问题"+b.QuestionId.ToString()+"提问悬赏" })
                    .ToList();
                 recordInfos.AddRange(list5);
+                //用户给动态投币
+                var list6 = myContext.Coinblogs
+                    .Where(b => b.UserId == user_id)
+                    .Select(b=>new RecordInfo { change_num=-(int)b.CoinNum,change_time=b.CoinTime,change_reason="给动态"+b.BlogId.ToString()+"投币"})
+                    .ToList();
+                recordInfos.AddRange(list6);
+                //用户给回答投币
+                var list7 = myContext.Coinanswers
+                   .Where(b => b.UserId == user_id)
+                   .Select(b => new RecordInfo { change_num = -(int)b.CoinNum, change_time = b.CoinTime, change_reason = "给回答" + b.AnswerId.ToString() + "投币" })
+                   .ToList();
+                recordInfos.AddRange(list7);
+
                 message.errorCode = 200;
                 message.status = true;
                 message.data["record_list"] = recordInfos.ToArray();
