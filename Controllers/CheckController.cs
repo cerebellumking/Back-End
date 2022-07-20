@@ -29,7 +29,10 @@ namespace Back_End.Controllers
                     .Select(b => new
                     {
                         b.QuestionId,
+                        b.Question.QuestionTitle,
                         b.Question.QuestionUserId,
+                        b.Question.QuestionUser.UserName,
+                        b.Question.QuestionUser.UserProfile,
                         b.AdministratorId,
                         b.QuestionDate,
                         b.ReviewResult,
