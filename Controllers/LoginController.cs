@@ -38,6 +38,7 @@ namespace Back_End.Controllers
             string user_password = new_user.GetProperty("user_password").ToString();
             try
             {
+                myContext.DetachAll();
                 var user = myContext.Users
                     .Single(b => b.UserId == user_id);
                 if (user != null)
@@ -60,6 +61,25 @@ namespace Back_End.Controllers
                         message.data["user_follower"] = user.UserFollower;
                         message.data["user_follows"] = user.UserFollows;
                         message.data["user_level"] = user.UserLevel;
+                        DateTime tomorrow = (DateTime)user.UserLogintime;
+                        tomorrow = tomorrow.AddDays(1);
+                        //判断是否为今天第一次登陆
+                        //实现每日登录领取鸟币的功能
+                        if (DateTime.Now.Year == tomorrow.Year && DateTime.Now.Month == tomorrow.Month && DateTime.Now.Day == tomorrow.Day)
+                        {
+                            user.UserCoin++;
+                            int record_id = myContext.Moneychangerecords.Count() + 1;
+                            Moneychangerecord moneychangerecord = new();
+                            moneychangerecord.ChangeDate = DateTime.Now;
+                            moneychangerecord.UserId = user.UserId;
+                            moneychangerecord.RecordId = record_id;
+                            moneychangerecord.ChangeNum = 1;
+                            moneychangerecord.ChangeReason = "登录奖励";
+                            myContext.Moneychangerecords.Add(moneychangerecord);
+                        }
+                        user.UserLogintime = DateTime.Now;
+                        myContext.SaveChanges();
+                        message.data["user_logintime"] = user.UserLogintime;
                         message.data["user_coin"] = user.UserCoin;
                     }
                 }

@@ -66,6 +66,7 @@ namespace Back_End.Controllers
                 coinanswer.CoinTime = DateTime.Now;
                 coinanswer.UserId = user_id;
                 coinanswer.AnswerId = answer_id;
+                coinanswer.CoinNum = num;
                 answer.AnswerCoin += num;
                 user.UserCoin -= num;
                 coinanswer.User = user;
@@ -138,6 +139,7 @@ namespace Back_End.Controllers
                 user.UserCoin -= num;
                 coinblog.User = user;
                 coinblog.Blog = blog;
+                coinblog.CoinNum = num;
                 myContext.Coinblogs.Add(coinblog);
                 myContext.SaveChanges();
                 message.data["user_coin_left"] = coinblog.User.UserCoin;
