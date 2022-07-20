@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
-
 #nullable disable
 
 namespace Back_End.Models
@@ -39,6 +38,7 @@ namespace Back_End.Models
         public virtual DbSet<Likeanswercomment> Likeanswercomments { get; set; }
         public virtual DbSet<Likeblog> Likeblogs { get; set; }
         public virtual DbSet<Likeblogcomment> Likeblogcomments { get; set; }
+        public virtual DbSet<Moneychangerecord> Moneychangerecords { get; set; }
         public virtual DbSet<Newsflash> Newsflashes { get; set; }
         public virtual DbSet<Qualification> Qualifications { get; set; }
         public virtual DbSet<Qualificationchecking> Qualificationcheckings { get; set; }
@@ -72,7 +72,6 @@ namespace Back_End.Models
                 }
             }
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -770,6 +769,11 @@ namespace Back_End.Models
                     .HasColumnName("USER_ID")
                     .HasDefaultValueSql("0 ");
 
+                entity.Property(e => e.CoinNum)
+                    .HasPrecision(10)
+                    .HasColumnName("COIN_NUM")
+                    .HasDefaultValueSql("0 ");
+
                 entity.Property(e => e.CoinTime)
                     .HasColumnType("DATE")
                     .HasColumnName("COIN_TIME")
@@ -801,6 +805,11 @@ namespace Back_End.Models
                 entity.Property(e => e.UserId)
                     .HasPrecision(10)
                     .HasColumnName("USER_ID")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.CoinNum)
+                    .HasPrecision(10)
+                    .HasColumnName("COIN_NUM")
                     .HasDefaultValueSql("0 ");
 
                 entity.Property(e => e.CoinTime)
@@ -1184,6 +1193,43 @@ namespace Back_End.Models
                     .WithMany(p => p.Likeblogcomments)
                     .HasForeignKey(d => d.UserId)
                     .HasConstraintName("SYS_C0011207");
+            });
+
+            modelBuilder.Entity<Moneychangerecord>(entity =>
+            {
+                entity.HasKey(e => new { e.RecordId, e.UserId })
+                    .HasName("MONEYCHANGERECORD_PK");
+
+                entity.ToTable("MONEYCHANGERECORD");
+
+                entity.Property(e => e.RecordId)
+                    .HasPrecision(10)
+                    .HasColumnName("RECORD_ID")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.UserId)
+                    .HasPrecision(10)
+                    .HasColumnName("USER_ID")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.ChangeDate)
+                    .HasColumnType("DATE")
+                    .HasColumnName("CHANGE_DATE");
+
+                entity.Property(e => e.ChangeNum)
+                    .HasPrecision(10)
+                    .HasColumnName("CHANGE_NUM")
+                    .HasDefaultValueSql("0 ");
+
+                entity.Property(e => e.ChangeReason)
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .HasColumnName("CHANGE_REASON");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Moneychangerecords)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("SYS_C0011431");
             });
 
             modelBuilder.Entity<Newsflash>(entity =>
@@ -1787,6 +1833,11 @@ namespace Back_End.Models
                     .HasColumnType("NUMBER(38)")
                     .HasColumnName("USER_LEVEL")
                     .HasDefaultValueSql("1 ");
+
+                entity.Property(e => e.UserLogintime)
+                    .HasColumnType("DATE")
+                    .HasColumnName("USER_LOGINTIME")
+                    .HasDefaultValueSql("SYSDATE ");
 
                 entity.Property(e => e.UserName)
                     .IsRequired()

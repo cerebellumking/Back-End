@@ -10,6 +10,7 @@ namespace Back_End.Models
         public int BlogId { get; set; }
         public int UserId { get; set; }
         public DateTime CoinTime { get; set; }
+        public int CoinNum { get; set; }
 
         public virtual Blog Blog { get; set; }
         public virtual User User { get; set; }

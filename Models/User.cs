@@ -27,6 +27,7 @@ namespace Back_End.Models
             Likeanswers = new HashSet<Likeanswer>();
             Likeblogcomments = new HashSet<Likeblogcomment>();
             Likeblogs = new HashSet<Likeblog>();
+            Moneychangerecords = new HashSet<Moneychangerecord>();
             Qualifications = new HashSet<Qualification>();
             Questions = new HashSet<Question>();
             Staranswers = new HashSet<Staranswer>();
@@ -49,6 +50,7 @@ namespace Back_End.Models
         public decimal UserFollows { get; set; }
         public decimal UserLevel { get; set; }
         public decimal UserCoin { get; set; }
+        public DateTime? UserLogintime { get; set; }
 
         public virtual ICollection<Answercommentreport> Answercommentreports { get; set; }
         public virtual ICollection<Answercomment> Answercomments { get; set; }
@@ -68,6 +70,7 @@ namespace Back_End.Models
         public virtual ICollection<Likeanswer> Likeanswers { get; set; }
         public virtual ICollection<Likeblogcomment> Likeblogcomments { get; set; }
         public virtual ICollection<Likeblog> Likeblogs { get; set; }
+        public virtual ICollection<Moneychangerecord> Moneychangerecords { get; set; }
         public virtual ICollection<Qualification> Qualifications { get; set; }
         public virtual ICollection<Question> Questions { get; set; }
         public virtual ICollection<Staranswer> Staranswers { get; set; }
