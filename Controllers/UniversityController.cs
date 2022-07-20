@@ -211,5 +211,28 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpGet("get_rank")]
+        public string getUniversityRank(int university_id,int rank_year)
+        {
+            Message message = new();
+            try
+            {
+                var rank = myContext.Ranks.Where(b => b.UniversityId == university_id && b.RankYear == rank_year).Select(b => new
+                {
+                    b.UniversityQsRank,
+                    b.UniversityTheRank,
+                    b.UniversityUsnewsRank,
+                }).ToList();
+                message.data.Add("rank", rank);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
