@@ -352,7 +352,7 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("followuniversitylist")]
+        [HttpGet("universities")]
         public string getUniversityFollowList(int user_id)
         {
             // 获取关注的高校列表
@@ -384,7 +384,7 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet("followinstitutionlist")]
+        [HttpGet("institutions")]
         public string getInstitutionFollowList(int user_id)
         {
             // 获取关注的机构列表
