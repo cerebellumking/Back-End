@@ -248,7 +248,8 @@ namespace Back_End.Controllers
                 question.QuestionApply = 0;
                 question.QuestionVisible = false; // 未通过审核，不可见——lc改
                 question.QuestionDate = DateTime.Now;
-                question.QuestionSummary = question_description.Substring(0, question_description.Length > 50 ? 50 : question_description.Length);
+                int length = question_description.Length > 50 ? 50 : question_description.Length;
+                question.QuestionSummary = question_description.Substring(0, length);
                 Questionchecking questionchecking = new Questionchecking();
                 questionchecking.AdministratorId = 0; // 零表示未审核——lc改
                 questionchecking.QuestionId = id;
