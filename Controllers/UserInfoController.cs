@@ -31,7 +31,7 @@ namespace Back_End.Controllers
         {
             Message message = new Message();
             try
-            {
+            { 
                 User user = myContext.Users.Single(b => b.UserId == user_id);
                 message.data["user_id"] = user_id;
                 message.data["user_email"] = user.UserEmail;
@@ -49,6 +49,74 @@ namespace Back_End.Controllers
             catch (Exception e)
             {
                 Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("achieve")]
+        public string getUserAchievement(int user_id)
+        {
+            // 成就包括：获赞次数、获得评论次数、获得收藏次数
+            Message message = new();
+            try
+            {
+                // 获赞次数
+                var like_answer_times = myContext.Likeanswers
+                    .Count(b => b.UserId == user_id && b.Cancel == false);
+                var like_answer_comment_times = myContext.Likeanswercomments
+                    .Count(b => b.UserId == user_id && b.Cancel == false);
+                var like_blog_times = myContext.Likeblogs
+                    .Count(b => b.UserId == user_id && b.Cancel == false);
+                var like_blog_comment_times = myContext.Likeblogcomments
+                    .Count(b => b.UserId == user_id && b.Cancel == false);
+                int like_times = like_answer_times + like_answer_comment_times + like_blog_times + like_blog_comment_times;
+                message.data.Add("like_times", like_times);
+
+                // 获评次数
+                int comment_times = 0;
+
+                var blog_id_list = myContext.Blogs.Where(a => a.BlogUserId == user_id)
+                    .Select(b => new
+                    {
+                        b.BlogId,
+                    }).ToList();
+
+                // 遍历所有blog
+                foreach(var blog_id in blog_id_list)
+                {
+                    comment_times += myContext.Blogcomments.Count(b => b.BlogCommentFather != null && b.BlogCommentFather == blog_id.BlogId);
+                }
+
+                var answer_id_list = myContext.Answers.Where(a => a.AnswerUserId == user_id)
+                    .Select(b => new
+                    {
+                        b.AnswerId,
+                    }).ToList();
+
+                // 遍历所有answer
+                foreach(var answer_id in answer_id_list)
+                {
+                    comment_times += myContext.Answercomments.Count(b => b.AnswerCommentFather != null && b.AnswerCommentFather == answer_id.AnswerId);
+                }
+
+                message.data.Add("comment_times", comment_times);
+
+                // 获藏次数
+                var star_question_times = myContext.Starquestions
+                    .Count(b => b.UserId == user_id);
+                var star_answer_times = myContext.Staranswers
+                    .Count(b => b.UserId == user_id);
+                var star_blog_times = myContext.Starblogs
+                    .Count(b => b.UserId == user_id);
+                int star_times = star_question_times + star_answer_times + star_blog_times;
+                message.data.Add("star_times", star_times);
+
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
             }
             return message.ReturnJson();
         }
