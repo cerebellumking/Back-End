@@ -33,6 +33,7 @@ namespace Back_End.Controllers
                         b.Question.QuestionUserId,
                         b.Question.QuestionUser.UserName,
                         b.Question.QuestionUser.UserProfile,
+                        b.Question.QuestionSummary,
                         b.AdministratorId,
                         b.QuestionDate,
                         b.ReviewResult,

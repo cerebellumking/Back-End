@@ -213,13 +213,14 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("get_rank")]
-        public string getUniversityRank(int university_id,int rank_year)
+        public string getUniversityRank(int university_id,int rank_year = 2022)
         {
             Message message = new();
             try
             {
                 var rank = myContext.Ranks.Where(b => b.UniversityId == university_id && b.RankYear == rank_year).Select(b => new
                 {
+                    b.UniversityId,
                     b.UniversityQsRank,
                     b.UniversityTheRank,
                     b.UniversityUsnewsRank,
