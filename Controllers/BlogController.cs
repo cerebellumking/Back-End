@@ -52,7 +52,7 @@ namespace Back_End.Controllers
                 User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                 message.data.Add("blog_user_name", user.UserName);
                 message.data.Add("blog_user_profile", user.UserProfile);
-                message.data.Add("blog_tag", blog.BlogTag.Split(','));
+                message.data.Add("blog_tag", blog.BlogTag.Split('-'));
                 message.data.Add("blog_date", blog.BlogDate);
                 message.data.Add("blog_content", blog.BlogContent);
                 message.data.Add("blog_image", blog.BlogImage);
@@ -72,6 +72,7 @@ namespace Back_End.Controllers
         [HttpGet("tag")]
         public string getBlogList(int num,string tag)
         {
+            // 返回包含某个tag的给定数量的blog
             Message message = new Message();
             try
             {
@@ -83,7 +84,7 @@ namespace Back_End.Controllers
                     .ToList();
                 foreach (var blog in bloglist)
                 {
-                    string[] tag_array = tag.Split(',');
+                    string[] tag_array = tag.Split('-');
                     bool flag = true;
                     foreach (var val in tag_array)
                     {

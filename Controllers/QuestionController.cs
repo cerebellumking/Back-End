@@ -71,7 +71,7 @@ namespace Back_End.Controllers
                         message.data.Add("user_university", "null");
                         message.data.Add("university_country", "null");
                     }
-                    message.data.Add("question_tag", question.QuestionTag);
+                    message.data.Add("question_tag", question.QuestionTag.Split("-"));
                     message.data.Add("question_date", question.QuestionDate);
                     message.data.Add("question_title", question.QuestionTitle);
                     message.data.Add("question_description", question.QuestionDescription);
@@ -126,27 +126,58 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        public class RelatedQuestionInfo
+        {
+            public int QuestionId { get; set; }
+            public int? QuestionUserId { get; set; }
+            public DateTime QuestionDate { get; set; }
+            public string[] QuestionTags { get; set; }
+            public string QuestionImage { get; set; }
+            public string QuestionTitle { get; set; }
+            public string QuestionSummary { get; set; }
+        }
+
         [HttpGet("related")]
         public string getRelatedQuestions(int question_id)
         {
             Message message = new();
             try
             {
-                string tag = myContext.Questions.Single(c => c.QuestionId == question_id).QuestionTag;
-                var questions = myContext.Questions.Where(c => c.QuestionTag == tag && c.QuestionId != question_id).OrderByDescending(a => a.QuestionDate).Select(b => new
+                string[] tags = myContext.Questions.Single(c => c.QuestionId == question_id).QuestionTag.Split("-");
+                int[] questions_id = { question_id };
+                List<RelatedQuestionInfo> list_questions = new();
+                foreach(var tag in tags)
                 {
-                    b.QuestionId,
-                    b.QuestionUserId,
-                    b.QuestionDate,
-                    b.QuestionTitle,
-                    //b.QuestionDescription,
-                    b.QuestionSummary
-                }).ToList();
+                    var questions = myContext.Questions
+                        .Where(c => c.QuestionTag.Contains(tag) && !questions_id.Contains(c.QuestionId))
+                        .OrderByDescending(a => a.QuestionDate).ToList();
+                    foreach(var question in questions)
+                    {
+                        RelatedQuestionInfo new_question_info = new();
+                        new_question_info.QuestionId = question.QuestionId;
+                        new_question_info.QuestionUserId = question.QuestionUserId;
+                        new_question_info.QuestionDate = question.QuestionDate;
+                        new_question_info.QuestionTags = question.QuestionTag.Split("-");
+                        new_question_info.QuestionImage = question.QuestionImage;
+                        new_question_info.QuestionTitle = question.QuestionTitle;
+                        new_question_info.QuestionSummary = question.QuestionSummary;
+                        list_questions.Add(new_question_info);
+                    }
+                }
+                //var questions = myContext.Questions.Where(c => c.QuestionTag == tag && c.QuestionId != question_id).OrderByDescending(a => a.QuestionDate).Select(b => new
+                //{
+                //    b.QuestionId,
+                //    b.QuestionUserId,
+                //    b.QuestionDate,
+                //    b.QuestionTitle,
+                //    //b.QuestionDescription,
+                //    b.QuestionSummary
+                //}).ToList();
                 message.errorCode = 200;
                 message.status = true;
-                message.data.Add("tag", tag);
-                message.data.Add("count", questions.Count);
-                message.data.Add("related_questions", questions.ToArray());
+                message.data.Add("tag", tags.ToArray());
+                message.data.Add("count", list_questions.Count);
+                message.data.Add("related_questions", list_questions.ToArray());
             }
             catch(Exception error)
             {
@@ -226,7 +257,7 @@ namespace Back_End.Controllers
                 string question_tag = front_end_data.GetProperty("question_tag").ToString();
                 string question_title = front_end_data.GetProperty("question_title").ToString();
                 string question_description = front_end_data.GetProperty("question_description").ToString();
-                decimal question_reward = decimal.Parse(front_end_data.GetProperty("question_tag").ToString());
+                decimal question_reward = decimal.Parse(front_end_data.GetProperty("question_reward").ToString());
 
                 myContext.DetachAll();
                 Question question = new Question();
