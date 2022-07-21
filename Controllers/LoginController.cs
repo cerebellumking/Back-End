@@ -34,20 +34,20 @@ namespace Back_End.Controllers
 
             //JsonElement jsonElement = new();
             //jsonElement.GetProperty().ToString();
-            int user_id = int.Parse(new_user.GetProperty("user_id").ToString());
+            string user_phone = new_user.GetProperty("user_phone").ToString();
             string user_password = new_user.GetProperty("user_password").ToString();
             try
             {
                 myContext.DetachAll();
                 var user = myContext.Users
-                    .Single(b => b.UserId == user_id);
+                    .Single(b => b.UserPhone == user_phone);
                 if (user != null)
                 {
                     message.errorCode = 200;
                     if (user.UserPassword == user_password)
                     {
                         message.status = true;
-                        message.data["user_id"] = user_id;
+                        message.data["user_id"] = user.UserId;
                         message.data["user_email"] = user.UserEmail;
                         message.data["user_phone"] = user.UserPhone;
                         message.data["user_password"] = user.UserPassword;

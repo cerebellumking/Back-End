@@ -52,12 +52,13 @@ namespace Back_End.Controllers
                 User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                 message.data.Add("blog_user_name", user.UserName);
                 message.data.Add("blog_user_profile", user.UserProfile);
-                message.data.Add("blog_tag", blog.BlogTag);
+                message.data.Add("blog_tag", blog.BlogTag.Split(','));
                 message.data.Add("blog_date", blog.BlogDate);
                 message.data.Add("blog_content", blog.BlogContent);
                 message.data.Add("blog_image", blog.BlogImage);
                 message.data.Add("blog_like", blog.BlogLike);
                 message.data.Add("blog_coin", blog.BlogCoin);
+                message.data.Add("blog_summary", blog.BlogSummary);
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -289,10 +290,12 @@ namespace Back_End.Controllers
                 string content = front_end_data.GetProperty("content").ToString();
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string summary = front_end_data.GetProperty("summary").ToString();
+                string tag= front_end_data.GetProperty("tag").ToString();
                 Blog blog = new Blog();
                 blog.BlogUserId = user_id;
                 int id = myContext.Blogs.Count() + 1;
                 blog.BlogId = id;
+                blog.BlogTag = tag;
                 blog.BlogUser = myContext.Users.Single(b => b.UserId == user_id);
                 blog.BlogContent = content;
                 blog.BlogDate = DateTime.Now;
