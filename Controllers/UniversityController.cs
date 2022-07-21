@@ -29,6 +29,7 @@ namespace Back_End.Controllers
         {
             myContext = modelContext;
         }
+
         [HttpGet("id")]
         public string getUniversityIDByName(string university_chname)
         {
@@ -46,8 +47,9 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
         [HttpGet]
-        public string getUniversityInfo(int university_id)
+        public string getUniversityInfoById(int university_id)
         {
             UniversityMessage message = new UniversityMessage();
             try
@@ -88,6 +90,22 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("chname")]
+        public string getUniversityInfoByChName(string chname)
+        {
+            chname = System.Web.HttpUtility.UrlDecode(chname); // url解码
+            Message message = new();
+            try
+            {
+                University university = myContext.Universities.Single(b => b.UniversityChName.Contains(chname));
+                return getUniversityInfoById(university.UniversityId);
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
 
         [HttpPost]
         public string addUniversity(dynamic university_info)
