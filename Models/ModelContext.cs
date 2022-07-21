@@ -467,7 +467,7 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.BlogContent)
-                    .HasColumnType("BLOB")
+                    .HasColumnType("CLOB")
                     .HasColumnName("BLOG_CONTENT");
 
                 entity.Property(e => e.BlogDate)

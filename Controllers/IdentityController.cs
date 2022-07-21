@@ -55,6 +55,7 @@ namespace Back_End.Controllers
             {
                 myContext.DetachAll();
                 string img_base64 = front_end_data.GetProperty("img").ToString();
+                Console.WriteLine(img_base64);
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string identity = front_end_data.GetProperty("identity").ToString();
                 string enrollment_time = front_end_data.GetProperty("enrollment_time").ToString();
@@ -63,6 +64,7 @@ namespace Back_End.Controllers
                 int id = myContext.Qualifications.Count() + 1;
                 //存储图片
                 string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                img_base64 = img_base64.Split("base64,")[1];//非常重要
                 byte[] img_bytes = Convert.FromBase64String(img_base64);
                 var client = OssHelp.createClient();
                 MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);

@@ -25,7 +25,7 @@ namespace Back_End.Models
         public decimal? BlogCoin { get; set; }
         public bool? BlogVisible { get; set; }
         public string BlogSummary { get; set; }
-        public byte[] BlogContent { get; set; }
+        public string BlogContent { get; set; }
 
         public virtual User BlogUser { get; set; }
         public virtual Blogchecking Blogchecking { get; set; }
