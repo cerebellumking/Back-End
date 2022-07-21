@@ -131,6 +131,8 @@ namespace Back_End.Controllers
                         b.Identity.UniversityId,
                         b.Identity.Identity,
                         b.Identity.IdentityQualificationImage,
+                        b.Identity.Major,
+                        b.Identity.EnrollmentTime,
                         b.ReviewResult,
                         b.SummitDate,
                         b.ReviewDate,
