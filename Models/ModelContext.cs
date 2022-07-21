@@ -1298,6 +1298,11 @@ namespace Back_End.Models
                     .HasColumnName("IDENTITY_ID")
                     .HasDefaultValueSql("0  ");
 
+                entity.Property(e => e.EnrollmentTime)
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .HasColumnName("ENROLLMENT_TIME");
+
                 entity.Property(e => e.Identity)
                     .IsRequired()
                     .HasMaxLength(32)
@@ -1308,6 +1313,11 @@ namespace Back_End.Models
                     .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("IDENTITY_QUALIFICATION_IMAGE");
+
+                entity.Property(e => e.Major)
+                    .HasMaxLength(128)
+                    .IsUnicode(false)
+                    .HasColumnName("MAJOR");
 
                 entity.Property(e => e.UniversityId)
                     .HasPrecision(10)
