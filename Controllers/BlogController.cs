@@ -292,6 +292,7 @@ namespace Back_End.Controllers
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string summary = front_end_data.GetProperty("summary").ToString();
                 string tag= front_end_data.GetProperty("tag").ToString();
+                string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Blog blog = new Blog();
                 blog.BlogUserId = user_id;
                 int id = myContext.Blogs.Count() + 1;
@@ -308,6 +309,19 @@ namespace Back_End.Controllers
                 blogchecking.BlogId = id;
                 blogchecking.BlogDate = blog.BlogDate;
                 blogchecking.ReviewResult = "待审核";
+                //存第一张图到oss
+                if (img_base64 != "")
+                {
+                    string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                    img_base64 = img_base64.Split("base64,")[1];//非常重要
+                    byte[] img_bytes = Convert.FromBase64String(img_base64);
+                    var client = OssHelp.createClient();
+                    MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                    string path = "blog/" + id.ToString() + type;
+                    client.PutObject(OssHelp.bucketName, path, stream);
+                    string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                    blog.BlogImage = imgurl;
+                }
                 blogchecking.Blog = blog;
                 myContext.Blogs.Add(blog);
                 myContext.Blogcheckings.Add(blogchecking);
