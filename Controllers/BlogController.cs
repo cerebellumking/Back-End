@@ -12,15 +12,15 @@ namespace Back_End.Controllers
 {
     public class BlogList
     {
-        public int blog_id { get; set; }
-        public string blog_summary { get; set; }
-        public string blog_tag { get; set; }
-        public decimal blog_like { get; set; }
-        public decimal blog_coin { get; set; }
-        public int blog_user_id { get; set; }
-        public DateTime blog_date { get; set; }
-        public string blog_image { get; set; }
-        public int blog_comment_num { get; set; }
+        public int BlogId { get; set; }
+        public string BlogSummary { get; set; }
+        public string[] BlogTag { get; set; }
+        public decimal BlogLike { get; set; }
+        public decimal BlogCoin { get; set; }
+        public int BlogUserId { get; set; }
+        public DateTime BlogDate { get; set; }
+        public string BlogImage { get; set; }
+        public int Count { get; set; }
     }
 
     public class BlogContent
@@ -80,7 +80,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
                     .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
+                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 foreach (var blog in bloglist)
                 {
@@ -99,7 +99,22 @@ namespace Back_End.Controllers
                 }
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
-                message.data.Add("blog", bloglist.ToArray());
+                List<BlogList> blogs  = new();
+                foreach(var blog in bloglist)
+                {
+                    BlogList list = new();
+                    list.BlogUserId = (int)blog.BlogUserId;
+                    list.BlogSummary = blog.BlogSummary;
+                    list.BlogImage = blog.BlogImage;
+                    list.BlogId = blog.BlogId;
+                    list.BlogDate = blog.BlogDate;
+                    list.BlogCoin = (decimal)blog.BlogCoin;
+                    list.Count = blog.Blogcomments.Count;
+                    list.BlogTag = blog.BlogTag.Split('-');
+                    list.BlogLike = (decimal)blog.BlogLike;
+                    blogs.Add(list);
+                }
+                message.data.Add("blog", blogs.ToArray());
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -119,11 +134,26 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true )
                     .OrderByDescending(c => c.BlogDate)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count })
+                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
-                message.data.Add("blog", bloglist.ToArray());
+                List<BlogList> blogs = new();
+                foreach (var blog in bloglist)
+                {
+                    BlogList list = new();
+                    list.BlogUserId = (int)blog.BlogUserId;
+                    list.BlogSummary = blog.BlogSummary;
+                    list.BlogImage = blog.BlogImage;
+                    list.BlogId = blog.BlogId;
+                    list.BlogDate = blog.BlogDate;
+                    list.BlogCoin = (decimal)blog.BlogCoin;
+                    list.Count = blog.Blogcomments.Count;
+                    list.BlogTag = blog.BlogTag.Split('-');
+                    list.BlogLike = (decimal)blog.BlogLike;
+                    blogs.Add(list);
+                }
+                message.data.Add("blog", blogs.ToArray());
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -144,11 +174,26 @@ namespace Back_End.Controllers
                     .Where(a => a.BlogVisible == true)
                     //.OrderByDescending(c => c.Blogcomments.Count)
                     .OrderByDescending(c=>c.Blogcomments.Count*2+c.BlogLike*3+c.BlogCoin*5)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
+                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
-                message.data.Add("blog", bloglist.ToArray());
+                List<BlogList> blogs = new();
+                foreach (var blog in bloglist)
+                {
+                    BlogList list = new();
+                    list.BlogUserId = (int)blog.BlogUserId;
+                    list.BlogSummary = blog.BlogSummary;
+                    list.BlogImage = blog.BlogImage;
+                    list.BlogId = blog.BlogId;
+                    list.BlogDate = blog.BlogDate;
+                    list.BlogCoin = (decimal)blog.BlogCoin;
+                    list.Count = blog.Blogcomments.Count;
+                    list.BlogTag = blog.BlogTag.Split('-');
+                    list.BlogLike = (decimal)blog.BlogLike;
+                    blogs.Add(list);
+                }
+                message.data.Add("blog", blogs.ToArray());
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -336,37 +381,37 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpPost("image")]
-        public string uploadImage(dynamic front_end_data)
-        {
-            Message message = new();
-            try
-            {
-                myContext.DetachAll();
-                string img_base64 = front_end_data.GetProperty("img").ToString();
-                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
-                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
-                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id && b.BlogUserId == user_id);
-                string type="."+img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
-                img_base64 = img_base64.Split("base64,")[1];//非常重要
-                byte[] img_bytes = Convert.FromBase64String(img_base64);
-                var client = OssHelp.createClient();
-                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
-                string path = "blog/" + blog_id.ToString() + type;
-                client.PutObject(OssHelp.bucketName, path, stream);
-                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
-                blog.BlogImage = imgurl;
-                myContext.SaveChanges();
-                message.data.Add("imageurl", imgurl);
-                message.status = true;
-                message.errorCode = 200;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            return message.ReturnJson();
-        }
+        //[HttpPost("image")]
+        //public string uploadImage(dynamic front_end_data)
+        //{
+        //    Message message = new();
+        //    try
+        //    {
+        //        myContext.DetachAll();
+        //        string img_base64 = front_end_data.GetProperty("img").ToString();
+        //        int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+        //        int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+        //        Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id && b.BlogUserId == user_id);
+        //        string type="."+img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+        //        img_base64 = img_base64.Split("base64,")[1];//非常重要
+        //        byte[] img_bytes = Convert.FromBase64String(img_base64);
+        //        var client = OssHelp.createClient();
+        //        MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+        //        string path = "blog/" + blog_id.ToString() + type;
+        //        client.PutObject(OssHelp.bucketName, path, stream);
+        //        string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+        //        blog.BlogImage = imgurl;
+        //        myContext.SaveChanges();
+        //        message.data.Add("imageurl", imgurl);
+        //        message.status = true;
+        //        message.errorCode = 200;
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //    return message.ReturnJson();
+        //}
 
         [HttpDelete("delete")]
         public void deleteBlog() { }
