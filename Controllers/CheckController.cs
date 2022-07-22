@@ -33,7 +33,6 @@ namespace Back_End.Controllers
                         b.Question.QuestionUserId,
                         b.Question.QuestionUser.UserName,
                         b.Question.QuestionUser.UserProfile,
-                        b.Question.QuestionSummary,
                         b.AdministratorId,
                         b.QuestionDate,
                         b.ReviewResult,
@@ -66,6 +65,11 @@ namespace Back_End.Controllers
                     {
                         b.BlogId,
                         b.Blog.BlogUserId,
+                        //增加动态发布者的用户名和头像以及动态标题
+                        b.Blog.BlogUser.UserName,
+                        b.Blog.BlogUser.UserProfile,
+                        b.Blog.BlogSummary,
+
                         b.AdministratorId,
                         b.BlogDate,
                         b.ReviewResult,
@@ -98,6 +102,12 @@ namespace Back_End.Controllers
                     {
                         b.AnswerId,
                         b.Answer.AnswerUserId,
+                        //添加管理员id，回答标题，答主用户名和头像
+                        b.AdministratorId,
+                        b.Answer.AnswerSummary,
+                        b.Answer.AnswerUser.UserName,
+                        b.Answer.AnswerUser.UserProfile,
+
                         b.AnswerDate,
                         b.ReviewResult,
                         b.ReviewDate,
@@ -128,11 +138,15 @@ namespace Back_End.Controllers
                     .Select(b => new
                     {
                         b.Identity.UserId,
+                        b.Identity.User.UserName,
+                        b.Identity.User.UserProfile,
                         b.Identity.UniversityId,
+                        b.Identity.University.UniversityChName,
                         b.Identity.Identity,
                         b.Identity.IdentityQualificationImage,
                         b.Identity.Major,
                         b.Identity.EnrollmentTime,
+                        b.AdministratorId,
                         b.ReviewResult,
                         b.SummitDate,
                         b.ReviewDate,
@@ -161,6 +175,9 @@ namespace Back_End.Controllers
                 message.data.Add("QuestionTitle", question.QuestionTitle);
                 message.data.Add("QuestionContent", question.QuestionDescription);
                 message.data.Add("QuestionUserId", question.QuestionUserId);
+                message.data.Add("QuestionUserName", question.QuestionUser.UserName);
+                message.data.Add("QuestionUserProfile", question.QuestionUser.UserProfile);
+                message.data.Add("QuestionTag", question.QuestionTag);
                 message.data.Add("AdministratorId", question_checking.AdministratorId);
                 message.data.Add("QuestionDate", question_checking.QuestionDate);
                 message.data.Add("ReviewResult", question_checking.ReviewResult);
@@ -187,6 +204,8 @@ namespace Back_End.Controllers
                 message.data.Add("BlogId", blog_checking.BlogId);
                 message.data.Add("BlogTag", blog.BlogTag);
                 message.data.Add("BlogContent", blog.BlogContent);
+                message.data.Add("BlogUserName", blog.BlogUser.UserName);
+                message.data.Add("BlogUserProfile", blog.BlogUser.UserProfile);
                 message.data.Add("BlogUserId", blog.BlogUserId);
                 message.data.Add("AdministratorId", blog_checking.AdministratorId);
                 message.data.Add("BlogDate", blog_checking.BlogDate);
@@ -214,6 +233,9 @@ namespace Back_End.Controllers
                 message.data.Add("AnswerId", answer_checking.AnswerId);
                 message.data.Add("AnswerContent", answer.AnswerContent);
                 message.data.Add("AnswerUserId", answer.AnswerUserId);
+                message.data.Add("AnswerUserName", answer.AnswerUser.UserName);
+                message.data.Add("AnswerUserProfile", answer.AnswerUser.UserProfile);
+                message.data.Add("AnswerSummary", answer.AnswerSummary);
                 message.data.Add("AdministratorId", answer_checking.AdministratorId);
                 message.data.Add("AnswerDate", answer_checking.AnswerDate);
                 message.data.Add("ReviewResult", answer_checking.ReviewResult);
@@ -239,8 +261,12 @@ namespace Back_End.Controllers
                 Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
                 message.data.Add("IdentityId", qualification_checking.IdentityId);
                 message.data.Add("UniversityId", qualification.UniversityId);
+                message.data.Add("University_name", qualification.University.UniversityChName);
                 message.data.Add("Identity", qualification.Identity);
                 message.data.Add("IdentityImage", qualification.IdentityQualificationImage);
+                message.data.Add("EnrollmentTime", qualification.EnrollmentTime);
+                message.data.Add("Major", qualification.Major);
+                message.data.Add("AdministratorId", qualification_checking.AdministratorId);
                 message.data.Add("SummitDate", qualification_checking.SummitDate);
                 message.data.Add("ReviewResult", qualification_checking.ReviewResult);
                 message.data.Add("ReviewDate", qualification_checking.ReviewDate);
@@ -291,6 +317,19 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
+                int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
+                int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
+                bool review_result = bool.Parse(front_end_data.GetProperty("review_result").ToString()); // 只能是通过/不通过
+                string review_reason = front_end_data.GetProperty("review_reason").ToString();
+                myContext.DetachAll();
+                Blogchecking blogchecking = myContext.Blogcheckings.Single(b => b.BlogId == blog_id);
+                blogchecking.AdministratorId = administrator_id;
+                blogchecking.ReviewDate = DateTime.Now;
+                blogchecking.ReviewResult = review_result ? "通过" : "不通过";
+                blogchecking.ReviewReason = review_reason;
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
+                blog.BlogVisible = review_result;
+                myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
             }
@@ -307,6 +346,19 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+                int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
+                bool review_result = bool.Parse(front_end_data.GetProperty("review_result").ToString()); // 只能是通过/不通过
+                string review_reason = front_end_data.GetProperty("review_reason").ToString();
+                myContext.DetachAll();
+                Answerchecking answerchecking = myContext.Answercheckings.Single(b => b.AnswerId == answer_id);
+                answerchecking.AdministratorId = administrator_id;
+                answerchecking.ReviewDate = DateTime.Now;
+                answerchecking.ReviewResult = review_result ? "通过" : "不通过";
+                answerchecking.ReviewReason = review_reason;
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
+                answer.AnswerVisible = review_result;
+                myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
             }
@@ -323,6 +375,19 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
+                int identity_id = int.Parse(front_end_data.GetProperty("identity_id").ToString());
+                int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
+                bool review_result = bool.Parse(front_end_data.GetProperty("review_result").ToString()); // 只能是通过/不通过
+                string review_reason = front_end_data.GetProperty("review_reason").ToString();
+                myContext.DetachAll();
+                Qualificationchecking qualificationchecking = myContext.Qualificationcheckings.Single(b => b.IdentityId == identity_id);
+                qualificationchecking.AdministratorId = administrator_id;
+                qualificationchecking.ReviewDate = DateTime.Now;
+                qualificationchecking.ReviewResult= review_result ? "通过" : "不通过";
+                qualificationchecking.ReviewReason = review_reason;
+                Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
+                qualification.Visible = review_result;
+                myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
             }
