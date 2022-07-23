@@ -470,6 +470,11 @@ namespace Back_End.Models
                     .HasColumnType("CLOB")
                     .HasColumnName("BLOG_CONTENT");
 
+                entity.Property(e => e.BlogContent2)
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("BLOG_CONTENT2");
+
                 entity.Property(e => e.BlogDate)
                     .HasColumnType("DATE")
                     .HasColumnName("BLOG_DATE")

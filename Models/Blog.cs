@@ -26,6 +26,7 @@ namespace Back_End.Models
         public bool? BlogVisible { get; set; }
         public string BlogSummary { get; set; }
         public string BlogContent { get; set; }
+        public string BlogContent2 { get; set; }
 
         public virtual User BlogUser { get; set; }
         public virtual Blogchecking Blogchecking { get; set; }

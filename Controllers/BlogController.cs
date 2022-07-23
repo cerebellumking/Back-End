@@ -26,6 +26,19 @@ namespace Back_End.Controllers
         public int Count { get; set; }
     }
 
+    public class BlogList2
+    {
+        public int blog_user_id { get; set; }
+        public string blog_user_name { get; set; }
+        public string blog_user_profile { get; set; }
+        public string blog_summary { get; set; }
+        public string[] blog_tag { get; set; }
+        public decimal blog_like { get; set; }
+        public decimal blog_coin { get; set; }
+        public DateTime blog_date { get; set; }
+        public string blog_image { get; set; }
+    }
+
     public class BlogContent
     {
         public int user_id { get; set; }
@@ -50,18 +63,22 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id&&b.BlogVisible==true);
-                message.data.Add("blog_user_id", blog.BlogUserId);
-                User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
-                message.data.Add("blog_user_name", user.UserName);
-                message.data.Add("blog_user_profile", user.UserProfile);
-                message.data.Add("blog_tag", blog.BlogTag.Split('-'));
-                message.data.Add("blog_date", blog.BlogDate);
-                message.data.Add("blog_content", blog.BlogContent);
-                message.data.Add("blog_image", blog.BlogImage);
-                message.data.Add("blog_like", blog.BlogLike);
-                message.data.Add("blog_coin", blog.BlogCoin);
-                message.data.Add("blog_summary", blog.BlogSummary);
+                var bloglist = myContext.Blogs.Where(b => b.BlogId == blog_id && b.BlogVisible == true)
+                    .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary,b.BlogContent2 })
+                    .ToList();
+                foreach (var blog in bloglist){
+                    message.data.Add("blog_user_id", blog.BlogUserId);
+                    User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
+                    message.data.Add("blog_user_name", user.UserName);
+                    message.data.Add("blog_user_profile", user.UserProfile);
+                    message.data.Add("blog_tag", blog.BlogTag.Split('-'));
+                    message.data.Add("blog_date", blog.BlogDate);
+                    message.data.Add("blog_content", blog.BlogContent2);
+                    message.data.Add("blog_image", blog.BlogImage);
+                    message.data.Add("blog_like", blog.BlogLike);
+                    message.data.Add("blog_coin", blog.BlogCoin);
+                    message.data.Add("blog_summary", blog.BlogSummary);
+                }
                 message.status = true;
                 message.errorCode = 200;
             }
@@ -354,12 +371,20 @@ namespace Back_End.Controllers
                 string tag= front_end_data.GetProperty("tag").ToString();
                 string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Blog blog = new Blog();
-                blog.BlogUserId = user_id;
+                //
+                byte[] img_bytes = Encoding.UTF8.GetBytes(content);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
                 int id = myContext.Blogs.Count() + 1;
+                string path = "blog/content/" + id.ToString() + ".html";
+                string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                client.PutObject(OssHelp.bucketName, path, stream);
+                blog.BlogContent2 = imageurl;
+                blog.BlogUserId = user_id;
                 blog.BlogId = id;
                 blog.BlogTag = tag;
                 blog.BlogUser = myContext.Users.Single(b => b.UserId == user_id);
-                blog.BlogContent = content;
+                //blog.BlogContent = content;
                 blog.BlogDate = DateTime.Now;
                 blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 blog.BlogSummary = summary;
@@ -374,12 +399,11 @@ namespace Back_End.Controllers
                 {
                     string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
                     img_base64 = img_base64.Split("base64,")[1];//非常重要
-                    byte[] img_bytes = Convert.FromBase64String(img_base64);
-                    var client = OssHelp.createClient();
-                    MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
-                    string path = "blog/" + id.ToString() + type;
-                    client.PutObject(OssHelp.bucketName, path, stream);
-                    string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                    byte[] img_bytes_ = Convert.FromBase64String(img_base64);
+                    MemoryStream stream_ = new MemoryStream(img_bytes_, 0, img_bytes_.Length);
+                    string path_ = "blog/" + id.ToString() + type;
+                    client.PutObject(OssHelp.bucketName, path_, stream_);
+                    string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path_;
                     blog.BlogImage = imgurl;
                 }
                 blogchecking.Blog = blog;
