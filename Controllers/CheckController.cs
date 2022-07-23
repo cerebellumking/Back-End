@@ -137,6 +137,7 @@ namespace Back_End.Controllers
                     .OrderByDescending(b => b.SummitDate)
                     .Select(b => new
                     {
+                        b.IdentityId,
                         b.Identity.UserId,
                         b.Identity.User.UserName,
                         b.Identity.User.UserProfile,

@@ -103,12 +103,13 @@ namespace Back_End.Controllers
                     tag = "";
                 }
                 string[] tags = tag.Split('-');
-                int[] blogs_id = { };
+                List<int> blogs_id = new();
                 List<BlogList> list_blogs = new();
                 foreach (var val in tags)
                 {
                     bool flag = true;
                     var blogs = myContext.Blogs
+                        .Where(c => c.BlogTag.Contains(val) && !blogs_id.Contains(c.BlogId) && c.BlogVisible == true)
                         .OrderByDescending(a => a.Blogcomments.Count * 2 + a.BlogLike * 3 + a.BlogCoin * 5)
                         .Select(b => new
                         {
@@ -124,7 +125,6 @@ namespace Back_End.Controllers
                             b.BlogDate,
                             b.BlogImage,
                         })
-                        .Where(c => c.BlogTag.Contains(val) && !blogs_id.Contains(c.BlogId))
                         .Take(num).ToList();
                     foreach (var blog in blogs)
                     {
@@ -141,6 +141,7 @@ namespace Back_End.Controllers
                         new_blog_info.BlogDate = blog.BlogDate;
                         new_blog_info.BlogImage = blog.BlogImage;
                         list_blogs.Add(new_blog_info);
+                        blogs_id.Add(blog.BlogId); 
                         if (list_blogs.Count >= num)
                         {
                             flag = false;

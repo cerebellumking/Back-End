@@ -168,7 +168,8 @@ namespace Back_End.Controllers
                     {
                         b.QuestionTag
                     }).ToList().First().QuestionTag.Split("-");
-                int[] questions_id = { question_id };
+                List<int> questions_id = new();
+                questions_id.Add(question_id);
                 List<RelatedQuestionInfo> list_questions = new();
                 foreach(var tag in tags)
                 {
@@ -186,17 +187,9 @@ namespace Back_End.Controllers
                         new_question_info.QuestionTitle = question.QuestionTitle;
                         new_question_info.QuestionSummary = question.QuestionSummary;
                         list_questions.Add(new_question_info);
+                        questions_id.Add(question.QuestionId);
                     }
                 }
-                //var questions = myContext.Questions.Where(c => c.QuestionTag == tag && c.QuestionId != question_id).OrderByDescending(a => a.QuestionDate).Select(b => new
-                //{
-                //    b.QuestionId,
-                //    b.QuestionUserId,
-                //    b.QuestionDate,
-                //    b.QuestionTitle,
-                //    //b.QuestionDescription,
-                //    b.QuestionSummary
-                //}).ToList();
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("tag", tags.ToArray());
