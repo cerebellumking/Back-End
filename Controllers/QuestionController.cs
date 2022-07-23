@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
+using System.Text;
+using System.IO;
 namespace Back_End.Controllers
 {
     [Route("api/[controller]")]
@@ -279,34 +281,35 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                myContext.DetachAll();
                 int question_user_id = int.Parse(front_end_data.GetProperty("question_user_id").ToString());
-                string question_tag = front_end_data.GetProperty("question_tag").ToString();
                 string question_title = front_end_data.GetProperty("question_title").ToString();
+                string question_tag = front_end_data.GetProperty("question_tag").ToString();
+                string question_summary = front_end_data.GetProperty("question_summary").ToString();
                 string question_description = front_end_data.GetProperty("question_description").ToString();
                 decimal question_reward = decimal.Parse(front_end_data.GetProperty("question_reward").ToString());
 
-                myContext.DetachAll();
                 Question question = new Question();
-                var count = myContext.Questions.Count();
-                int id;
-                if (count == 0)
-                    id = 1;
-                else
-                {
-                    id = myContext.Questions.Select(b => b.QuestionId).Max() + 1;
-                }
+                byte[] img_bytes = Encoding.UTF8.GetBytes(question_description);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                int id = myContext.Questions.Count() + 1;
+                string path = "question/content/" + id.ToString() + ".html";
+                string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                client.PutObject(OssHelp.bucketName, path, stream);
+
                 question.QuestionId = id;
                 question.QuestionUserId = question_user_id;
-                //question.QuestionUser = myContext.Users.Single(b => b.UserId == question_user_id);
                 question.QuestionTag = question_tag;
+                question.QuestionDate = DateTime.Now;
                 question.QuestionTitle = question_title;
-                question.QuestionDescription = question_description;
+                question.QuestionDescription = imageurl;
                 question.QuestionReward = question_reward;
                 question.QuestionApply = 0;
-                question.QuestionVisible = false; // 未通过审核，不可见——lc改
-                question.QuestionDate = DateTime.Now;
-                int length = question_description.Length > 50 ? 50 : question_description.Length;
-                question.QuestionSummary = question_description.Substring(0, length);
+                question.QuestionVisible = true; // 为调试方便，先设定为true，后改为false
+                question.QuestionSummary = question_summary;
+                // question不存第一张图，因为不一定有图
+
                 Questionchecking questionchecking = new Questionchecking();
                 questionchecking.AdministratorId = 0; // 零表示未审核——lc改
                 questionchecking.QuestionId = id;
