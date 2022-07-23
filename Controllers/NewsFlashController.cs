@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
+using System.Text;
+using System.IO;
 
 namespace Back_End.Controllers
 {
@@ -113,27 +115,50 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                string news_flash_title = front_end_data.GetProperty("news_flash_title").ToString();
-                string news_flash_region = front_end_data.GetProperty("news_flash_region").ToString();
-                string news_flash_content = front_end_data.GetProperty("news_flash_content").ToString();
-                string news_flash_tag = front_end_data.GetProperty("news_flash_tag").ToString();
-                //string news_flash_image = front_end_data.GetProperty("news_flash_image").ToString();
                 myContext.DetachAll();
+                string title = front_end_data.GetProperty("title").ToString();
+                string tag = front_end_data.GetProperty("tag").ToString();
+                string region = front_end_data.GetProperty("region").ToString();
+                string summary = front_end_data.GetProperty("summary").ToString();
+                string content = front_end_data.GetProperty("content").ToString();
+                string img_base64 = front_end_data.GetProperty("image_url").ToString();
+
                 Newsflash newsflash = new();
-                var count = myContext.Newsflashes.Count();
-                int id = 1;
-                if (count != 0)
-                {
-                    id = myContext.Newsflashes.Select(b => b.NewsFlashId).Max() + 1;
-                }
+
+                byte[] img_bytes = Encoding.UTF8.GetBytes(content);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                int id = myContext.Newsflashes.Count() + 1;
+                string path = "newsflash/content/" + id.ToString() + ".html";
+                string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                client.PutObject(OssHelp.bucketName, path, stream);
+
+                newsflash.NewsFlashContent = imageurl;
                 newsflash.NewsFlashId = id;
-                newsflash.NewsFlashTitle = news_flash_title;
+                newsflash.NewsFlashTitle = title;
                 newsflash.NewsFlashDate = DateTime.Now;
-                newsflash.NewsFlashRegion = news_flash_region;
-                newsflash.NewsFlashContent = news_flash_content;
-                newsflash.NewsFlashTag = news_flash_tag;
+                newsflash.NewsFlashRegion = region;
                 newsflash.NewsFlashVisible = true;
-                newsflash.NewsFlashSummary = news_flash_content.Substring(0, 100);
+                newsflash.NewsFlashSummary = summary;
+                newsflash.NewsFlashTag = tag;
+
+                if(img_base64 != "")
+                {
+                    string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                    img_base64 = img_base64.Split("base64,")[1];
+                    byte[] img_bytes_ = Convert.FromBase64String(img_base64);
+                    MemoryStream stream_ = new MemoryStream(img_bytes_, 0, img_bytes_.Length);
+                    string path_ = "blog/" + id.ToString() + type;
+                    client.PutObject(OssHelp.bucketName, path_, stream_);
+                    string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path_;
+                    newsflash.NewsFlashImage = imgurl;
+                }
+
+                myContext.Newsflashes.Add(newsflash);
+                myContext.SaveChanges();
+                message.data.Add("newsflash_id", id);
+                message.errorCode = 200;
+                message.status = true;
             }
             catch (Exception error)
             {
