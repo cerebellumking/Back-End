@@ -64,9 +64,10 @@ namespace Back_End.Controllers
             try
             {
                 var bloglist = myContext.Blogs.Where(b => b.BlogId == blog_id && b.BlogVisible == true)
-                    .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary,b.BlogContent2 })
+                    .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary, b.BlogContent2 })
                     .ToList();
-                foreach (var blog in bloglist){
+                foreach (var blog in bloglist)
+                {
                     message.data.Add("blog_user_id", blog.BlogUserId);
                     User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                     message.data.Add("blog_user_name", user.UserName);
@@ -82,70 +83,84 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.errorCode = 200;
             }
-            catch
+            catch (Exception error)
             {
-
+                Console.WriteLine(error.ToString());
             }
             return message.ReturnJson();
         }
 
         [HttpGet("tag")]
-        public string getBlogList(int num,string tag)
+        public string getBlogList(int num, string tag)
         {
             // 返回包含某个tag的给定数量的blog
             Message message = new Message();
+            tag = System.Web.HttpUtility.UrlDecode(tag);
             try
             {
-                tag = System.Web.HttpUtility.UrlDecode(tag);
-                var bloglist = myContext.Blogs
-                    .Where(a => a.BlogVisible == true )
-                    .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
-                    .ToList();
-                if (tag == "")
+                if (tag == null)
                 {
-                    foreach (var blog in bloglist)
-                    {
-                        string[] tag_array = tag.Split('-');
-                        bool flag = true;
-                        foreach (var val in tag_array)
+                    tag = "";
+                }
+                string[] tags = tag.Split('-');
+                int[] blogs_id = { };
+                List<BlogList> list_blogs = new();
+                foreach (var val in tags)
+                {
+                    bool flag = true;
+                    var blogs = myContext.Blogs
+                        .OrderByDescending(a => a.Blogcomments.Count * 2 + a.BlogLike * 3 + a.BlogCoin * 5)
+                        .Select(b => new
                         {
-                            if (!blog.BlogTag.Contains(val))
-                            {
-                                flag = false;
-                                break;
-                            }
+                            b.BlogUser.UserId,
+                            b.BlogUser.UserName,
+                            b.BlogUser.UserProfile,
+                            b.BlogId,
+                            b.BlogSummary,
+                            b.BlogTag,
+                            b.BlogLike,
+                            b.BlogCoin,
+                            b.BlogUserId,
+                            b.BlogDate,
+                            b.BlogImage,
+                        })
+                        .Where(c => c.BlogTag.Contains(val) && !blogs_id.Contains(c.BlogId))
+                        .Take(num).ToList();
+                    foreach (var blog in blogs)
+                    {
+                        BlogList new_blog_info = new();
+                        new_blog_info.UserId = blog.UserId;
+                        new_blog_info.UserName = blog.UserName;
+                        new_blog_info.UserProfile = blog.UserProfile;
+                        new_blog_info.BlogId = blog.BlogId;
+                        new_blog_info.BlogSummary = blog.BlogSummary;
+                        new_blog_info.BlogTag = blog.BlogTag.Split('-');
+                        new_blog_info.BlogLike = (decimal)blog.BlogLike;
+                        new_blog_info.BlogCoin = (decimal)blog.BlogCoin;
+                        new_blog_info.BlogUserId = (int)blog.BlogUserId;
+                        new_blog_info.BlogDate = blog.BlogDate;
+                        new_blog_info.BlogImage = blog.BlogImage;
+                        list_blogs.Add(new_blog_info);
+                        if (list_blogs.Count >= num)
+                        {
+                            flag = false;
+                            break;
                         }
-                        if (!flag)
-                            bloglist.Remove(blog);
+                    }
+                    if (!flag)
+                    {
+                        break;
                     }
                 }
-                if (bloglist.Count > num)
-                    bloglist.RemoveRange(num, bloglist.Count - num);
-                List<BlogList> blogs  = new();
-                foreach(var blog in bloglist)
-                {
-                    BlogList list = new();
-                    list.UserId = blog.UserId;
-                    list.UserName = blog.UserName;
-                    list.UserProfile = blog.UserProfile;
-                    list.BlogUserId = (int)blog.BlogUserId;
-                    list.BlogSummary = blog.BlogSummary;
-                    list.BlogImage = blog.BlogImage;
-                    list.BlogId = blog.BlogId;
-                    list.BlogDate = blog.BlogDate;
-                    list.BlogCoin = (decimal)blog.BlogCoin;
-                    list.Count = blog.Count;
-                    list.BlogTag = blog.BlogTag.Split('-');
-                    list.BlogLike = (decimal)blog.BlogLike;
-                    blogs.Add(list);
-                }
-                message.data.Add("blog", blogs.ToArray());
-                message.status = true;
                 message.errorCode = 200;
+                message.status = true;
+                message.data.Add("tag", tags.ToArray());
+                message.data.Add("count", list_blogs.Count);
+                message.data.Add("blog", list_blogs.ToArray());
             }
-            catch
+            catch (Exception error)
             {
+                Console.WriteLine(error.ToString());
 
             }
             return message.ReturnJson();
@@ -158,9 +173,9 @@ namespace Back_End.Controllers
             try
             {
                 var bloglist = myContext.Blogs
-                    .Where(a => a.BlogVisible == true )
+                    .Where(a => a.BlogVisible == true)
                     .OrderByDescending(c => c.BlogDate)
-                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count,b.BlogUser.UserId,b.BlogUser.UserName,b.BlogUser.UserProfile })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -202,7 +217,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
                     //.OrderByDescending(c => c.Blogcomments.Count)
-                    .OrderByDescending(c=>c.Blogcomments.Count*2+c.BlogLike*3+c.BlogCoin*5)
+                    .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
                     .ToList();
                 if (bloglist.Count > num)
@@ -368,7 +383,7 @@ namespace Back_End.Controllers
                 string content = front_end_data.GetProperty("content").ToString();
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string summary = front_end_data.GetProperty("summary").ToString();
-                string tag= front_end_data.GetProperty("tag").ToString();
+                string tag = front_end_data.GetProperty("tag").ToString();
                 string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Blog blog = new Blog();
                 //
@@ -413,7 +428,8 @@ namespace Back_End.Controllers
                 message.data["blog_id"] = id;
                 message.errorCode = 200;
                 message.status = true;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
             }
