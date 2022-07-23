@@ -94,7 +94,8 @@ namespace Back_End.Controllers
             {
                 message.errorCode = 200;
                 message.status = myContext.Coinblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id);
-                message.data["blog_coin"] = myContext.Blogs.Single(b => b.BlogId == blog_id).BlogCoin;
+                //message.data["blog_coin"] = myContext.Blogs.Single(b => b.BlogId == blog_id).BlogCoin;
+                message.data["blog_coin"] = myContext.Blogs.Where(b=>b.BlogId==blog_id).Select(b=>b.BlogCoin).ToArray()[0].Value;
             }
             catch (Exception e)
             {

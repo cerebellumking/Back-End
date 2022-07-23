@@ -12,6 +12,9 @@ namespace Back_End.Controllers
 {
     public class BlogList
     {
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string UserProfile { get; set; }
         public int BlogId { get; set; }
         public string BlogSummary { get; set; }
         public string[] BlogTag { get; set; }
@@ -78,24 +81,27 @@ namespace Back_End.Controllers
             {
                 tag = System.Web.HttpUtility.UrlDecode(tag);
                 var bloglist = myContext.Blogs
-                    .Where(a => a.BlogVisible == true && a.BlogTag.Contains(tag))
+                    .Where(a => a.BlogVisible == true )
                     .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
-                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
                     .ToList();
-                foreach (var blog in bloglist)
+                if (tag == "")
                 {
-                    string[] tag_array = tag.Split('-');
-                    bool flag = true;
-                    foreach (var val in tag_array)
+                    foreach (var blog in bloglist)
                     {
-                        if (!blog.BlogTag.Contains(val))
+                        string[] tag_array = tag.Split('-');
+                        bool flag = true;
+                        foreach (var val in tag_array)
                         {
-                            flag = false;
-                            break;
+                            if (!blog.BlogTag.Contains(val))
+                            {
+                                flag = false;
+                                break;
+                            }
                         }
+                        if (!flag)
+                            bloglist.Remove(blog);
                     }
-                    if (!flag)
-                        bloglist.Remove(blog);
                 }
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -103,13 +109,16 @@ namespace Back_End.Controllers
                 foreach(var blog in bloglist)
                 {
                     BlogList list = new();
+                    list.UserId = blog.UserId;
+                    list.UserName = blog.UserName;
+                    list.UserProfile = blog.UserProfile;
                     list.BlogUserId = (int)blog.BlogUserId;
                     list.BlogSummary = blog.BlogSummary;
                     list.BlogImage = blog.BlogImage;
                     list.BlogId = blog.BlogId;
                     list.BlogDate = blog.BlogDate;
                     list.BlogCoin = (decimal)blog.BlogCoin;
-                    list.Count = blog.Blogcomments.Count;
+                    list.Count = blog.Count;
                     list.BlogTag = blog.BlogTag.Split('-');
                     list.BlogLike = (decimal)blog.BlogLike;
                     blogs.Add(list);
@@ -134,7 +143,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true )
                     .OrderByDescending(c => c.BlogDate)
-                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage,b.Blogcomments.Count,b.BlogUser.UserId,b.BlogUser.UserName,b.BlogUser.UserProfile })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -142,13 +151,16 @@ namespace Back_End.Controllers
                 foreach (var blog in bloglist)
                 {
                     BlogList list = new();
+                    list.UserId = blog.UserId;
+                    list.UserName = blog.UserName;
+                    list.UserProfile = blog.UserProfile;
                     list.BlogUserId = (int)blog.BlogUserId;
                     list.BlogSummary = blog.BlogSummary;
                     list.BlogImage = blog.BlogImage;
                     list.BlogId = blog.BlogId;
                     list.BlogDate = blog.BlogDate;
                     list.BlogCoin = (decimal)blog.BlogCoin;
-                    list.Count = blog.Blogcomments.Count;
+                    list.Count = blog.Count;
                     list.BlogTag = blog.BlogTag.Split('-');
                     list.BlogLike = (decimal)blog.BlogLike;
                     blogs.Add(list);
@@ -174,7 +186,7 @@ namespace Back_End.Controllers
                     .Where(a => a.BlogVisible == true)
                     //.OrderByDescending(c => c.Blogcomments.Count)
                     .OrderByDescending(c=>c.Blogcomments.Count*2+c.BlogLike*3+c.BlogCoin*5)
-                    //.Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count })
+                    .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -182,13 +194,16 @@ namespace Back_End.Controllers
                 foreach (var blog in bloglist)
                 {
                     BlogList list = new();
+                    list.UserId = blog.UserId;
+                    list.UserName = blog.UserName;
+                    list.UserProfile = blog.UserProfile;
                     list.BlogUserId = (int)blog.BlogUserId;
                     list.BlogSummary = blog.BlogSummary;
                     list.BlogImage = blog.BlogImage;
                     list.BlogId = blog.BlogId;
                     list.BlogDate = blog.BlogDate;
                     list.BlogCoin = (decimal)blog.BlogCoin;
-                    list.Count = blog.Blogcomments.Count;
+                    list.Count = blog.Count;
                     list.BlogTag = blog.BlogTag.Split('-');
                     list.BlogLike = (decimal)blog.BlogLike;
                     blogs.Add(list);
