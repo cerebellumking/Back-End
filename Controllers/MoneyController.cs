@@ -5,7 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
-
+using Alipay.EasySDK.Factory;
+using Alipay.EasySDK.Kernel;
+using Alipay.EasySDK.Kernel.Util;
+using Alipay.EasySDK.Payment.Common.Models;
+using Alipay.EasySDK.Payment.FaceToFace.Models;
+using Alipay.EasySDK.Payment.Page.Models;
+using System.Text.Json;
 namespace Back_End.Controllers
 {
     public class RecordInfo
@@ -135,6 +141,37 @@ namespace Back_End.Controllers
                 Console.WriteLine(e.ToString());
             }
             return message.ReturnJson();
+        }
+
+        [HttpPost("order")]
+        public string createOrder(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                string user_id = front_end_data.GetProperty("user_id").ToString();
+                string num = front_end_data.GetProperty("num").ToString();
+                string name = front_end_data.GetProperty("name").ToString();
+                string order_num = DateTime.Now.ToShortDateString().Replace('/','T')+ DateTime.Now.ToShortTimeString().Replace(':', 'T')+'U'+user_id.ToString();
+                AlipayTradePagePayResponse response = Factory.Payment.Page().Pay(name, order_num, num, "http://43.142.41.192:54686/#/login");
+                // 处理响应或异常
+                if (ResponseChecker.Success(response))
+                {
+                    return response.Body;
+                }
+                else
+                {
+                    message.errorCode = 200;
+                    message.status = false;
+                }
+                //Console.WriteLine(order_num);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+            //return message.ReturnJson();
         }
     }
 }
