@@ -64,7 +64,7 @@ namespace Back_End.Controllers
             try
             {
                 var bloglist = myContext.Blogs.Where(b => b.BlogId == blog_id && b.BlogVisible == true)
-                    .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary, b.BlogContent2 })
+                    .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary, b.BlogContent })
                     .ToList();
                 foreach (var blog in bloglist)
                 {
@@ -74,7 +74,7 @@ namespace Back_End.Controllers
                     message.data.Add("blog_user_profile", user.UserProfile);
                     message.data.Add("blog_tag", blog.BlogTag.Split('-'));
                     message.data.Add("blog_date", blog.BlogDate);
-                    message.data.Add("blog_content", blog.BlogContent2);
+                    message.data.Add("blog_content", blog.BlogContent);
                     message.data.Add("blog_image", blog.BlogImage);
                     message.data.Add("blog_like", blog.BlogLike);
                     message.data.Add("blog_coin", blog.BlogCoin);
@@ -395,7 +395,7 @@ namespace Back_End.Controllers
                 string path = "blog/content/" + id.ToString() + ".html";
                 string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
                 client.PutObject(OssHelp.bucketName, path, stream);
-                blog.BlogContent2 = imageurl;
+                blog.BlogContent = imageurl;
                 blog.BlogUserId = user_id;
                 blog.BlogId = id;
                 blog.BlogTag = tag;

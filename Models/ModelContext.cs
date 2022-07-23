@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
+
 #nullable disable
 
 namespace Back_End.Models
@@ -72,6 +73,7 @@ namespace Back_End.Models
                 }
             }
         }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -467,13 +469,9 @@ namespace Back_End.Models
                     .HasDefaultValueSql("0");
 
                 entity.Property(e => e.BlogContent)
-                    .HasColumnType("CLOB")
-                    .HasColumnName("BLOG_CONTENT");
-
-                entity.Property(e => e.BlogContent2)
                     .HasMaxLength(256)
                     .IsUnicode(false)
-                    .HasColumnName("BLOG_CONTENT2");
+                    .HasColumnName("BLOG_CONTENT");
 
                 entity.Property(e => e.BlogDate)
                     .HasColumnType("DATE")
