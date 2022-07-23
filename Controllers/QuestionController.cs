@@ -23,12 +23,27 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
-                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
+                var question = myContext.Questions
+                    .Where(b => b.QuestionId == question_id)
+                    .Select(b => new
+                    {
+                        b.QuestionVisible,
+                        b.QuestionUserId,
+                        b.QuestionTag,
+                        b.QuestionDate,
+                        b.QuestionTitle,
+                        b.QuestionDescription,
+                        b.QuestionReward,
+                        b.QuestionApply,
+                        b.QuestionImage,
+                    }).ToList().First();
                 // 获取提问者相关信息
                 User user = myContext.Users.Single(b => b.UserId == question.QuestionUserId && b.UserState == true);
                 string qualification;
                 int university_id = -1;
-                var all_qualification = myContext.Qualifications.Where(c => c.UserId == user.UserId && c.Visible == true).Select(b => new { b.Identity,b.UniversityId });
+                var all_qualification = myContext.Qualifications
+                    .Where(c => c.UserId == user.UserId && c.Visible == true)
+                    .Select(b => new { b.Identity,b.UniversityId });
                 if (all_qualification.Any(b => b.Identity == "博士"))
                 {
                     qualification = "博士";
@@ -100,7 +115,9 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                var answers = myContext.Answers.Where(c => c.AnswerVisible == true && c.QuestionId == question_id).OrderByDescending(a => a.AnswerDate).Select(b => new
+                var answers = myContext.Answers.Where(c => c.AnswerVisible == true && c.QuestionId == question_id)
+                    .OrderByDescending(a => a.AnswerDate)
+                    .Select(b => new
                 {
                     b.AnswerId,
                     b.AnswerUserId,
@@ -143,7 +160,12 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                string[] tags = myContext.Questions.Single(c => c.QuestionId == question_id).QuestionTag.Split("-");
+                string[] tags = myContext.Questions
+                    .Where(c => c.QuestionId == question_id && c.QuestionVisible == true)
+                    .Select(b => new
+                    {
+                        b.QuestionTag
+                    }).ToList().First().QuestionTag.Split("-");
                 int[] questions_id = { question_id };
                 List<RelatedQuestionInfo> list_questions = new();
                 foreach(var tag in tags)
@@ -192,7 +214,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.QuestionDate).Select(b => new
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true)
+                    .OrderByDescending(a => a.QuestionDate)
+                    .Select(b => new
                 {
                     b.Answers.Count,
                     b.QuestionId,
@@ -223,7 +247,9 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var question = myContext.Questions.Where(c => c.QuestionVisible == true).OrderByDescending(a => a.Answers.Count).Select(b => new
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true)
+                    .OrderByDescending(a => a.Answers.Count)
+                    .Select(b => new
                 {
                     b.Answers.Count,
                     b.QuestionId,
@@ -271,7 +297,7 @@ namespace Back_End.Controllers
                 }
                 question.QuestionId = id;
                 question.QuestionUserId = question_user_id;
-                question.QuestionUser = myContext.Users.Single(b => b.UserId == question_user_id);
+                //question.QuestionUser = myContext.Users.Single(b => b.UserId == question_user_id);
                 question.QuestionTag = question_tag;
                 question.QuestionTitle = question_title;
                 question.QuestionDescription = question_description;
