@@ -104,6 +104,7 @@ namespace Back_End.Controllers
                         b.Answer.AnswerUserId,
                         //添加管理员id，回答标题，答主用户名和头像
                         b.AdministratorId,
+                        b.Answer.Question.QuestionTitle,
                         b.Answer.AnswerSummary,
                         b.Answer.AnswerUser.UserName,
                         b.Answer.AnswerUser.UserProfile,
@@ -176,8 +177,14 @@ namespace Back_End.Controllers
                 message.data.Add("QuestionTitle", question.QuestionTitle);
                 message.data.Add("QuestionContent", question.QuestionDescription);
                 message.data.Add("QuestionUserId", question.QuestionUserId);
-                message.data.Add("QuestionUserName", question.QuestionUser.UserName);
-                message.data.Add("QuestionUserProfile", question.QuestionUser.UserProfile);
+                var user = myContext.Users.Where(b => b.UserId == question.QuestionUserId)
+                    .Select(b => new
+                    {
+                        b.UserName,
+                        b.UserProfile,
+                    }).First();
+                message.data.Add("QuestionUserName", user.UserName);
+                message.data.Add("QuestionUserProfile", user.UserProfile);
                 message.data.Add("QuestionTag", question.QuestionTag);
                 message.data.Add("AdministratorId", question_checking.AdministratorId);
                 message.data.Add("QuestionDate", question_checking.QuestionDate);
@@ -203,11 +210,17 @@ namespace Back_End.Controllers
                 Blogchecking blog_checking = myContext.Blogcheckings.Single(b => b.BlogId == blog_id);
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
                 message.data.Add("BlogId", blog_checking.BlogId);
+                message.data.Add("BlogUserId", blog.BlogUserId);
                 message.data.Add("BlogTag", blog.BlogTag);
                 message.data.Add("BlogContent", blog.BlogContent);
-                message.data.Add("BlogUserName", blog.BlogUser.UserName);
-                message.data.Add("BlogUserProfile", blog.BlogUser.UserProfile);
-                message.data.Add("BlogUserId", blog.BlogUserId);
+                var user = myContext.Users.Where(b => b.UserId == blog.BlogUserId)
+                    .Select(b => new
+                    {
+                        b.UserName,
+                        b.UserProfile,
+                    }).First();
+                message.data.Add("BlogUserName", user.UserName);
+                message.data.Add("BlogUserProfile", user.UserProfile);
                 message.data.Add("AdministratorId", blog_checking.AdministratorId);
                 message.data.Add("BlogDate", blog_checking.BlogDate);
                 message.data.Add("ReviewResult", blog_checking.ReviewResult);
@@ -234,8 +247,20 @@ namespace Back_End.Controllers
                 message.data.Add("AnswerId", answer_checking.AnswerId);
                 message.data.Add("AnswerContent", answer.AnswerContent);
                 message.data.Add("AnswerUserId", answer.AnswerUserId);
-                message.data.Add("AnswerUserName", answer.AnswerUser.UserName);
-                message.data.Add("AnswerUserProfile", answer.AnswerUser.UserProfile);
+                var user = myContext.Users.Where(b => b.UserId == answer.AnswerUserId)
+                    .Select(b => new
+                    {
+                        b.UserName,
+                        b.UserProfile,
+                    }).First();
+                message.data.Add("AnswerUserName", user.UserName);
+                message.data.Add("AnswerUserProfile", user.UserProfile);
+                var question = myContext.Questions.Where(b => b.QuestionId == answer.QuestionId)
+                    .Select(b => new
+                    {
+                        b.QuestionTitle,
+                    }).First();
+                message.data.Add("QuestionTitle", question.QuestionTitle);
                 message.data.Add("AnswerSummary", answer.AnswerSummary);
                 message.data.Add("AdministratorId", answer_checking.AdministratorId);
                 message.data.Add("AnswerDate", answer_checking.AnswerDate);
@@ -262,7 +287,14 @@ namespace Back_End.Controllers
                 Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
                 message.data.Add("IdentityId", qualification_checking.IdentityId);
                 message.data.Add("UniversityId", qualification.UniversityId);
-                message.data.Add("University_name", qualification.University.UniversityChName);
+                var university = myContext.Universities.Where(b => b.UniversityId == qualification.UniversityId)
+                    .Select(b => new
+                    {
+                        b.UniversityChName,
+                        b.UniversityEnName,
+                    }).First();
+                message.data.Add("UniversityChName", university.UniversityChName);
+                message.data.Add("UniversityEnName", university.UniversityEnName);
                 message.data.Add("Identity", qualification.Identity);
                 message.data.Add("IdentityImage", qualification.IdentityQualificationImage);
                 message.data.Add("EnrollmentTime", qualification.EnrollmentTime);
