@@ -34,6 +34,7 @@ namespace Back_End.Controllers
                         b.QuestionTag,
                         b.QuestionDate,
                         b.QuestionTitle,
+                        b.QuestionSummary,
                         b.QuestionDescription,
                         b.QuestionReward,
                         b.QuestionApply,
@@ -92,6 +93,7 @@ namespace Back_End.Controllers
                     message.data.Add("question_date", question.QuestionDate);
                     message.data.Add("question_title", question.QuestionTitle);
                     message.data.Add("question_description", question.QuestionDescription);
+                    message.data.Add("question_summary", question.QuestionSummary);
                     message.data.Add("question_reward", question.QuestionReward);
                     message.data.Add("question_apply", question.QuestionApply);
                     message.data.Add("question_image", question.QuestionImage);
