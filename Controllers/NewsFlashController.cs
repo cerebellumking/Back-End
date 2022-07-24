@@ -148,7 +148,7 @@ namespace Back_End.Controllers
                     img_base64 = img_base64.Split("base64,")[1];
                     byte[] img_bytes_ = Convert.FromBase64String(img_base64);
                     MemoryStream stream_ = new MemoryStream(img_bytes_, 0, img_bytes_.Length);
-                    string path_ = "blog/" + id.ToString() + type;
+                    string path_ = "newsflash/" + id.ToString() + type;
                     client.PutObject(OssHelp.bucketName, path_, stream_);
                     string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path_;
                     newsflash.NewsFlashImage = imgurl;
