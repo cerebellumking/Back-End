@@ -156,7 +156,7 @@ namespace Back_End.Controllers
 
                 myContext.Newsflashes.Add(newsflash);
                 myContext.SaveChanges();
-                message.data.Add("newsflash_id", id);
+                message.data["newsflash_id"] = id;
                 message.errorCode = 200;
                 message.status = true;
             }
@@ -164,7 +164,7 @@ namespace Back_End.Controllers
             {
                 Console.WriteLine(error.ToString());
             }
-            return message.ToString();
+            return message.ReturnJson();
         }
 
         [HttpDelete]
