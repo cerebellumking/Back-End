@@ -58,7 +58,7 @@ namespace Back_End
                 AlipayPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxn3YczlkG4BDA1LLr2T2rAL0sjYOx36ENJ58h7yYg0wdagfzesRnbR999AIZIhR/A74LZhtMLr3cT6z0Dap0DBdgOBIh3s33mPAr0gPCbY1gB2VDmwqOGLaPjPixCmbesV+zcahWEmZLrRqj0T7WwO2pYgfOjLQqDiKUeJaJK8JTAKMvDYMTV5DJnOKhpMiODtr2ph/FtAc6TWPxddbNl+3m2ph26ZZHBDC+Jpyv+h5a9eO2Bldv/M8OyHrt4IFHE8TwBE4go4MMgzzCjaN2RMmz6tTVWgQ7Hnz8IZiWBlmbAzGD1ClhDEjq3mWP9n7XBIC0mHd1j6bZkfULElJN7wIDAQAB",
 
                 //可设置异步通知接收服务地址（可选）
-                NotifyUrl = "http://43.142.41.192:54686/#/home"
+                NotifyUrl = "http://43.142.41.192:6001/api/money/check"
 
                 //可设置AES密钥，调用AES加解密相关接口时需要（可选）
                 // EncryptKey = "<-- 请填写您的AES密钥，例如：aa4BtZ4tspm2wnXLb1ThQA== -->"
