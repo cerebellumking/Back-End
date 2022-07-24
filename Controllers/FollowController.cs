@@ -46,7 +46,7 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
 
-        [HttpPost]
+        [HttpPost("follow_user")]
         public string followUser(dynamic front_end_data)
         {
 
@@ -166,7 +166,7 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
-        [HttpPut]
+        [HttpPut("follow_user")]
         public string cancelFollowUser(dynamic front_end_data)
         {
             FollowMessage message = new FollowMessage();
@@ -238,7 +238,7 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpGet]
+        [HttpGet("follow_user")]
         public string whetherFollowUser(int user_id, int follow_user_id)
         {
             FollowMessage message = new FollowMessage();
@@ -247,6 +247,7 @@ namespace Back_End.Controllers
                 bool flag = myContext.Followusers.Any(b => b.UserId == user_id && b.FollowUserId == follow_user_id && b.Cancel == false);
                 message.errorCode = 200;
                 message.status = flag;
+                message.data["follow"] = myContext.Users.Single(b=>b.UserId==follow_user_id).UserFollower;
             }
             catch (Exception e)
             {
@@ -263,7 +264,8 @@ namespace Back_End.Controllers
             {
                 bool flag = myContext.Followuniversities.Any(b => b.UserId == user_id && b.UniversityId == university_id && b.Cancel == false);
                 message.errorCode = 200;
-                message.status = flag;
+                message.status = flag;          
+                message.data["follow"] = myContext.Followuniversities.Where(b=>b.UniversityId==university_id&&b.Cancel==false).Count();              
             }
             catch (Exception e)
             {
@@ -280,7 +282,8 @@ namespace Back_End.Controllers
             {
                 bool flag = myContext.Followinstitutions.Any(b => b.UserId == user_id && b.InstitutionId == institution_id && b.Cancel == false);
                 message.errorCode = 200;
-                message.status = flag;
+                message.status = flag;               
+                message.data["follow"] = myContext.Followinstitutions.Where(b => b.InstitutionId == institution_id && b.Cancel == false).Count();              
             }
             catch (Exception e)
             {

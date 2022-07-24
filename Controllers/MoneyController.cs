@@ -142,7 +142,37 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
-
+        [HttpPost("check")]
+        public string checkOrder(int user_id,string out_trade_num)
+        {
+            Message message = new();
+            try
+            {
+                AlipayTradeQueryResponse alipayTradeQueryResponse = Factory.Payment.Common().Query(out_trade_num);
+                Console.WriteLine(alipayTradeQueryResponse.TradeStatus);
+                Console.WriteLine(alipayTradeQueryResponse.TotalAmount);
+                if (alipayTradeQueryResponse.TradeStatus == "TRADE_SUCCESS")
+                {
+                    myContext.DetachAll();
+                    Moneychangerecord moneychangerecord = new();
+                    moneychangerecord.RecordId = myContext.Moneychangerecords.Count() + 1;
+                    moneychangerecord.UserId = user_id;
+                    moneychangerecord.ChangeNum = int.Parse(alipayTradeQueryResponse.TotalAmount.Split('.')[0])*10;
+                    moneychangerecord.ChangeDate = DateTime.Now;
+                    moneychangerecord.ChangeReason = "充值" + (moneychangerecord.ChangeNum).ToString() + "枚鸟币";
+                    User user = myContext.Users.Single(b => b.UserId == user_id);
+                    user.UserCoin += moneychangerecord.ChangeNum;
+                    myContext.Add(moneychangerecord);
+                    myContext.SaveChanges();
+                }
+            }
+            catch(Exception e)
+            {
+                
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
         [HttpPost("order")]
         public string createOrder(dynamic front_end_data)
         {
@@ -152,8 +182,11 @@ namespace Back_End.Controllers
                 string user_id = front_end_data.GetProperty("user_id").ToString();
                 string num = front_end_data.GetProperty("num").ToString();
                 string name = front_end_data.GetProperty("name").ToString();
-                string order_num = DateTime.Now.ToShortDateString().Replace('/','T')+ DateTime.Now.ToShortTimeString().Replace(':', 'T')+'U'+user_id.ToString();
-                AlipayTradePagePayResponse response = Factory.Payment.Page().Pay(name, order_num, num, "http://43.142.41.192:54686/#/login");
+                string order_num = DateTime.Now.ToShortDateString().Replace('/','T')+ DateTime.Now.ToShortTimeString().Replace(':', 'T')+DateTime.Now.Second.ToString()+user_id.ToString();
+                Console.WriteLine(order_num);
+                AlipayTradePagePayResponse response = Factory.Payment.Page()
+                    .AsyncNotify("http://43.142.41.192:6001/api/money/check?user_id=" + user_id.ToString() + "&out_trade_num=" + order_num)
+                    .Pay(name, order_num, num, "http://43.142.41.192:54686/#/login");
                 // 处理响应或异常
                 if (ResponseChecker.Success(response))
                 {
