@@ -313,6 +313,7 @@ namespace Back_End.Controllers
                     follow.user_signature = user.UserSignature;
                     followUserList.Add(follow);
                 }
+                message.data.Add("count", followUserList.Count);
                 message.data.Add("follows", followUserList.ToArray());
                 message.errorCode = 200;
                 message.status = true;
@@ -344,6 +345,7 @@ namespace Back_End.Controllers
                     follow.user_signature = user.UserSignature;
                     followUserList.Add(follow);
                 }
+                message.data.Add("count", followUserList.Count);
                 message.data.Add("follows", followUserList.ToArray());
                 message.errorCode = 200;
                 message.status = true;
@@ -376,6 +378,7 @@ namespace Back_End.Controllers
                     follow.university_region = university.UniversityRegion;
                     followUniversityList.Add(follow);
                 }
+                message.data.Add("count", followUniversityList.Count);
                 message.data.Add("follows", followUniversityList.ToArray());
                 message.errorCode = 200;
                 message.status = true;
@@ -408,6 +411,7 @@ namespace Back_End.Controllers
                     follow.institution_target = institution.InstitutionTarget;
                     followInstitutionList.Add(follow);
                 }
+                message.data.Add("count", followInstitutionList.Count);
                 message.data.Add("follows", followInstitutionList.ToArray());
                 message.errorCode = 200;
                 message.status = true;

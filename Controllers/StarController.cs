@@ -238,12 +238,14 @@ namespace Back_End.Controllers
         public class StarQuestionInfo
         {
             public int question_id { get; set; }
+            public int user_id { get; set; }
+            public string user_name { get; set; }
             public string question_tag { get; set; }
             public DateTime question_date { get; set; }
             public DateTime star_time { get; set; }
             public string question_title { get; set; }
-            public decimal? question_reward { get; set; }
-            public int? question_apply { get; set; }
+            public decimal question_reward { get; set; }
+            public int question_apply { get; set; }
             public string question_summary { get; set; }
         }
 
@@ -260,15 +262,23 @@ namespace Back_End.Controllers
                     Question question = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
                     StarQuestionInfo star = new();
                     star.question_id = question.QuestionId;
+                    star.user_id = (int)question.QuestionUserId;
+                    var user = myContext.Users.Where(b => b.UserId == question.QuestionUserId)
+                        .Select(b => new
+                        {
+                            b.UserName,
+                        }).First();
+                    star.user_name = user.UserName;
                     star.question_tag = question.QuestionTag;
                     star.question_date = question.QuestionDate;
                     star.star_time = val.StarTime;
                     star.question_title = question.QuestionTitle;
-                    star.question_reward = question.QuestionReward;
-                    star.question_apply = question.QuestionApply;
+                    star.question_reward = (decimal)question.QuestionReward;
+                    star.question_apply = (int)question.QuestionApply;
                     star.question_summary = question.QuestionSummary;
                     starQuestionList.Add(star);
                 }
+                message.data.Add("count", starQuestionList.Count);
                 message.data.Add("stars", starQuestionList.ToArray());
                 message.errorCode = 200;
                 message.status = true;
@@ -320,6 +330,7 @@ namespace Back_End.Controllers
                     star.answer_summary = answer.AnswerSummary;
                     starAnswerList.Add(star);
                 }
+                message.data.Add("count", starAnswerList.Count);
                 message.data.Add("stars", starAnswerList.ToArray());
                 message.errorCode = 200;
                 message.status = true;
@@ -341,6 +352,7 @@ namespace Back_End.Controllers
             public decimal? blog_like { get; set; }
             public decimal? blog_coin { get; set; }
             public string blog_summary { get; set; }
+            public string image_url { get; set; }
         }
 
         [HttpGet("blogs")]
@@ -365,8 +377,10 @@ namespace Back_End.Controllers
                     star.blog_like = blog.BlogLike;
                     star.blog_coin = blog.BlogCoin;
                     star.blog_summary = blog.BlogSummary;
+                    star.image_url = blog.BlogImage;
                     starBlogList.Add(star);
                 }
+                message.data.Add("count", starBlogList.Count);
                 message.data.Add("stars", starBlogList.ToArray());
                 message.errorCode = 200;
                 message.status = true;

@@ -167,6 +167,7 @@ namespace Back_End.Controllers
                         b.QuestionTitle,
                         b.QuestionSummary,
                     }).ToList();
+                message.data.Add("count", questions.Count);
                 message.data.Add("question_list", questions.ToArray()); ;
                 message.errorCode = 200;
                 message.status = true;
@@ -189,10 +190,14 @@ namespace Back_End.Controllers
                     .Select(b => new
                     {
                         b.AnswerId,
+                        b.Question.QuestionTitle,
+                        b.AnswerUserId,
+                        b.AnswerUser.UserName,
                         b.AnswerLike,
                         b.AnswerDate,
                         b.AnswerSummary,
                     }).ToList();
+                message.data.Add("count", answers.Count);
                 message.data.Add("answer_list", answers.ToArray()); ;
                 message.errorCode = 200;
                 message.status = true;
@@ -217,7 +222,9 @@ namespace Back_End.Controllers
                         b.BlogId,
                         b.BlogSummary,
                         b.BlogDate,
+                        b.BlogImage,
                     }).ToList();
+                message.data.Add("count", blogs.Count);
                 message.data.Add("blog_list", blogs.ToArray()); ;
                 message.errorCode = 200;
                 message.status = true;
