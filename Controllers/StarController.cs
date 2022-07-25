@@ -296,6 +296,8 @@ namespace Back_End.Controllers
             public int? question_id { get; set; }
             public int? answer_user_id { get; set; }
             public string answer_user_name { get; set; }
+            public int? question_user_id { get; set; }
+            public string question_user_name { get; set; }
             public DateTime answer_date { get; set; }
             public DateTime star_time { get; set; }
             public string question_title { get; set; }
@@ -316,12 +318,15 @@ namespace Back_End.Controllers
                 {
                     Answer answer = myContext.Answers.Single(b => b.AnswerId == val.AnswerId);
                     StarAnswerInfo star = new();
+                    User answer_user = myContext.Users.Single(b => b.UserId == answer.AnswerUserId);
+                    Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
+                    User question_user = myContext.Users.Single(b => b.UserId == question.QuestionUserId);
                     star.answer_id = answer.AnswerId;
                     star.question_id = answer.QuestionId;
                     star.answer_user_id = answer.AnswerUserId;
-                    User user = myContext.Users.Single(b => b.UserId == answer.AnswerUserId);
-                    star.answer_user_name = user.UserName;
-                    Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
+                    star.answer_user_name = answer_user.UserName;
+                    star.question_user_id = question.QuestionUserId;
+                    star.question_user_name = question_user.UserName;
                     star.answer_date = answer.AnswerDate;
                     star.star_time = val.StarTime;
                     star.question_title = question.QuestionTitle;
