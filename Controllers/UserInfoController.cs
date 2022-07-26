@@ -279,9 +279,35 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPut("change")]
-        public void changeInfo()
+        public string changeInfo(dynamic front_end_data)
         {
-
+            Message message = new();
+            try
+            {
+                // 修改信息，包括gender, phone, email, signature, user_name, profile
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                string name = front_end_data.GetProperty("user_name").ToString();
+                string phone = front_end_data.GetProperty("user_phone").ToString();
+                string gender = front_end_data.GetProperty("user_gender").ToString();
+                string email = front_end_data.GetProperty("user_email").ToString();
+                string signature = front_end_data.GetProperty("user_signature").ToString();
+               
+                myContext.DetachAll();
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserName = name;
+                user.UserPhone = phone;
+                user.UserGender = gender;
+                user.UserEmail = email;
+                user.UserSignature = signature;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
         }
 
         [HttpDelete]
