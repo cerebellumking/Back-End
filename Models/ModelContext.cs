@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
-
 #nullable disable
 
 namespace Back_End.Models
@@ -73,7 +72,6 @@ namespace Back_End.Models
                 }
             }
         }
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -369,6 +367,12 @@ namespace Back_End.Models
                     .IsUnicode(false)
                     .HasColumnName("REPORT_REASON");
 
+                entity.Property(e => e.ReportState)
+                    .IsRequired()
+                    .HasPrecision(1)
+                    .HasColumnName("REPORT_STATE")
+                    .HasDefaultValueSql("0 ");
+
                 entity.Property(e => e.UserId)
                     .HasPrecision(10)
                     .HasColumnName("USER_ID")
@@ -431,6 +435,12 @@ namespace Back_End.Models
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("REPORT_REASON");
+
+                entity.Property(e => e.ReportState)
+                    .IsRequired()
+                    .HasPrecision(1)
+                    .HasColumnName("REPORT_STATE")
+                    .HasDefaultValueSql("0 ");
 
                 entity.Property(e => e.UserId)
                     .HasPrecision(10)
@@ -670,6 +680,12 @@ namespace Back_End.Models
                     .IsUnicode(false)
                     .HasColumnName("REPORT_REASON");
 
+                entity.Property(e => e.ReportState)
+                    .IsRequired()
+                    .HasPrecision(1)
+                    .HasColumnName("REPORT_STATE")
+                    .HasDefaultValueSql("0 ");
+
                 entity.Property(e => e.UserId)
                     .HasPrecision(10)
                     .HasColumnName("USER_ID")
@@ -732,6 +748,12 @@ namespace Back_End.Models
                     .HasMaxLength(64)
                     .IsUnicode(false)
                     .HasColumnName("REPORT_REASON");
+
+                entity.Property(e => e.ReportState)
+                    .IsRequired()
+                    .HasPrecision(1)
+                    .HasColumnName("REPORT_STATE")
+                    .HasDefaultValueSql("0 ");
 
                 entity.Property(e => e.UserId)
                     .HasPrecision(10)
