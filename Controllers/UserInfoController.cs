@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
+using System.IO;
 
 namespace Back_End.Controllers
 {
@@ -309,6 +310,37 @@ namespace Back_End.Controllers
                 user.UserBirthday = datetime;
                 
                 myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPut("profile")]
+        public string upLoadProfile(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                myContext.DetachAll();
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                string img_base64 = front_end_data.GetProperty("user_profile").ToString();
+                string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                img_base64 = img_base64.Split("base64,")[1];
+                byte[] img_bytes = Convert.FromBase64String(img_base64);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                string path = "user_profile/" + user_id.ToString() + type;
+                client.PutObject(OssHelp.bucketName, path, stream); // 直接覆盖
+                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                user.UserProfile = imgurl;
+                myContext.SaveChanges();
+                message.data.Add("img_url", imgurl);
                 message.errorCode = 200;
                 message.status = true;
             }
