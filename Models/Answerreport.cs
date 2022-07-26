@@ -15,6 +15,7 @@ namespace Back_End.Models
         public DateTime? ReportAnswerDate { get; set; }
         public bool? ReportAnswerResult { get; set; }
         public string ReportReason { get; set; }
+        public bool? ReportState { get; set; }
 
         public virtual Administrator Administrator { get; set; }
         public virtual Answer Answer { get; set; }
