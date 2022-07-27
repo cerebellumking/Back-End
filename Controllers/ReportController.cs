@@ -210,5 +210,68 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        [HttpGet("answer")]
+        public string whetherReportedAnswer(int user_id,int answer_id)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = myContext.Answerreports.Any(b => b.UserId == user_id && b.AnswerId == answer_id);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("blog")]
+        public string whetherReportedBlog(int user_id, int blog_id)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = myContext.Blogreports.Any(b => b.UserId == user_id && b.BlogId == blog_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("answercomment")]
+        public string whetherReportedAnswerComment(int user_id, int answer_comment_id)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = myContext.Answercommentreports.Any(b => b.UserId == user_id && b.AnswerCommentId == answer_comment_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("blogcomment")]
+        public string whetherReportedBlogComment(int user_id, int blog_comment_id)
+        {
+            Message message = new();
+            try
+            {
+                message.errorCode = 200;
+                message.status = myContext.Blogcommentreports.Any(b => b.UserId == user_id && b.BlogCommentId == blog_comment_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
