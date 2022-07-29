@@ -55,7 +55,7 @@ namespace Back_End.Controllers
             {
                 myContext.DetachAll();
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
-                int answer_comment_id = int.Parse(front_end_data.GetProperty("answer_comment_id").ToString());
+                int answer_comment_id = int.Parse(front_end_data.GetProperty("answercomment_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Answercommentreport answercommentreport=new();
                 int id = myContext.Answercommentreports.Count() + 1;
@@ -117,7 +117,7 @@ namespace Back_End.Controllers
             {
                 myContext.DetachAll();
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
-                int blog_comment_id = int.Parse(front_end_data.GetProperty("blog_comment_id").ToString());
+                int blog_comment_id = int.Parse(front_end_data.GetProperty("blogcomment_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Blogcommentreport blogcommentreport = new();
                 int id = myContext.Blogcommentreports.Count() + 1;
@@ -164,8 +164,8 @@ namespace Back_End.Controllers
                     .ToList();
                 message.data["answer_report"] = answer_report_list.ToArray();
                 message.data["blog_report"] = blog_report_list.ToArray();
-                message.data["answer_comment_report"] = answer_comment_report_list.ToArray();
-                message.data["blog_comment_report"] = blog_comment_report_list.ToArray();
+                message.data["answercomment_report"] = answer_comment_report_list.ToArray();
+                message.data["blogcomment_report"] = blog_comment_report_list.ToArray();
                 message.errorCode = 200;
                 message.status = true;
             }catch(Exception e)
@@ -199,8 +199,8 @@ namespace Back_End.Controllers
                     .ToList();
                 message.data["answer_report"] = answer_report_list.ToArray();
                 message.data["blog_report"] = blog_report_list.ToArray();
-                message.data["answer_comment_report"] = answer_comment_report_list.ToArray();
-                message.data["blog_comment_report"] = blog_comment_report_list.ToArray();
+                message.data["answercomment_report"] = answer_comment_report_list.ToArray();
+                message.data["blogcomment_report"] = blog_comment_report_list.ToArray();
                 message.errorCode = 200;
                 message.status = true;
             }
@@ -243,13 +243,13 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("answercomment")]
-        public string whetherReportedAnswerComment(int user_id, int answer_comment_id)
+        public string whetherReportedAnswerComment(int user_id, int answercomment_id)
         {
             Message message = new();
             try
             {
                 message.errorCode = 200;
-                message.status = myContext.Answercommentreports.Any(b => b.UserId == user_id && b.AnswerCommentId == answer_comment_id);
+                message.status = myContext.Answercommentreports.Any(b => b.UserId == user_id && b.AnswerCommentId == answercomment_id);
             }
             catch (Exception e)
             {
@@ -259,13 +259,13 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("blogcomment")]
-        public string whetherReportedBlogComment(int user_id, int blog_comment_id)
+        public string whetherReportedBlogComment(int user_id, int blogcomment_id)
         {
             Message message = new();
             try
             {
                 message.errorCode = 200;
-                message.status = myContext.Blogcommentreports.Any(b => b.UserId == user_id && b.BlogCommentId == blog_comment_id);
+                message.status = myContext.Blogcommentreports.Any(b => b.UserId == user_id && b.BlogCommentId == blogcomment_id);
             }
             catch (Exception e)
             {
