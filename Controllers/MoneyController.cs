@@ -143,11 +143,16 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
         [HttpPost("check")]
-        public string checkOrder(int user_id,string out_trade_num)
+        public string checkOrder()
         {
             Message message = new();
             try
             {
+                //Console.WriteLine(Request.Query["out_trade_no"]);
+                Console.WriteLine(Request.Form["out_trade_no"]);
+                string out_trade_num = Request.Form["out_trade_no"];
+                int user_id = int.Parse(out_trade_num.Split('U')[1]);
+                Console.WriteLine(user_id);
                 AlipayTradeQueryResponse alipayTradeQueryResponse = Factory.Payment.Common().Query(out_trade_num);
                 Console.WriteLine(alipayTradeQueryResponse.TradeStatus);
                 Console.WriteLine(alipayTradeQueryResponse.TotalAmount);
@@ -182,11 +187,12 @@ namespace Back_End.Controllers
                 string user_id = front_end_data.GetProperty("user_id").ToString();
                 string num = front_end_data.GetProperty("num").ToString();
                 string name = front_end_data.GetProperty("name").ToString();
-                string order_num = DateTime.Now.ToShortDateString().Replace('/','T')+ DateTime.Now.ToShortTimeString().Replace(':', 'T')+DateTime.Now.Second.ToString()+user_id.ToString();
+                string order_num = DateTime.Now.ToShortDateString().Replace('/','T')+ DateTime.Now.ToShortTimeString().Replace(':', 'T')+DateTime.Now.Second.ToString()+"U"+user_id.ToString();
+                order_num = order_num.Replace(' ', 'T');
                 Console.WriteLine(order_num);
                 AlipayTradePagePayResponse response = Factory.Payment.Page()
-                    .AsyncNotify("http://43.142.41.192:6001/api/money/check?user_id=" + user_id.ToString() + "&out_trade_num=" + order_num)
-                    .Pay(name, order_num, num, "http://43.142.41.192:54686/#/login");
+                    .AsyncNotify("http://43.142.41.192:6001/api/money/check")
+                    .Pay(name, order_num, num, "http://www.houniaoliuxue.xyz/#/person_info");
                 // 处理响应或异常
                 if (ResponseChecker.Success(response))
                 {
