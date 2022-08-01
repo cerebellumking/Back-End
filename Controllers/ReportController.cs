@@ -7,6 +7,15 @@ using System.Threading.Tasks;
 using Back_End.Models;
 namespace Back_End.Controllers
 {
+    public class ReportInfo
+    {
+        public DateTime ReportDate { get; set; }
+        public int Id { get; set; }
+        public int ReportId { get; set; }
+        public string ReportReason { get; set; }
+        public dynamic ReportState { get; set; } 
+        public dynamic ReportAnswerResult { get; set; }
+    }
     [Route("api/[controller]")]
     [ApiController]
     public class ReportController : ControllerBase
@@ -266,6 +275,125 @@ namespace Back_End.Controllers
             {
                 message.errorCode = 200;
                 message.status = myContext.Blogcommentreports.Any(b => b.UserId == user_id && b.BlogCommentId == blogcomment_id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+        [HttpPut("answer")]
+        public string setAnswerReportSeen(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int report_id = int.Parse(front_end_data.GetProperty("report_id").ToString());
+                Answerreport answerreport = myContext.Answerreports.Single(b => b.UserId == user_id && b.ReportId == report_id && b.ReportState == false);
+                answerreport.ReportState = true;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+        [HttpPut("blog")]
+        public string setBlogReportSeen(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int report_id = int.Parse(front_end_data.GetProperty("report_id").ToString());
+                Blogreport blogreport = myContext.Blogreports.Single(b => b.UserId == user_id && b.ReportId == report_id && b.ReportState == false);
+                blogreport.ReportState = true;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+        [HttpPut("answercomment")]
+        public string setAnswerCommentReportSeen(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int report_id = int.Parse(front_end_data.GetProperty("report_id").ToString());
+                Answercommentreport answercommentreport = myContext.Answercommentreports.Single(b => b.UserId == user_id && b.ReportId == report_id && b.ReportState == false);
+                answercommentreport.ReportState = true;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+        [HttpPut("blogcomment")]
+        public string setBlogCommentReportSeen(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                int report_id = int.Parse(front_end_data.GetProperty("report_id").ToString());
+                Blogcommentreport blogcommentreport = myContext.Blogcommentreports.Single(b => b.UserId == user_id && b.ReportId == report_id && b.ReportState == false);
+                blogcommentreport.ReportState = true;
+                myContext.SaveChanges();
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+        [HttpGet]
+        public string getReports(int user_id)
+        {
+            Message message = new();
+            try
+            {
+                var answer_report_list = myContext.Answerreports
+                    .Where(b => b.UserId == user_id && b.ReportState == false)
+                    .Select(b => new ReportInfo{ReportDate=(DateTime)b.ReportDate, ReportId=b.ReportId, Id=b.AnswerId,ReportReason=b.ReportReason, ReportState=(bool)b.ReportState,ReportAnswerResult=(bool)b.ReportAnswerResult })
+                    .ToList();
+                var blog_report_list = myContext.Blogreports
+                    .Where(b => b.UserId == user_id && b.ReportState == false)
+                    .Select(b => new ReportInfo { ReportDate = (DateTime)b.ReportDate, ReportId = b.ReportId, Id = b.BlogId, ReportReason = b.ReportReason, ReportState = (bool)b.ReportState, ReportAnswerResult = (bool)b.ReportAnswerResult })
+                    .ToList();
+                var answer_comment_report_list = myContext.Answercommentreports
+                    .Where(b => b.UserId == user_id && b.ReportState == false)
+                    .Select(b => new ReportInfo { ReportDate = (DateTime)b.ReportDate, ReportId = b.ReportId, Id = b.AnswerCommentId, ReportReason = b.ReportReason, ReportState = (bool)b.ReportState, ReportAnswerResult = (bool)b.ReportAnswerResult })
+                    .ToList();
+                var blog_comment_report_list = myContext.Blogcommentreports
+                    .Where(b => b.UserId == user_id && b.ReportState == false)
+                    .Select(b => new ReportInfo { ReportDate = (DateTime)b.ReportDate, ReportId = b.ReportId, Id = b.BlogCommentId, ReportReason = b.ReportReason, ReportState = (bool)b.ReportState, ReportAnswerResult = (bool)b.ReportAnswerResult })
+                    .ToList();
+                message.data["answer_report"] = answer_report_list.ToArray();
+                message.data["blog_report"] = blog_report_list.ToArray();
+                message.data["answercomment_report"] = answer_comment_report_list.ToArray();
+                message.data["blogcomment_report"] = blog_comment_report_list.ToArray();
+                message.errorCode = 200;
+                message.status = true;
             }
             catch (Exception e)
             {
