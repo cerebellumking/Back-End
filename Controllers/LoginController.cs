@@ -62,10 +62,9 @@ namespace Back_End.Controllers
                         message.data["user_follows"] = user.UserFollows;
                         message.data["user_level"] = user.UserLevel;
                         DateTime tomorrow = (DateTime)user.UserLogintime;
-                        tomorrow = tomorrow.AddDays(1);
                         //判断是否为今天第一次登陆
                         //实现每日登录领取鸟币的功能
-                        if (DateTime.Now.Year == tomorrow.Year && DateTime.Now.Month == tomorrow.Month && DateTime.Now.Day == tomorrow.Day)
+                        if (!(DateTime.Now.Year == tomorrow.Year && DateTime.Now.Month == tomorrow.Month && DateTime.Now.Day == tomorrow.Day))
                         {
                             user.UserCoin++;
                             int record_id = myContext.Moneychangerecords.Count() + 1;
