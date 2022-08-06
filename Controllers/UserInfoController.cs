@@ -294,10 +294,6 @@ namespace Back_End.Controllers
                 string signature = front_end_data.GetProperty("user_signature").ToString();
                 string birthday = front_end_data.GetProperty("user_birthday").ToString();
                 
-                string[] date = birthday.Split('-');
-                int year = int.Parse(date[0]);
-                int month = int.Parse(date[1]);
-                int second = int.Parse(date[2]);
 
                 myContext.DetachAll();
                 User user = myContext.Users.Single(b => b.UserId == user_id);
@@ -306,9 +302,15 @@ namespace Back_End.Controllers
                 user.UserGender = gender;
                 user.UserEmail = email;
                 user.UserSignature = signature;
-                DateTime datetime = new(year, month, second);
-                user.UserBirthday = datetime;
-                
+                if (birthday != "")
+                {
+                    string[] date = birthday.Split('-');
+                    int year = int.Parse(date[0]);
+                    int month = int.Parse(date[1]);
+                    int second = int.Parse(date[2]);
+                    DateTime datetime = new(year, month, second);
+                    user.UserBirthday = datetime;
+                }
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
