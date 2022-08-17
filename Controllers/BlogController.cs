@@ -258,7 +258,7 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentFather == blog_id);
+                var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentFather == blog_id&& b.BlogCommentVisible==true);
                 message.data["comment_num"] = blogcomment.Count();
                 var list = blogcomment
                     .Select(b => new { b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })

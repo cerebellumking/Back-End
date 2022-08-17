@@ -59,7 +59,7 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentFather == answer_id);
+                var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentFather == answer_id&&b.AnswerCommentVisible==true);
                 message.data["comment_num"] = answercomment.Count();
                 var list = answercomment
                     .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike,b.InverseAnswerCommentReplyNavigation.Count,})
