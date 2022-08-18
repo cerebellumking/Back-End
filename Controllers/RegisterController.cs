@@ -6,18 +6,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 namespace Back_End.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class RegisterController : ControllerBase
     {
+        private readonly IConfiguration _Configuration;//读取配置文件
         public static IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
 
         private readonly ModelContext myContext;
-        public RegisterController(ModelContext modelContext)
+        public RegisterController(ModelContext modelContext, IConfiguration configuration)
         {
             myContext = modelContext;
+            _Configuration = configuration;
         }
 
         [HttpPost]
@@ -72,7 +75,9 @@ namespace Back_End.Controllers
                 Random random = new Random();
                 int code_ = random.Next(100000, 999999);
                 _cache.Set(user_phone, code_, new TimeSpan(0, 0, 180));
-                var client = CreateClient("LTAI5tL73LUQtWCbdwGZR2gp", "hTGTKeWp0cKJhtHgsl9dg93ncY1LpQ");
+                string key = _Configuration["MessageAccessKey"];
+                string password = _Configuration["MessageAccessPassword"];
+                var client = CreateClient(key, password);
                 AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest sendReq = new AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest
                 {
                     PhoneNumbers = user_phone,
