@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Linq;
@@ -8,13 +9,17 @@ namespace Back_End.Models
 {
     public partial class ModelContext : DbContext
     {
-        public ModelContext()
+        private readonly IConfiguration _Configuration;//读取配置文件
+
+        public ModelContext(IConfiguration configuration)
         {
+            _Configuration = configuration;
         }
 
-        public ModelContext(DbContextOptions<ModelContext> options)
+        public ModelContext(DbContextOptions<ModelContext> options, IConfiguration configuration)
             : base(options)
         {
+            _Configuration = configuration;
         }
 
         public virtual DbSet<Administrator> Administrators { get; set; }
@@ -76,8 +81,10 @@ namespace Back_End.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseOracle("Data Source=43.142.41.192/xe;Password=123456;User ID=joe;");
+                string _DataSource = _Configuration["DataSource"];
+                string _Password = _Configuration["Password"];
+                string _UserID = _Configuration["UserID"];
+                optionsBuilder.UseOracle("Data Source="+ _DataSource + ";Password=" + _Password + ";User ID=" + _UserID + ";");
             }
         }
 
