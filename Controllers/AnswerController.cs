@@ -178,20 +178,28 @@ namespace Back_End.Controllers
         [HttpPost]
         public string sendAnswer(dynamic front_end_data)
         {
-            //还未将content换成blob
             Message message = new Message();
             try
             {
                 myContext.DetachAll();
-                byte[] content = Encoding.UTF8.GetBytes(front_end_data.GetProperty("content").ToString());
+                int question_id= int.Parse(front_end_data.GetProperty("question_id").ToString());
+                string content = front_end_data.GetProperty("content").ToString();
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string summary = front_end_data.GetProperty("summary").ToString();
+                string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Answer answer = new();
-                answer.AnswerUserId = user_id;
                 int id = myContext.Answers.Count() + 1;
+                byte[] img_bytes = Encoding.UTF8.GetBytes(content);
+                var client = OssHelp.createClient();
+                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+                string path = "answer/content/" + id.ToString() + ".html";
+                string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+                client.PutObject(OssHelp.bucketName, path, stream);
+                answer.QuestionId = question_id;
+                answer.AnswerUserId = user_id;
                 answer.AnswerId = id;
                 answer.AnswerUser = myContext.Users.Single(b => b.UserId == user_id);
-                //answer.AnswerContent = content;
+                answer.AnswerContent = imageurl;
                 answer.AnswerDate = DateTime.Now;
                 answer.AnswerContentpic = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 answer.AnswerSummary = summary;
@@ -201,6 +209,18 @@ namespace Back_End.Controllers
                 answerchecking.AnswerId = id;
                 answerchecking.AnswerDate = answer.AnswerDate;
                 answerchecking.ReviewResult = "待审核";
+                //存第一张图到oss
+                if (img_base64 != "")
+                {
+                    string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+                    img_base64 = img_base64.Split("base64,")[1];//非常重要
+                    byte[] img_bytes_ = Convert.FromBase64String(img_base64);
+                    MemoryStream stream_ = new MemoryStream(img_bytes_, 0, img_bytes_.Length);
+                    string path_ = "answer/" + id.ToString() + type;
+                    client.PutObject(OssHelp.bucketName, path_, stream_);
+                    string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path_;
+                    answer.AnswerContentpic = imgurl;
+                }
                 answerchecking.Answer = answer;
                 myContext.Answers.Add(answer);
                 myContext.Answercheckings.Add(answerchecking);
@@ -216,36 +236,36 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpPost("image")]
-        public string uploadImage(dynamic front_end_data)
-        {
-            Message message = new();
-            try
-            {
-                myContext.DetachAll();
-                string img_base64 = front_end_data.GetProperty("img").ToString();
-                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
-                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
-                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id && b.AnswerUserId == user_id);
-                string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
-                img_base64 = img_base64.Split("base64,")[1];//非常重要
-                byte[] img_bytes = Convert.FromBase64String(img_base64);
-                var client = OssHelp.createClient();
-                MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
-                string path = "answer/" + answer_id.ToString() + type;
-                client.PutObject(OssHelp.bucketName, path, stream);
-                string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
-                answer.AnswerContentpic = imgurl;
-                myContext.SaveChanges();
-                message.data.Add("imageurl", imgurl);
-                message.status = true;
-                message.errorCode = 200;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            return message.ReturnJson();
-        }
+        //[HttpPost("image")]
+        //public string uploadImage(dynamic front_end_data)
+        //{
+        //    Message message = new();
+        //    try
+        //    {
+        //        myContext.DetachAll();
+        //        string img_base64 = front_end_data.GetProperty("img").ToString();
+        //        int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+        //        int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+        //        Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id && b.AnswerUserId == user_id);
+        //        string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
+        //        img_base64 = img_base64.Split("base64,")[1];//非常重要
+        //        byte[] img_bytes = Convert.FromBase64String(img_base64);
+        //        var client = OssHelp.createClient();
+        //        MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
+        //        string path = "answer/" + answer_id.ToString() + type;
+        //        client.PutObject(OssHelp.bucketName, path, stream);
+        //        string imgurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
+        //        answer.AnswerContentpic = imgurl;
+        //        myContext.SaveChanges();
+        //        message.data.Add("imageurl", imgurl);
+        //        message.status = true;
+        //        message.errorCode = 200;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.ToString());
+        //    }
+        //    return message.ReturnJson();
+        //}
     }
 }

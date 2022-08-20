@@ -400,7 +400,6 @@ namespace Back_End.Controllers
                 blog.BlogId = id;
                 blog.BlogTag = tag;
                 blog.BlogUser = myContext.Users.Single(b => b.UserId == user_id);
-                //blog.BlogContent = content;
                 blog.BlogDate = DateTime.Now;
                 blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 blog.BlogSummary = summary;
