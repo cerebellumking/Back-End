@@ -221,9 +221,12 @@ namespace Back_End.Controllers
                     .Select(b => new
                     {
                         b.BlogId,
+                        b.BlogUserId,
+                        b.BlogUser.UserName,
                         b.BlogSummary,
                         b.BlogDate,
                         b.BlogImage,
+                        b.BlogTag,
                     }).ToList();
                 message.data.Add("count", blogs.Count);
                 message.data.Add("blog_list", blogs.ToArray()); ;
