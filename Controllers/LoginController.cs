@@ -32,8 +32,6 @@ namespace Back_End.Controllers
         {
             LoginMessage message = new LoginMessage();
 
-            //JsonElement jsonElement = new();
-            //jsonElement.GetProperty().ToString();
             string user_phone = new_user.GetProperty("user_phone").ToString();
             string user_password = new_user.GetProperty("user_password").ToString();
             try
@@ -130,6 +128,39 @@ namespace Back_End.Controllers
             return m.ReturnJson();
         }
 
+        [HttpPost("administrator")]
+        public string AdministratorLogin(dynamic new_user)
+        {
+            LoginMessage message = new LoginMessage();
 
+            int id = int.Parse(new_user.GetProperty("id").ToString());
+            string password = new_user.GetProperty("password").ToString();
+            try
+            {
+                myContext.DetachAll();
+                var administrator = myContext.Administrators
+                    .Single(b => b.AdministratorId == id);
+                if (administrator != null)
+                {
+                    message.errorCode = 200;
+                    if (administrator.AdministratorPassword == password)
+                    {
+                        message.status = true;
+                        message.data["administrator_id"] = administrator.AdministratorId;
+                        message.data["administrator_email"] = administrator.AdministratorEmail;
+                        message.data["administrator_phone"] = administrator.AdministratorPhone;
+                        message.data["administrator_name"] = administrator.AdministratorName;
+                        message.data["administrator_profile"] = administrator.AdministratorName;
+                        message.data["administrator_createtime"] = administrator.AdministratorCreatetime;
+                        message.data["administrator_gender"] = administrator.AdministratorGender;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
