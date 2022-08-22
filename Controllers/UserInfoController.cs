@@ -159,7 +159,7 @@ namespace Back_End.Controllers
             try
             {
                 var questions = myContext.Questions
-                    .Where(c => c.QuestionUserId == user_id && c.QuestionVisible == true)
+                    .Where(c => c.QuestionUserId == user_id /* && c.QuestionVisible == true */)
                     .Select(b => new
                     {
                         b.QuestionId,
@@ -167,6 +167,9 @@ namespace Back_End.Controllers
                         b.QuestionDate,
                         b.QuestionTitle,
                         b.QuestionSummary,
+                        b.Questionchecking.ReviewResult,
+                        b.Questionchecking.ReviewDate,
+                        b.Questionchecking.ReviewReason,
                     }).ToList();
                 message.data.Add("count", questions.Count);
                 message.data.Add("question_list", questions.ToArray()); ;
@@ -187,7 +190,7 @@ namespace Back_End.Controllers
             try
             {
                 var answers = myContext.Answers
-                    .Where(c => c.AnswerUserId == user_id && c.AnswerVisible == true)
+                    .Where(c => c.AnswerUserId == user_id /* && c.AnswerVisible == true */)
                     .Select(b => new
                     {
                         b.AnswerId,
@@ -197,6 +200,9 @@ namespace Back_End.Controllers
                         b.AnswerLike,
                         b.AnswerDate,
                         b.AnswerSummary,
+                        b.Answerchecking.ReviewResult,
+                        b.Answerchecking.ReviewDate,
+                        b.Answerchecking.ReviewReason,
                     }).ToList();
                 message.data.Add("count", answers.Count);
                 message.data.Add("answer_list", answers.ToArray()); ;
@@ -217,7 +223,7 @@ namespace Back_End.Controllers
             try
             {
                 var blogs = myContext.Blogs
-                    .Where(c => c.BlogUserId == user_id && c.BlogVisible == true)
+                    .Where(c => c.BlogUserId == user_id /* && c.BlogVisible == true */)
                     .Select(b => new
                     {
                         b.BlogId,
@@ -227,6 +233,9 @@ namespace Back_End.Controllers
                         b.BlogDate,
                         b.BlogImage,
                         b.BlogTag,
+                        b.Blogchecking.ReviewResult,
+                        b.Blogchecking.ReviewDate,
+                        b.Blogchecking.ReviewReason,
                     }).ToList();
                 message.data.Add("count", blogs.Count);
                 message.data.Add("blog_list", blogs.ToArray()); ;
