@@ -135,6 +135,8 @@ namespace Back_End.Controllers
 
                 message.errorCode = 200;
                 message.status = true;
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                message.data["coin"] = user.UserCoin;
                 message.data["record_list"] = recordInfos.ToArray();
             }catch(Exception e)
             {

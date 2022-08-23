@@ -240,7 +240,7 @@ namespace Back_End.Controllers
             public int question_id { get; set; }
             public int user_id { get; set; }
             public string user_name { get; set; }
-            public string question_tag { get; set; }
+            public string[] question_tag { get; set; }
             public DateTime question_date { get; set; }
             public DateTime star_time { get; set; }
             public string question_title { get; set; }
@@ -269,7 +269,7 @@ namespace Back_End.Controllers
                             b.UserName,
                         }).First();
                     star.user_name = user.UserName;
-                    star.question_tag = question.QuestionTag;
+                    star.question_tag = question.QuestionTag.Split(',');
                     star.question_date = question.QuestionDate;
                     star.star_time = val.StarTime;
                     star.question_title = question.QuestionTitle;
@@ -351,7 +351,7 @@ namespace Back_End.Controllers
             public int blog_id { get; set; }
             public int? blog_user_id { get; set; }
             public string blog_user_name { get; set; }
-            public string blog_tag { get; set; }
+            public string[] blog_tag { get; set; }
             public DateTime blog_date { get; set; }
             public DateTime star_date { get; set; }
             public decimal? blog_like { get; set; }
@@ -376,7 +376,7 @@ namespace Back_End.Controllers
                     star.blog_user_id = blog.BlogUserId;
                     User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                     star.blog_user_name = user.UserName;
-                    star.blog_tag = blog.BlogTag;
+                    star.blog_tag = blog.BlogTag.Split(',');
                     star.blog_date = blog.BlogDate;
                     star.star_date = val.StarTime;
                     star.blog_like = blog.BlogLike;
