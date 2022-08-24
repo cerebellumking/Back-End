@@ -83,6 +83,8 @@ namespace Back_End.Controllers
         {
             Message message = new Message();
             bool flag = myContext.Starquestions.Any(b => b.UserId == user_id && b.QuestionId == question_id && b.Cancel == false);
+            int star_nums = myContext.Starquestions.Count(b => b.QuestionId == question_id && b.Cancel == false);
+            message.data.Add("star_nums", star_nums);
             message.errorCode = 200;
             message.status = flag;
             return message.ReturnJson();
@@ -156,6 +158,8 @@ namespace Back_End.Controllers
         {
             Message message = new Message();
             bool flag = myContext.Staranswers.Any(b => b.UserId == user_id && b.AnswerId == answer_id && b.Cancel == false);
+            int star_nums = myContext.Staranswers.Count(b => b.AnswerId == answer_id && b.Cancel == false);
+            message.data.Add("star_nums", star_nums);
             message.errorCode = 200;
             message.status = flag;
             return message.ReturnJson();
@@ -171,7 +175,7 @@ namespace Back_End.Controllers
                 int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
 
                 myContext.DetachAll();
-                object[] pk = { user_id, blog_id };
+                object[] pk = { blog_id, user_id };
                 Starblog old_starblog = myContext.Starblogs.Find(pk);
                 /*判断该收藏是否取消过*/
                 if (old_starblog==null)
@@ -230,6 +234,8 @@ namespace Back_End.Controllers
         {
             Message message = new Message();
             bool flag = myContext.Starblogs.Any(b => b.UserId == user_id && b.BlogId == blog_id && b.Cancel == false);
+            int star_nums = myContext.Starblogs.Count(b => b.BlogId == blog_id && b.Cancel == false);
+            message.data.Add("star_nums", star_nums);
             message.errorCode = 200;
             message.status = flag;
             return message.ReturnJson();
@@ -269,7 +275,7 @@ namespace Back_End.Controllers
                             b.UserName,
                         }).First();
                     star.user_name = user.UserName;
-                    star.question_tag = question.QuestionTag.Split(',');
+                    star.question_tag = question.QuestionTag.Split('-');
                     star.question_date = question.QuestionDate;
                     star.star_time = val.StarTime;
                     star.question_title = question.QuestionTitle;
@@ -376,7 +382,7 @@ namespace Back_End.Controllers
                     star.blog_user_id = blog.BlogUserId;
                     User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
                     star.blog_user_name = user.UserName;
-                    star.blog_tag = blog.BlogTag.Split(',');
+                    star.blog_tag = blog.BlogTag.Split('-');
                     star.blog_date = blog.BlogDate;
                     star.star_date = val.StarTime;
                     star.blog_like = blog.BlogLike;
