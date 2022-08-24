@@ -19,6 +19,7 @@ namespace Back_End.Controllers
         public decimal university_student_num { get; set; }
         public string university_introduction { get; set; }
         public string university_location { get; set; }
+        public string university_tuition { get; set; }
     }
     [Route("api/[controller]")]
     [ApiController]
@@ -215,6 +216,7 @@ namespace Back_End.Controllers
                     list.university_student_num = rank.University.UniversityStudentNum;
                     list.university_the_rank = rank.UniversityTheRank;
                     list.university_usnews_rank = rank.UniversityUsnewsRank;
+                    list.university_tuition = rank.University.UniversityTuition;
                     lists.Add(list);
                 }
                 myContext.SaveChanges();
