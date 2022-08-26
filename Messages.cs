@@ -9,15 +9,17 @@ namespace Back_End
 {
     public class Message
     {
-        public int errorCode { get; set; }
-        public bool status { get; set; }
-        public Dictionary<string, dynamic> data { get; set; } = new Dictionary<string, dynamic>();
-
+        public int errorCode { get; set; } //错误码，用于判断本次操作是否成功
+        public bool status { get; set; }   //操作是否成功
+        public Dictionary<string, dynamic> data { get; set; } = new Dictionary<string, dynamic>(); //返回数据
+        
+        //初始化
         public Message()
         {
             errorCode = 300;
             status = false;
         }
+        //将类以json字符串的形式传递给前端
         public string ReturnJson()
         {
             var options = new JsonSerializerOptions

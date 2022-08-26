@@ -468,7 +468,44 @@ namespace Back_End.Controllers
         //    return message.ReturnJson();
         //}
 
-        [HttpDelete("delete")]
-        public void deleteBlog() { }
+        [HttpDelete]
+        public string deleteBlog(int blog_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
+                blog.BlogVisible = false;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpDelete("comment")]
+        public string deleteBlogComment(int blogcomment_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                Blogcomment blogcomment = myContext.Blogcomments.Single(b => b.BlogCommentId == blogcomment_id);
+                blogcomment.BlogCommentVisible = false;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }

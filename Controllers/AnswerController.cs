@@ -29,6 +29,7 @@ namespace Back_End.Controllers
                 if (answer.AnswerVisible == true)
                 {
                     Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
+                    bool flag = answer_id == question.QuestionApply;
                     message.data.Add("answer_id", answer_id);
                     message.data.Add("answer_user_id", answer.AnswerUserId);
                     message.data.Add("question_id", answer.QuestionId);
@@ -38,6 +39,7 @@ namespace Back_End.Controllers
                     message.data.Add("answer_contentpic", answer.AnswerContentpic);
                     message.data.Add("answer_coin", answer.AnswerCoin);
                     message.data.Add("answer_like", answer.AnswerLike);
+                    message.data.Add("apply_flag", flag);
                 }
                 else
                 {
@@ -236,6 +238,45 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpDelete]
+        public string deleteAnswer(int answer_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
+                answer.AnswerVisible = false;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpDelete("comment")]
+        public string deleteAnswerComment(int answercomment_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == answercomment_id);
+                answercomment.AnswerCommentVisible = false;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
         //[HttpPost("image")]
         //public string uploadImage(dynamic front_end_data)
         //{

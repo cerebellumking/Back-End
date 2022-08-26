@@ -119,6 +119,7 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
+                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
                 var answers = myContext.Answers.Where(c => c.AnswerVisible == true && c.QuestionId == question_id)
                     .OrderByDescending(a => a.AnswerDate)
                     .Select(b => new
@@ -139,6 +140,7 @@ namespace Back_End.Controllers
                 message.status = true;
                 message.data.Add("count", answers.Count);
                 message.data.Add("answers", answers.ToArray());
+                message.data.Add("apply",question.QuestionApply);
             }
             catch(Exception error)
             {
@@ -316,6 +318,56 @@ namespace Back_End.Controllers
                 message.data.Add("question_id", id);
                 message.errorCode = 200;
                 message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPut("apply")]
+        public string applyAnswer(dynamic front_end_data)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                int question_id = int.Parse(front_end_data.GetProperty("question_id").ToString());
+                int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
+                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
+                if (question.QuestionApply != 0)
+                {
+                    message.errorCode = 200;
+                    return message.ReturnJson();
+                }
+                Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
+                User user = myContext.Users.Single(b => b.UserId == answer.AnswerUserId);
+                user.UserCoin +=(decimal)question.QuestionReward;
+                question.QuestionApply = answer_id;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpDelete]
+        public string deleteQuestion(int question_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
+                question.QuestionVisible = false;
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
             }
             catch (Exception e)
             {
