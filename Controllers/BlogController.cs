@@ -110,7 +110,7 @@ namespace Back_End.Controllers
                     bool flag = true;
                     var blogs = myContext.Blogs
                         .Where(c => c.BlogTag.Contains(val) && !blogs_id.Contains(c.BlogId) && c.BlogVisible == true)
-                        .OrderByDescending(a => a.Blogcomments.Count * 2 + a.BlogLike * 3 + a.BlogCoin * 5)
+                        .OrderByDescending(a => a.Blogcomments.Count(b => b.BlogCommentVisible == true) * 2 + a.BlogLike * 3 + a.BlogCoin * 5)
                         .Select(b => new
                         {
                             b.BlogUser.UserId,
@@ -218,7 +218,7 @@ namespace Back_End.Controllers
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
                     //.OrderByDescending(c => c.Blogcomments.Count)
-                    .OrderByDescending(c => c.Blogcomments.Count * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
+                    .OrderByDescending(c => c.Blogcomments.Count(b=>b.BlogCommentVisible==true) * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
                     .ToList();
                 if (bloglist.Count > num)

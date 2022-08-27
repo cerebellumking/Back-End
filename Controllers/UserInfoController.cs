@@ -190,7 +190,7 @@ namespace Back_End.Controllers
             try
             {
                 var answers = myContext.Answers
-                    .Where(c => c.AnswerUserId == user_id /* && c.AnswerVisible == true */)
+                    .Where(c => c.AnswerUserId == user_id && c.AnswerVisible == true)
                     .Select(b => new
                     {
                         b.AnswerId,
@@ -223,7 +223,7 @@ namespace Back_End.Controllers
             try
             {
                 var blogs = myContext.Blogs
-                    .Where(c => c.BlogUserId == user_id /* && c.BlogVisible == true */)
+                    .Where(c => c.BlogUserId == user_id && c.BlogVisible == true)
                     .Select(b => new
                     {
                         b.BlogId,

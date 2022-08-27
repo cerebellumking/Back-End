@@ -206,6 +206,18 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        public class QuestionInfo
+        {
+            public int Count { get; set; }
+            public int QuestionId { get; set; }
+            //public int? QuestionUserId { get; set; }
+            public int QuestionApply { get; set; }
+            public decimal QuestionReward { get; set; }
+            public DateTime QuestionDate { get; set; }
+            //public string[] QuestionTag { get; set; }
+            public string QuestionTitle { get; set; }
+            //public string Questiondescription { get; set; }
+        }
 
         [HttpGet("time")]
         public string showQuestionByTime()
@@ -213,20 +225,39 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                //var question = myContext.Questions.Where(c => c.QuestionVisible == true)
+                //    .OrderByDescending(a => a.QuestionDate)
+                //    .Select(b => new
+                //    {
+                //        b.Answers.Count,
+                //        b.QuestionId,
+                //        b.QuestionUserId,
+                //        b.QuestionTitle,
+                //        b.QuestionApply,
+                //        b.QuestionReward,
+                //        b.QuestionDate,
+                //        b.QuestionDescription,
+                //        b.QuestionTag
+                //    }).ToList();
                 var question = myContext.Questions.Where(c => c.QuestionVisible == true)
                     .OrderByDescending(a => a.QuestionDate)
-                    .Select(b => new
-                {
-                    b.Answers.Count,
-                    b.QuestionId,
-                    b.QuestionUserId,
-                    b.QuestionTitle,
-                    b.QuestionApply,
-                    b.QuestionReward,
-                    b.QuestionDate,
-                    b.QuestionDescription,
-                    b.QuestionTag
-                }).ToList();
+                    .Select(b => new QuestionInfo
+                    {
+                        Count = myContext.Answers.Count(c => c.QuestionId == b.QuestionId && c.AnswerVisible == true),
+                        QuestionId = b.QuestionId,
+                        //QuestionUserId = b.QuestionUserId,
+                        QuestionTitle = b.QuestionTitle,
+                        QuestionApply = (int)b.QuestionApply,
+                        QuestionReward = (decimal)b.QuestionReward,
+                        QuestionDate = b.QuestionDate,
+                        //Questiondescription = b.QuestionDescription
+                    }).ToList();
+                //foreach (var val in question)
+                //{
+                //    Question question1 = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
+                //    val.QuestionTag = question1.QuestionTag.Split('-');
+                //    val.Count = myContext.Answers.Count(c => c.QuestionId == val.QuestionId && c.AnswerVisible == true);
+                //}
                 //if (question.Count > 2)
                 //    question.RemoveRange(2, question.Count - 2);
                 message.errorCode = 200;
@@ -246,20 +277,39 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
+                //var question = myContext.Questions.Where(c => c.QuestionVisible == true)
+                //    .OrderByDescending(a => a.Answers.Count(b => b.AnswerVisible == true))
+                //    .Select(b => new
+                //    {
+                //        b.Answers.Count,
+                //        b.QuestionId,
+                //        b.QuestionUserId,
+                //        b.QuestionTitle,
+                //        b.QuestionApply,
+                //        b.QuestionReward,
+                //        b.QuestionDate,
+                //        b.QuestionDescription,
+                //        b.QuestionTag
+                //    }).ToList();
                 var question = myContext.Questions.Where(c => c.QuestionVisible == true)
-                    .OrderByDescending(a => a.Answers.Count)
-                    .Select(b => new
-                {
-                    b.Answers.Count,
-                    b.QuestionId,
-                    b.QuestionUserId,
-                    b.QuestionTitle,
-                    b.QuestionApply,
-                    b.QuestionReward,
-                    b.QuestionDate,
-                    b.QuestionDescription,
-                    b.QuestionTag
-                }).ToList();
+                    .OrderByDescending(a => a.Answers.Count(b => b.AnswerVisible == true))
+                    .Select(b => new QuestionInfo
+                    {
+                        Count = myContext.Answers.Count(c => c.QuestionId == b.QuestionId && c.AnswerVisible == true),
+                        QuestionId = b.QuestionId,
+                        //QuestionUserId = b.QuestionUserId,
+                        QuestionTitle = b.QuestionTitle,
+                        QuestionApply = (int)b.QuestionApply,
+                        QuestionReward = (decimal)b.QuestionReward,
+                        QuestionDate = b.QuestionDate,
+                        //Questiondescription = b.QuestionDescription
+                    }).ToList();
+                //foreach (var val in question)
+                //{
+                //    Question question1 = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
+                //    val.QuestionTag = question1.QuestionTag.Split('-');
+                //    val.Count = myContext.Answers.Count(c => c.QuestionId == val.QuestionId && c.AnswerVisible == true);
+                //}
                 //if (question.Count > 2)
                 //    question.RemoveRange(2, question.Count - 2);
                 message.errorCode = 200;
