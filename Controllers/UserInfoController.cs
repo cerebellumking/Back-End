@@ -159,7 +159,7 @@ namespace Back_End.Controllers
             try
             {
                 var questions = myContext.Questions
-                    .Where(c => c.QuestionUserId == user_id /* && c.QuestionVisible == true */)
+                    .Where(c => c.QuestionUserId == user_id && c.QuestionVisible == true)
                     .Select(b => new
                     {
                         b.QuestionId,
