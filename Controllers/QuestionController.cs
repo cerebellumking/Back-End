@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Back_End.Models;
 using System.Text;
 using System.IO;
+using Back_End;
 namespace Back_End.Controllers
 {
     [Route("api/[controller]")]
@@ -217,6 +218,7 @@ namespace Back_End.Controllers
             //public string[] QuestionTag { get; set; }
             public string QuestionTitle { get; set; }
             //public string Questiondescription { get; set; }
+            public double distance { get; set; }
         }
 
         [HttpGet("time")]
@@ -312,6 +314,46 @@ namespace Back_End.Controllers
                 //}
                 //if (question.Count > 2)
                 //    question.RemoveRange(2, question.Count - 2);
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("question", question.ToArray());
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("search")]
+        public string searchQuestionByTitle(string target)
+        {
+            Message message = new Message();
+            try
+            {
+                target = System.Web.HttpUtility.UrlDecode(target);
+                var question = myContext.Questions.Where(c => c.QuestionVisible == true)
+                    .Select(b => new QuestionInfo
+                    {
+                        Count = myContext.Answers.Count(c => c.QuestionId == b.QuestionId && c.AnswerVisible == true),
+                        QuestionId = b.QuestionId,
+                        QuestionTitle = b.QuestionTitle,
+                        QuestionApply = (int)b.QuestionApply,
+                        QuestionReward = (decimal)b.QuestionReward,
+                        QuestionDate = b.QuestionDate,
+                    }).ToList();
+                foreach (var val in question)
+                {
+                    val.distance = (double)SimilarityTool.LevenshteinDistancePercent(val.QuestionTitle, target);
+                }
+                question.OrderByDescending(b => b.distance);
+                //for (int i = 0; i < question.Count; i++)
+                //{
+                //    if ((double)SimilarityTool.LevenshteinDistancePercent(question[i].QuestionTitle, target) < 0.3)
+                //    {
+                //        question.Remove(question[i]);
+                //    }
+                //}
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());

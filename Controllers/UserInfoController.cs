@@ -76,7 +76,7 @@ namespace Back_End.Controllers
                 // 获评次数
                 int comment_times = 0;
 
-                var blog_id_list = myContext.Blogs.Where(a => a.BlogUserId == user_id)
+                var blog_id_list = myContext.Blogs.Where(a => a.BlogUserId == user_id&&a.BlogVisible==true)
                     .Select(b => new
                     {
                         b.BlogId,
@@ -88,7 +88,7 @@ namespace Back_End.Controllers
                     comment_times += myContext.Blogcomments.Count(b => b.BlogCommentFather != null && b.BlogCommentFather == blog_id.BlogId);
                 }
 
-                var answer_id_list = myContext.Answers.Where(a => a.AnswerUserId == user_id)
+                var answer_id_list = myContext.Answers.Where(a => a.AnswerUserId == user_id&& a.AnswerVisible==true)
                     .Select(b => new
                     {
                         b.AnswerId,
@@ -104,11 +104,11 @@ namespace Back_End.Controllers
 
                 // 获藏次数
                 var star_question_times = myContext.Starquestions
-                    .Count(b => b.UserId == user_id);
+                    .Count(b => b.UserId == user_id&&b.Cancel==false);
                 var star_answer_times = myContext.Staranswers
-                    .Count(b => b.UserId == user_id);
+                    .Count(b => b.UserId == user_id&&b.Cancel==false);
                 var star_blog_times = myContext.Starblogs
-                    .Count(b => b.UserId == user_id);
+                    .Count(b => b.UserId == user_id&&b.Cancel==false);
                 int star_times = star_question_times + star_answer_times + star_blog_times;
                 message.data.Add("star_times", star_times);
 

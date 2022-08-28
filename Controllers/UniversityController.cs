@@ -255,5 +255,52 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        public class UserInfo
+        {
+            public int user_id { get; set; }
+            public string user_profile { get; set; }
+            public decimal user_follower { get; set; }
+            public string user_signature { get; set; }
+            public decimal user_level { get; set; }
+            public string user_gender { get; set; }
+            public string user_name { get; set; }
+        }
+        [HttpGet("get_oldboy")]
+        public string getOldBoy(int university_id)
+        {
+            Message message = new();
+            try
+            {
+                var user_list = myContext.Qualifications
+                    .Where(b => b.Visible == true&&b.UniversityId==university_id)
+                    .Select(b => b.UserId)
+                    .Distinct()
+                    .ToList();
+                List<UserInfo> userInfos = new();
+                foreach(int id in user_list)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == id);
+                    if (user.UserState == false)
+                        continue;
+                    UserInfo userInfo = new();
+                    userInfo.user_id = id;
+                    userInfo.user_profile = user.UserProfile;
+                    userInfo.user_follower = user.UserFollower;
+                    userInfo.user_signature = user.UserSignature;
+                    userInfo.user_gender=user.UserGender;
+                    userInfo.user_name=user.UserName;
+                    userInfo.user_level=user.UserLevel;
+                    userInfos.Add(userInfo);
+                }
+                message.data.Add("user_info", userInfos.ToArray());
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
     }
 }
