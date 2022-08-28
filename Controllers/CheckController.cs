@@ -284,8 +284,30 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                Qualificationchecking qualification_checking = myContext.Qualificationcheckings.Single(b => b.IdentityId == identity_id);
-                Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
+                //Qualificationchecking qualification_checking = myContext.Qualificationcheckings.Single(b => b.IdentityId == identity_id);
+                var qualification_checking = myContext.Qualificationcheckings
+                    .Where(b => b.IdentityId == identity_id)
+                    .Select(b => new
+                    {
+                        b.IdentityId,
+                        b.AdministratorId,
+                        b.SummitDate,
+                        b.ReviewResult,
+                        b.ReviewDate,
+                        b.ReviewReason,
+                    }).First();
+                //Qualification qualification = myContext.Qualifications.Single(b => b.IdentityId == identity_id);
+                var qualification = myContext.Qualifications
+                    .Where(b => b.IdentityId == identity_id)
+                    .Select(b => new
+                    {
+                        b.User.UserName,
+                        b.UniversityId,
+                        b.Identity,
+                        b.IdentityQualificationImage,
+                        b.EnrollmentTime,
+                        b.Major,
+                    }).First();
                 message.data.Add("IdentityId", qualification_checking.IdentityId);
                 message.data.Add("UniversityId", qualification.UniversityId);
                 var university = myContext.Universities.Where(b => b.UniversityId == qualification.UniversityId)
@@ -296,6 +318,7 @@ namespace Back_End.Controllers
                     }).First();
                 message.data.Add("UniversityChName", university.UniversityChName);
                 message.data.Add("UniversityEnName", university.UniversityEnName);
+                message.data.Add("UserName", qualification.UserName);
                 message.data.Add("Identity", qualification.Identity);
                 message.data.Add("IdentityImage", qualification.IdentityQualificationImage);
                 message.data.Add("EnrollmentTime", qualification.EnrollmentTime);
@@ -308,7 +331,7 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = true;
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.ToString());
             }

@@ -98,10 +98,18 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                University university = myContext.Universities.Single(b => b.UniversityChName.Contains(chname));
+                //University university = myContext.Universities.Single(b => b.UniversityChName.Contains(chname));
+                var university = myContext.Universities
+                    .Where(item => item.UniversityChName.Contains(chname))
+                    .Select(item => new
+                    {
+                        item.UniversityId
+                    })
+                    .ToList().First();
+
                 return getUniversityInfoById(university.UniversityId);
             }
-            catch(Exception error)
+            catch (Exception error)
             {
                 Console.WriteLine(error.ToString());
             }
@@ -160,6 +168,24 @@ namespace Back_End.Controllers
 
             return message.ReturnJson();
         }
+
+        [HttpPost("change")]
+        public string changeUniversityInfo()
+        {
+            Message message = new();
+            try
+            {
+                string chname = Request.Form["chname"];
+                string enname = Request.Form["enname"];
+                Console.WriteLine(chname + enname);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         /*tag:以哪个排行榜为主
          QS_rank：qs，The_rank：the，USNews_rank：usnews
          */
