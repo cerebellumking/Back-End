@@ -175,9 +175,103 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
+                int university_id = int.Parse(Request.Form["id"]);
+                University university = myContext.Universities.Single(item => item.UniversityId == university_id);
+
+                // name
                 string chname = Request.Form["chname"];
                 string enname = Request.Form["enname"];
-                Console.WriteLine(chname + enname);
+                if (chname != null && enname != null)
+                {
+                    university.UniversityChName = chname;
+                    university.UniversityEnName = enname;
+                }
+
+                // badge
+                /////////
+
+                // abbreviation
+                string abbreviation = Request.Form["abbreviation"];
+                if (abbreviation != null)
+                {
+                    university.UniversityAbbreviation = abbreviation;
+                }
+
+                // country
+                string country = Request.Form["country"];
+                if (country != null)
+                {
+                    university.UniversityCountry = country;
+                }
+
+                // region
+
+                string region = Request.Form["region"];
+                if (region != null)
+                {
+                    university.UniversityRegion = region;
+                }
+
+                // location
+                string location = Request.Form["location"];
+                if(location != null)
+                {
+                    university.UniversityLocation = location;
+                }
+
+                // email
+                string email = Request.Form["email"];
+                if (email != null)
+                {
+                    university.UniversityEmail = email;
+                }
+
+                // website
+                string website = Request.Form["website"];
+                if (website != null)
+                {
+                    university.UniversityWebsite = website;
+                }
+
+                // student_num
+                string student_num = Request.Form["student_num"];
+                if (student_num != null)
+                {
+                    university.UniversityStudentNum = decimal.Parse(student_num);
+                }
+
+                // teacher_num
+                string teacher_num = Request.Form["teacher_num"];
+                if (teacher_num != null)
+                {
+                    university.UniversityTeacherNum = short.Parse(teacher_num);
+                }
+
+                // 排名相关
+                Rank rank = myContext.Ranks.Single(item => item.UniversityId == university_id && item.RankYear == 2022);
+                // qs_rank
+                string qs_rank = Request.Form["qs_rank"];
+                if (qs_rank != null)
+                {
+                    rank.UniversityQsRank = short.Parse(qs_rank);
+                }
+
+                // the_rank
+                string the_rank = Request.Form["the_rank"];
+                if (the_rank != null)
+                {
+                    rank.UniversityTheRank = short.Parse(the_rank);
+                }
+
+                // usnews_rank
+                string usnews_rank = Request.Form["usnews_rank"];
+                if (usnews_rank != null)
+                {
+                    rank.UniversityUsnewsRank = short.Parse(usnews_rank);
+                }
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
             }
             catch (Exception error)
             {
