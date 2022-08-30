@@ -131,6 +131,7 @@ namespace Back_End.Controllers
                 //查询有学历认证的用户
                 var qualificationList = myContext.Qualifications.Where(a => a.UserId == user_id && a.Visible == true).Select(b => new { b.UserId, b.Identity, b.UniversityId }).ToList();
                 message.data.Add("user_id", user_id);
+                decimal coin = myContext.Users.Where(b=>b.UserId==user_id).Select(b => b.UserCoin).First();
                 List<IdentityInfo> infos = new List<IdentityInfo>();
                 //遍历不同identityID，将用户信息保存到identityInfo后存到infos中
                 foreach (var qualification in qualificationList)
@@ -142,6 +143,7 @@ namespace Back_End.Controllers
                     infos.Add(identityInfo);
                 }
                 //以数组形式返回
+                message.data.Add("coin", coin);
                 message.data.Add("identity_info", infos.ToArray());
                 message.status = true;
                 message.errorCode = 200;
