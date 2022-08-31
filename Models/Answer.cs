@@ -17,13 +17,13 @@ namespace Back_End.Models
         }
 
         public int AnswerId { get; set; }
-        public int? AnswerUserId { get; set; }
-        public int? QuestionId { get; set; }
+        public int AnswerUserId { get; set; }
+        public int QuestionId { get; set; }
         public DateTime AnswerDate { get; set; }
         public string AnswerContent { get; set; }
         public string AnswerContentpic { get; set; }
-        public decimal? AnswerLike { get; set; }
-        public decimal? AnswerCoin { get; set; }
+        public decimal AnswerLike { get; set; }
+        public decimal AnswerCoin { get; set; }
         public bool? AnswerVisible { get; set; }
         public string AnswerSummary { get; set; }
 

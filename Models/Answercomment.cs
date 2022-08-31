@@ -15,12 +15,12 @@ namespace Back_End.Models
         }
 
         public int AnswerCommentId { get; set; }
-        public int? AnswerCommentUserId { get; set; }
+        public int AnswerCommentUserId { get; set; }
         public DateTime AnswerCommentTime { get; set; }
         public string AnswerCommentContent { get; set; }
         public int? AnswerCommentReply { get; set; }
         public int? AnswerCommentFather { get; set; }
-        public decimal? AnswerCommentLike { get; set; }
+        public decimal AnswerCommentLike { get; set; }
         public bool? AnswerCommentVisible { get; set; }
 
         public virtual Answer AnswerCommentFatherNavigation { get; set; }

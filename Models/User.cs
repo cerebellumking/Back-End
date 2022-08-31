@@ -50,7 +50,9 @@ namespace Back_End.Models
         public decimal UserFollows { get; set; }
         public decimal UserLevel { get; set; }
         public decimal UserCoin { get; set; }
-        public DateTime? UserLogintime { get; set; }
+        public DateTime UserLogintime { get; set; }
+        public int UserExp { get; set; }
+        public int ContinusLogin { get; set; }
 
         public virtual ICollection<Answercommentreport> Answercommentreports { get; set; }
         public virtual ICollection<Answercomment> Answercomments { get; set; }

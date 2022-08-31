@@ -9,7 +9,7 @@ namespace Back_End.Models
     {
         public int BlogId { get; set; }
         public int AdministratorId { get; set; }
-        public DateTime? BlogDate { get; set; }
+        public DateTime BlogDate { get; set; }
         public DateTime? ReviewDate { get; set; }
         public string ReviewResult { get; set; }
         public string ReviewReason { get; set; }

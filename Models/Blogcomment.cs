@@ -15,12 +15,12 @@ namespace Back_End.Models
         }
 
         public int BlogCommentId { get; set; }
-        public int? BlogCommentUserId { get; set; }
+        public int BlogCommentUserId { get; set; }
         public DateTime BlogCommentTime { get; set; }
         public string BlogCommentContent { get; set; }
         public int? BlogCommentReply { get; set; }
         public int? BlogCommentFather { get; set; }
-        public decimal? BlogCommentLike { get; set; }
+        public decimal BlogCommentLike { get; set; }
         public bool? BlogCommentVisible { get; set; }
 
         public virtual Blog BlogCommentFatherNavigation { get; set; }
