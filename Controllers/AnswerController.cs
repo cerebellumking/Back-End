@@ -64,7 +64,7 @@ namespace Back_End.Controllers
                 var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentFather == answer_id&&b.AnswerCommentVisible==true);
                 message.data["comment_num"] = answercomment.Count();
                 var list = answercomment
-                    .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike,b.InverseAnswerCommentReplyNavigation.Count,})
+                    .Select(b => new { b.AnswerCommentUser.UserId, b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike,b.InverseAnswerCommentReplyNavigation.Count,})
                     .ToList();
                 message.data["comment_list"] = list.ToArray();
                 message.status = true;
@@ -87,7 +87,7 @@ namespace Back_End.Controllers
                 var answercomment = myContext.Answercomments.Where(b => b.AnswerCommentReply == answer_comment_id&&b.AnswerCommentVisible==true);
                 message.data["reply_num"] = answercomment.Count();
                 var list = answercomment
-                    .Select(b => new { b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike, b.InverseAnswerCommentReplyNavigation.Count, })
+                    .Select(b => new { b.AnswerCommentUser.UserId,b.AnswerCommentId, b.AnswerCommentUser.UserName, b.AnswerCommentUser.UserProfile, b.AnswerCommentContent, b.AnswerCommentLike, b.InverseAnswerCommentReplyNavigation.Count, })
                     .ToList();
                 message.data["reply_list"] = list.ToArray();
                 message.status = true;

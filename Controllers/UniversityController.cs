@@ -284,7 +284,7 @@ namespace Back_End.Controllers
          QS_rank：qs，The_rank：the，USNews_rank：usnews
          */
         [HttpGet("rank")]
-        public string showQsRank(int rank_year, string tag, string university_country = "")
+        public string showQsRank(int page,int rank_year, string tag,int page_size = 5,string university_country = "")
         {
             Message message = new Message();
             university_country = System.Web.HttpUtility.UrlDecode(university_country); // url解码
@@ -302,6 +302,8 @@ namespace Back_End.Controllers
                     ranklist = myContext.Ranks
                         .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                         .OrderBy(b => b.UniversityQsRank)
+                        .Skip(page_size*(page-1))
+                        .Take(page_size)
                         .ToList();
                 }
                 else if (tag == "THE_rank")
@@ -309,6 +311,8 @@ namespace Back_End.Controllers
                     ranklist = myContext.Ranks
                       .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                       .OrderBy(b => b.UniversityTheRank)
+                      .Skip(page_size * (page - 1))
+                      .Take(page_size)
                       .ToList();
                 }
                 else
@@ -316,7 +320,8 @@ namespace Back_End.Controllers
                     ranklist = myContext.Ranks
                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
                        .OrderBy(b => b.UniversityUsnewsRank)
-
+                       .Skip(page_size * (page - 1))
+                       .Take(page_size)
                        .ToList();
                 }
                 foreach (var rank in ranklist)
@@ -344,6 +349,47 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.data["university_list"] = lists;
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("num")]
+        public string getNumber(int rank_year, string tag, string university_country = "")
+        {
+            Message message = new Message();
+            university_country = System.Web.HttpUtility.UrlDecode(university_country); // url解码
+            try
+            {
+                List<Rank> ranklist = new List<Rank>();
+                if (tag == "QS_rank")
+                {
+                    ranklist = myContext.Ranks
+                        .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                        .OrderBy(b => b.UniversityQsRank)
+                        .ToList();
+                }
+                else if (tag == "THE_rank")
+                {
+                    ranklist = myContext.Ranks
+                      .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                      .OrderBy(b => b.UniversityTheRank)
+                      .ToList();
+                }
+                else
+                {
+                    ranklist = myContext.Ranks
+                       .Where(a => a.RankYear == rank_year && a.University.UniversityCountry.Contains(university_country))
+                       .OrderBy(b => b.UniversityUsnewsRank)
+
+                       .ToList();
+                }
+                message.status = true;
+                message.errorCode = 200;
+                message.data["num"] = ranklist.Count;
             }
             catch (Exception e)
             {

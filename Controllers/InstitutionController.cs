@@ -58,7 +58,7 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("list")]
-        public string showInstitutionList(string institution_province="",string institution_city = "",string institution_target = "")
+        public string showInstitutionList(int page,int page_size=5,string institution_province="",string institution_city = "",string institution_target = "")
         {
             Message message = new Message();
             try
@@ -71,6 +71,8 @@ namespace Back_End.Controllers
                 var institution_list = myContext.Institutions
                     .Where(b => b.InstitutionProvince.Contains(institution_province) && b.InstitutionCity.Contains(institution_city) && b.InstitutionTarget.Contains(institution_target))
                     .OrderBy(b=>b.InstitutionId)
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
                     .ToList();
                 foreach (Institution institution in institution_list)
                 {
@@ -94,6 +96,31 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("num")]
+        public string getNumber(string institution_province = "", string institution_city = "", string institution_target = "")
+        {
+            Message message = new Message();
+            try
+            {
+                //url解码
+                institution_province = System.Web.HttpUtility.UrlDecode(institution_province);
+                institution_city = System.Web.HttpUtility.UrlDecode(institution_city);
+                institution_target = System.Web.HttpUtility.UrlDecode(institution_target);
+                List<InstitutionInfo> institutionInfos = new List<InstitutionInfo>();
+                var institution_list = myContext.Institutions
+                    .Where(b => b.InstitutionProvince.Contains(institution_province) && b.InstitutionCity.Contains(institution_city) && b.InstitutionTarget.Contains(institution_target))
+                    .OrderBy(b => b.InstitutionId)
+                    .ToList();
+                message.data["num"] = institutionInfos.Count;
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
 
         [HttpPost]
         public string addInstitution(dynamic front_end_data)

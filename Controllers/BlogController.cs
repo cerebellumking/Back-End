@@ -261,7 +261,7 @@ namespace Back_End.Controllers
                 var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentFather == blog_id&& b.BlogCommentVisible==true);
                 message.data["comment_num"] = blogcomment.Count();
                 var list = blogcomment
-                    .Select(b => new { b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
+                    .Select(b => new { b.BlogCommentUser.UserId,b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
                     .ToList();
                 message.data["comment_list"] = list.ToArray();
                 message.status = true;
@@ -284,7 +284,7 @@ namespace Back_End.Controllers
                 var blogcomment = myContext.Blogcomments.Where(b => b.BlogCommentReply == blog_comment_id && b.BlogCommentVisible == true);
                 message.data["reply_num"] = blogcomment.Count();
                 var list = blogcomment
-                    .Select(b => new { b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
+                    .Select(b => new { b.BlogCommentUser.UserId,b.BlogCommentId, b.BlogCommentUser.UserName, b.BlogCommentUser.UserProfile, b.BlogCommentContent, b.BlogCommentLike, b.InverseBlogCommentReplyNavigation.Count, })
                     .ToList();
                 message.data["reply_list"] = list.ToArray();
                 message.status = true;
