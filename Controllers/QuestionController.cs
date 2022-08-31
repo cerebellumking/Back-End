@@ -464,6 +464,11 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
                 question.QuestionVisible = false;
+                var answer_list = myContext.Answers.Where(b => b.QuestionId == question_id);
+                foreach(Answer answer in answer_list)
+                {
+                    answer.AnswerVisible = false;
+                }
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;
