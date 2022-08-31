@@ -44,6 +44,13 @@ namespace Back_End.Controllers
                     // 若存在，则将Cancel改为false
                     like_answer.Cancel = false;
                 }
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 message.errorCode = 200;
                 message.status = true;
                 myContext.SaveChanges();
@@ -130,6 +137,13 @@ namespace Back_End.Controllers
                 {
                     like_answer_comment.Cancel = false;
                 }
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 message.errorCode = 200;
                 message.status = true;
                 myContext.SaveChanges();
@@ -214,6 +228,13 @@ namespace Back_End.Controllers
                 {
                     like_blog.Cancel = false;
                 }
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 message.errorCode = 200;
                 message.status = true;
                 myContext.SaveChanges();
@@ -297,6 +318,13 @@ namespace Back_End.Controllers
                 else
                 {
                     like_blog_comment.Cancel = false;
+                }
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
                 }
                 message.errorCode = 200;
                 message.status = true;

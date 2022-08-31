@@ -404,6 +404,13 @@ namespace Back_End.Controllers
                 questionchecking.QuestionId = id;
                 questionchecking.ReviewResult = "待审核";
                 questionchecking.QuestionDate = question.QuestionDate;
+                User user = myContext.Users.Single(b => b.UserId == question_user_id);
+                user.UserExp += 5;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 myContext.Questioncheckings.Add(questionchecking);
                 myContext.Questions.Add(question);
                 myContext.SaveChanges();

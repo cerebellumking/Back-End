@@ -313,6 +313,12 @@ namespace Back_End.Controllers
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
                 User user = myContext.Users.Single(b => b.UserId == blog_comment_user_id);
                 int id = myContext.Blogcomments.Count() + 1;
+                user.UserExp += 3;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 Blogcomment blogcomment = new Blogcomment();
                 blogcomment.BlogCommentUser = user;
                 blogcomment.BlogCommentVisible = true;
@@ -349,6 +355,12 @@ namespace Back_End.Controllers
                 string reply_content = front_end_data.GetProperty("reply_content").ToString();
                 Blogcomment blogcomment = myContext.Blogcomments.Single(b => b.BlogCommentId == comment_id);
                 User user = myContext.Users.Single(b => b.UserId == reply_user_id);
+                user.UserExp += 3;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 Blogcomment new_comment = new Blogcomment();
                 new_comment.BlogCommentContent = reply_content;
                 new_comment.BlogCommentFather = null;
@@ -387,7 +399,13 @@ namespace Back_End.Controllers
                 string tag = front_end_data.GetProperty("tag").ToString();
                 string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Blog blog = new Blog();
-                //
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 5;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 byte[] img_bytes = Encoding.UTF8.GetBytes(content);
                 var client = OssHelp.createClient();
                 MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
@@ -399,7 +417,7 @@ namespace Back_End.Controllers
                 blog.BlogUserId = user_id;
                 blog.BlogId = id;
                 blog.BlogTag = tag;
-                blog.BlogUser = myContext.Users.Single(b => b.UserId == user_id);
+                blog.BlogUser =user;
                 blog.BlogDate = DateTime.Now;
                 blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 blog.BlogSummary = summary;

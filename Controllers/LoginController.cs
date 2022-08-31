@@ -73,6 +73,28 @@ namespace Back_End.Controllers
                             moneychangerecord.ChangeNum = 1;
                             moneychangerecord.ChangeReason = "登录奖励";
                             myContext.Moneychangerecords.Add(moneychangerecord);
+                            /*实现连续登录经验获取*/
+                            DateTime time = tomorrow.AddDays(1);
+                            if (!(time.Date.Equals(DateTime.Now.Date)))
+                            {
+                                user.ContinusLogin = 1;
+                                user.UserExp += 1;
+                                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                                {
+                                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                                    user.UserLevel++;
+                                }
+                            }
+                            else
+                            {
+                                user.ContinusLogin=(user.ContinusLogin==7)?1: user.ContinusLogin+1;
+                                user.UserExp += user.ContinusLogin*user.ContinusLogin;
+                                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                                {
+                                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                                    user.UserLevel++;
+                                }
+                            }
                         }
                         user.UserLogintime = DateTime.Now;
                         myContext.SaveChanges();

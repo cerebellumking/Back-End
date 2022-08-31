@@ -71,6 +71,12 @@ namespace Back_End.Controllers
                 user.UserCoin -= num;
                 coinanswer.User = user;
                 coinanswer.Answer = answer;
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 myContext.Coinanswers.Add(coinanswer);
                 myContext.SaveChanges();
                 message.data["user_coin_left"] = user.UserCoin;
@@ -95,7 +101,7 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.status = myContext.Coinblogs.Any(b => b.BlogId == blog_id && b.UserId == user_id);
                 //message.data["blog_coin"] = myContext.Blogs.Single(b => b.BlogId == blog_id).BlogCoin;
-                message.data["blog_coin"] = myContext.Blogs.Where(b=>b.BlogId==blog_id).Select(b=>b.BlogCoin).ToArray()[0].Value;
+                message.data["blog_coin"] = myContext.Blogs.Where(b=>b.BlogId==blog_id).Select(b=>b.BlogCoin).First();
             }
             catch (Exception e)
             {
@@ -141,6 +147,12 @@ namespace Back_End.Controllers
                 coinblog.User = user;
                 coinblog.Blog = blog;
                 coinblog.CoinNum = num;
+                user.UserExp += 1;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 myContext.Coinblogs.Add(coinblog);
                 myContext.SaveChanges();
                 message.data["user_coin_left"] = coinblog.User.UserCoin;

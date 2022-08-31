@@ -127,6 +127,12 @@ namespace Back_End.Controllers
                 answercomment.AnswerCommentId = id;
                 answercomment.AnswerCommentTime = DateTime.Now;
                 answercomment.AnswerCommentUserId = answer_comment_user_id;
+                user.UserExp += 3;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 myContext.Answercomments.Add(answercomment);
                 myContext.SaveChanges();
                 message.data.Add("answer_comment_id", id);
@@ -164,6 +170,12 @@ namespace Back_End.Controllers
                 new_comment.AnswerCommentUserId = reply_user_id;
                 new_comment.AnswerCommentUser = user;
                 new_comment.AnswerCommentVisible = true;
+                user.UserExp += 3;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 myContext.Answercomments.Add(new_comment);
                 myContext.SaveChanges();
                 message.data["comment_id"] = id;
@@ -197,10 +209,17 @@ namespace Back_End.Controllers
                 string path = "answer/content/" + id.ToString() + ".html";
                 string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
                 client.PutObject(OssHelp.bucketName, path, stream);
+                User user= myContext.Users.Single(b => b.UserId == user_id);
+                user.UserExp += 5;
+                if (user.UserExp >= user.UserLevel * user.UserLevel)
+                {
+                    user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
+                    user.UserLevel++;
+                }
                 answer.QuestionId = question_id;
                 answer.AnswerUserId = user_id;
                 answer.AnswerId = id;
-                answer.AnswerUser = myContext.Users.Single(b => b.UserId == user_id);
+                answer.AnswerUser = user;
                 answer.AnswerContent = imageurl;
                 answer.AnswerDate = DateTime.Now;
                 answer.AnswerContentpic = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
@@ -224,6 +243,7 @@ namespace Back_End.Controllers
                     answer.AnswerContentpic = imgurl;
                 }
                 answerchecking.Answer = answer;
+               
                 myContext.Answers.Add(answer);
                 myContext.Answercheckings.Add(answerchecking);
                 myContext.SaveChanges();
