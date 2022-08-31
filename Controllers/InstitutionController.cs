@@ -106,12 +106,11 @@ namespace Back_End.Controllers
                 institution_province = System.Web.HttpUtility.UrlDecode(institution_province);
                 institution_city = System.Web.HttpUtility.UrlDecode(institution_city);
                 institution_target = System.Web.HttpUtility.UrlDecode(institution_target);
-                List<InstitutionInfo> institutionInfos = new List<InstitutionInfo>();
                 var institution_list = myContext.Institutions
                     .Where(b => b.InstitutionProvince.Contains(institution_province) && b.InstitutionCity.Contains(institution_city) && b.InstitutionTarget.Contains(institution_target))
                     .OrderBy(b => b.InstitutionId)
                     .ToList();
-                message.data["num"] = institutionInfos.Count;
+                message.data["num"] = institution_list.Count;
                 message.errorCode = 200;
                 message.status = true;
             }
