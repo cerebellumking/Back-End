@@ -365,6 +365,7 @@ namespace Back_End.Controllers
             try
             {
                 List<Rank> ranklist = new List<Rank>();
+                List<UniversityList> lists = new List<UniversityList>();
                 if (tag == "QS_rank")
                 {
                     ranklist = myContext.Ranks
@@ -387,6 +388,16 @@ namespace Back_End.Controllers
 
                        .ToList();
                 }
+                foreach (var rank in ranklist)
+                {
+                    UniversityList list = new UniversityList();
+                    if (rank.University == null)
+                        rank.University = myContext.Universities.Single(b => b.UniversityId == rank.UniversityId);
+                    list.university_id = rank.UniversityId;
+                    list.university_chname = rank.University.UniversityChName;
+                    lists.Add(list);
+                }
+                message.data["university_list"] = lists;
                 message.status = true;
                 message.errorCode = 200;
                 message.data["num"] = ranklist.Count;
