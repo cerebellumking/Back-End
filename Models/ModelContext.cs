@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 using System.Linq;
 #nullable disable
 
@@ -1297,7 +1297,7 @@ namespace Back_End.Models
                     .HasColumnName("NEWS_FLASH_REGION");
 
                 entity.Property(e => e.NewsFlashSummary)
-                    .HasMaxLength(256)
+                    .HasMaxLength(1024)
                     .IsUnicode(false)
                     .HasColumnName("NEWS_FLASH_SUMMARY");
 
