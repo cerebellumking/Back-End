@@ -19,15 +19,34 @@ namespace Back_End.Controllers
             myContext = modelContext;
         }
 
+        [HttpGet("num")]
+        public string getNewsFlashsNum()
+        {
+            Message message = new();
+            try
+            {
+                myContext.DetachAll();
+                int count = myContext.Newsflashes.Count(b => b.NewsFlashVisible == true);
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("num", count);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpGet("all")]
-        public string getAllNewsFlashs()
+        public string getAllNewsFlashs(int page,int page_size=5)
         {
             Message message = new();
             try
             {
                 myContext.DetachAll();
                 var newsflashs = myContext.Newsflashes.Where(c=>c.NewsFlashVisible == true)
-                    .OrderBy(a => a.NewsFlashDate)
+                    .OrderByDescending(a => a.NewsFlashDate)
                     .Select(b => new
                 {
                     b.NewsFlashId,
@@ -38,7 +57,10 @@ namespace Back_End.Controllers
                     b.NewsFlashSummary,
                     //b.NewsFlashContent,
                     b.NewsFlashImage
-                }).ToList();
+                })
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
+                    .ToList();
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("count", newsflashs.Count);
