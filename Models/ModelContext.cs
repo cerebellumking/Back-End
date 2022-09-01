@@ -1308,7 +1308,7 @@ namespace Back_End.Models
 
                 entity.Property(e => e.NewsFlashTitle)
                     .IsRequired()
-                    .HasMaxLength(64)
+                    .HasMaxLength(128)
                     .IsUnicode(false)
                     .HasColumnName("NEWS_FLASH_TITLE")
                     .HasDefaultValueSql("'none'");
