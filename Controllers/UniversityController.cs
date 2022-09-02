@@ -299,11 +299,11 @@ namespace Back_End.Controllers
                 }
 
                 //college
-                string college = Request.Form["college"];
-                if (college != null)
-                {
-                    university.UniversityCollege = college;
-                }
+                //string college = Request.Form["college"];
+                //if (college != null)
+                //{
+                //    university.UniversityCollege = college;
+                //}
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;

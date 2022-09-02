@@ -150,8 +150,6 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                //Console.WriteLine(Request.Query["out_trade_no"]);
-                Console.WriteLine(Request.Form["out_trade_no"]);
                 string out_trade_num = Request.Form["out_trade_no"];
                 int user_id = int.Parse(out_trade_num.Split('U')[1]);
                 Console.WriteLine(user_id);
