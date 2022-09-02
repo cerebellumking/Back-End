@@ -162,7 +162,7 @@ namespace Back_End.Controllers
                 {
                     myContext.DetachAll();
                     Moneychangerecord moneychangerecord = new();
-                    moneychangerecord.RecordId = myContext.Moneychangerecords.Count() + 1;
+                    moneychangerecord.RecordId = myContext.Moneychangerecords.Max(b=>b.RecordId) + 1;
                     moneychangerecord.UserId = user_id;
                     moneychangerecord.ChangeNum = int.Parse(alipayTradeQueryResponse.TotalAmount.Split('.')[0])*10;
                     moneychangerecord.ChangeDate = DateTime.Now;

@@ -37,7 +37,7 @@ namespace Back_End.Controllers
                 int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Answerreport answerreport = new();
-                int id = myContext.Answerreports.Count()+1;
+                int id = myContext.Answerreports.Max(b=>b.ReportId)+1;
                 answerreport.ReportId = id;
                 answerreport.UserId = user_id;
                 answerreport.AdministratorId = 0;
@@ -67,7 +67,7 @@ namespace Back_End.Controllers
                 int answer_comment_id = int.Parse(front_end_data.GetProperty("answercomment_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Answercommentreport answercommentreport=new();
-                int id = myContext.Answercommentreports.Count() + 1;
+                int id = myContext.Answercommentreports.Max(b => b.ReportId) + 1;
                 answercommentreport.ReportId = id;
                 answercommentreport.UserId = user_id;
                 answercommentreport.AdministratorId = 0;
@@ -98,7 +98,7 @@ namespace Back_End.Controllers
                 int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Blogreport blogreport = new();
-                int id = myContext.Blogreports.Count() + 1;
+                int id = myContext.Blogreports.Max(b => b.ReportId) + 1;
                 blogreport.ReportId = id;
                 blogreport.UserId = user_id;
                 blogreport.AdministratorId = 0;
@@ -129,7 +129,7 @@ namespace Back_End.Controllers
                 int blog_comment_id = int.Parse(front_end_data.GetProperty("blogcomment_id").ToString());
                 string report_reason = front_end_data.GetProperty("report_reason").ToString();
                 Blogcommentreport blogcommentreport = new();
-                int id = myContext.Blogcommentreports.Count() + 1;
+                int id = myContext.Blogcommentreports.Max(b => b.ReportId) + 1;
                 blogcommentreport.ReportId = id;
                 blogcommentreport.UserId = user_id;
                 blogcommentreport.AdministratorId = 0;

@@ -116,7 +116,7 @@ namespace Back_End.Controllers
                 string answer_comment_content = front_end_data.GetProperty("answer_comment_content").ToString();
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
                 User user = myContext.Users.Single(b => b.UserId == answer_comment_user_id);
-                int id = myContext.Answercomments.Count() + 1;
+                int id = myContext.Answercomments.Max(b=>b.AnswerCommentId) + 1;
                 Answercomment answercomment = new Answercomment();
                 answercomment.AnswerCommentUser = user;
                 answercomment.AnswerCommentVisible = true;
@@ -164,7 +164,7 @@ namespace Back_End.Controllers
                 new_comment.AnswerCommentFather = null;
                 new_comment.AnswerCommentReply = comment_id;
                 new_comment.AnswerCommentReplyNavigation = answercomment;
-                int id = myContext.Answercomments.Count() + 1;
+                int id = myContext.Answercomments.Max(b=>b.AnswerCommentId) + 1;
                 new_comment.AnswerCommentId =id;
                 new_comment.AnswerCommentTime = DateTime.Now;
                 new_comment.AnswerCommentUserId = reply_user_id;
@@ -202,7 +202,7 @@ namespace Back_End.Controllers
                 string summary = front_end_data.GetProperty("summary").ToString();
                 string img_base64 = front_end_data.GetProperty("image_url").ToString();
                 Answer answer = new();
-                int id = myContext.Answers.Count() + 1;
+                int id = myContext.Answers.Max(b=>b.AnswerId) + 1;
                 byte[] img_bytes = Encoding.UTF8.GetBytes(content);
                 var client = OssHelp.createClient();
                 MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);

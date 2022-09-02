@@ -415,7 +415,7 @@ namespace Back_End.Controllers
                 string blog_comment_content = front_end_data.GetProperty("blog_comment_content").ToString();
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
                 User user = myContext.Users.Single(b => b.UserId == blog_comment_user_id);
-                int id = myContext.Blogcomments.Count() + 1;
+                int id = myContext.Blogcomments.Max(b=>b.BlogCommentId) + 1;
                 user.UserExp += 3;
                 if (user.UserExp >= user.UserLevel * user.UserLevel)
                 {
@@ -469,7 +469,7 @@ namespace Back_End.Controllers
                 new_comment.BlogCommentFather = null;
                 new_comment.BlogCommentReply = comment_id;
                 new_comment.BlogCommentReplyNavigation = blogcomment;
-                int id = myContext.Blogcomments.Count() + 1;
+                int id = myContext.Blogcomments.Max(b=>b.BlogCommentId) + 1;
                 new_comment.BlogCommentId = id;
                 new_comment.BlogCommentTime = DateTime.Now;
                 new_comment.BlogCommentUserId = reply_user_id;
@@ -512,7 +512,7 @@ namespace Back_End.Controllers
                 byte[] img_bytes = Encoding.UTF8.GetBytes(content);
                 var client = OssHelp.createClient();
                 MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
-                int id = myContext.Blogs.Count() + 1;
+                int id = myContext.Blogs.Max(b=>b.BlogId) + 1;
                 string path = "blog/content/" + id.ToString() + ".html";
                 string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
                 client.PutObject(OssHelp.bucketName, path, stream);

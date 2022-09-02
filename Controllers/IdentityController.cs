@@ -61,7 +61,7 @@ namespace Back_End.Controllers
                 string enrollment_time = front_end_data.GetProperty("enrollment_time").ToString();
                 string major = front_end_data.GetProperty("major").ToString();
                 string university_name = front_end_data.GetProperty("university_name").ToString();
-                int id = myContext.Qualifications.Count() + 1;
+                int id = myContext.Qualifications.Max(b=>b.IdentityId) + 1;
                 //存储图片
                 string type = "." + img_base64.Split(',')[0].Split(';')[0].Split('/')[1];
                 img_base64 = img_base64.Split("base64,")[1];//非常重要

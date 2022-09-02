@@ -130,6 +130,91 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpPost("change")]
+        public string changeUniversityInfo()
+        {
+            Message message = new();
+            try
+            {
+                int institution_id = int.Parse(Request.Form["id"]);
+                Institution institution = myContext.Institutions.Single(b => b.InstitutionId == institution_id);
+
+                // name
+                string name = Request.Form["name"];
+                if (name != null)
+                {
+                    institution.InstitutionName = name;
+                }
+
+                string phone = Request.Form["phone"];
+                if (phone != null)
+                {
+                    institution.InstitutionPhone = phone;
+                }
+
+
+                string qualify = Request.Form["qualify"];
+                if (qualify != null)
+                {
+                    institution.InstitutionQualify = qualify;
+                }
+
+                string introduction = Request.Form["introduction"];
+                if (introduction != null)
+                {
+                    institution.InstitutionIntroduction = introduction;
+                }
+
+                string profile = Request.Form["profile"];
+                if (profile != null)
+                {
+                    institution.InstitutionProfile = profile;
+                }
+
+                string city = Request.Form["city"];
+                if (city != null)
+                {
+                    institution.InstitutionCity = city;
+                }
+                string target = Request.Form["target"];
+                if (target != null)
+                {
+                    institution.InstitutionTarget = target;
+                }
+                string location = Request.Form["location"];
+                if (location != null)
+                {
+                    institution.InstitutionLocation = location;
+                }
+
+                string email = Request.Form["email"];
+                if (email != null)
+                {
+                    institution.InstitutionEmail = email;
+                }
+
+
+                string lessons_characteristic = Request.Form["lessons_characteristic"];
+                if (lessons_characteristic != null)
+                {
+                    institution.InstitutionLessonsCharacter = lessons_characteristic;
+                }
+                string lessons = Request.Form["lessons"];
+                if (lessons != null)
+                {
+                    institution.InstitutionLessons = lessons;
+                }
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpPost]
         public string addInstitution(dynamic front_end_data)
         {

@@ -354,7 +354,7 @@ namespace Back_End.Controllers
                 byte[] img_bytes = Encoding.UTF8.GetBytes(question_description);
                 var client = OssHelp.createClient();
                 MemoryStream stream = new MemoryStream(img_bytes, 0, img_bytes.Length);
-                int id = myContext.Questions.Count() + 1;
+                int id = myContext.Questions.Max(b=>b.QuestionId) + 1;
                 string path = "question/content/" + id.ToString() + ".html";
                 string imageurl = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path;
                 client.PutObject(OssHelp.bucketName, path, stream);

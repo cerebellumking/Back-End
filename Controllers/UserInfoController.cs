@@ -367,10 +367,24 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
-        [HttpDelete]
-        public void deleteInfo()
+        [HttpGet("grow")]
+        public string getGrowthInfo(int user_id)
         {
-
+            Message message = new();
+            try
+            {
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                message.data.Add("continus", user.ContinusLogin);
+                message.data.Add("level", user.UserLevel);
+                message.data.Add("exp", user.UserExp);
+                message.errorCode = 200;
+                message.status = true;
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+            }
+            return message.ReturnJson();
         }
 
     }
