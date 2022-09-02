@@ -89,6 +89,68 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        [HttpGet("tag/num")]
+        public string getBlogListNumber(int num, string tag)
+        {
+            // 返回包含某个tag的给定数量的blog
+            Message message = new Message();
+            tag = System.Web.HttpUtility.UrlDecode(tag);
+            try
+            {
+                if (tag == null)
+                {
+                    tag = "";
+                }
+                string[] tags = tag.Split('-');
+                List<int> blogs_id = new();
+                List<BlogList> list_blogs = new();
+                foreach (var val in tags)
+                {
+                    bool flag = true;
+                    var blogs = myContext.Blogs
+                        .Where(c => c.BlogTag.Contains(val) && !blogs_id.Contains(c.BlogId) && c.BlogVisible == true)
+                        .Select(b => new
+                        {
+                            b.BlogUser.UserId,
+                            b.BlogUser.UserName,
+                            b.BlogUser.UserProfile,
+                            b.BlogId,
+                            b.BlogSummary,
+                            b.BlogTag,
+                            b.BlogLike,
+                            b.BlogCoin,
+                            b.BlogUserId,
+                            b.BlogDate,
+                            b.BlogImage,
+                        })
+                        .Take(num).ToList();
+                    foreach (var blog in blogs)
+                    {
+                        BlogList new_blog_info = new();
+                        list_blogs.Add(new_blog_info);
+                        blogs_id.Add(blog.BlogId);
+                        if (list_blogs.Count >= num)
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (!flag)
+                    {
+                        break;
+                    }
+                }
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("count", list_blogs.Count);
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error.ToString());
+
+            }
+            return message.ReturnJson();
+        }
 
         [HttpGet("tag")]
         public string getBlogList(int num, string tag)
@@ -125,7 +187,7 @@ namespace Back_End.Controllers
                             b.BlogDate,
                             b.BlogImage,
                         })
-                        .Take(num).ToList();
+                        .ToList();
                     foreach (var blog in blogs)
                     {
                         BlogList new_blog_info = new();
@@ -167,8 +229,28 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpGet("time/num")]
+        public string getBlogListNumberByTime(int num)
+        {
+            Message message = new Message();
+            try
+            {
+                int count = myContext.Blogs.Count(b => b.BlogVisible == true);
+                if (count >= num)
+                    count = num;
+                message.data.Add("num", count);
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+
         [HttpGet("time")]
-        public string getBlogListByTime(int num)
+        public string getBlogListByTime(int num, int page, int page_size = 5)
         {
             Message message = new Message();
             try
@@ -177,6 +259,8 @@ namespace Back_End.Controllers
                     .Where(a => a.BlogVisible == true)
                     .OrderByDescending(c => c.BlogDate)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);
@@ -208,18 +292,37 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+        [HttpGet("heat/num")]
+        public string getBlogListNumberByHeat(int num)
+        {
+            Message message = new Message();
+            try
+            {
+                int count = myContext.Blogs.Count(b => b.BlogVisible == true);
+                if (count >= num)
+                    count = num;
+                message.data.Add("num", count);
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch
+            {
+            }
+            return message.ReturnJson();
+        }
 
         [HttpGet("heat")]
-        public string getBlogListByHeat(int num)
+        public string getBlogListByHeat(int num, int page, int page_size = 5)
         {
             Message message = new Message();
             try
             {
                 var bloglist = myContext.Blogs
                     .Where(a => a.BlogVisible == true)
-                    //.OrderByDescending(c => c.Blogcomments.Count)
                     .OrderByDescending(c => c.Blogcomments.Count(b=>b.BlogCommentVisible==true) * 2 + c.BlogLike * 3 + c.BlogCoin * 5)
                     .Select(b => new { b.BlogId, b.BlogSummary, b.BlogTag, b.BlogLike, b.BlogCoin, b.BlogUserId, b.BlogDate, b.BlogImage, b.Blogcomments.Count, b.BlogUser.UserId, b.BlogUser.UserName, b.BlogUser.UserProfile })
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
                     .ToList();
                 if (bloglist.Count > num)
                     bloglist.RemoveRange(num, bloglist.Count - num);

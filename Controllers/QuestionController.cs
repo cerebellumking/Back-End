@@ -221,26 +221,29 @@ namespace Back_End.Controllers
             public double distance { get; set; }
         }
 
-        [HttpGet("time")]
-        public string showQuestionByTime()
+        [HttpGet("num")]
+        public string getQuestionNumber()
         {
             Message message = new Message();
             try
             {
-                //var question = myContext.Questions.Where(c => c.QuestionVisible == true)
-                //    .OrderByDescending(a => a.QuestionDate)
-                //    .Select(b => new
-                //    {
-                //        b.Answers.Count,
-                //        b.QuestionId,
-                //        b.QuestionUserId,
-                //        b.QuestionTitle,
-                //        b.QuestionApply,
-                //        b.QuestionReward,
-                //        b.QuestionDate,
-                //        b.QuestionDescription,
-                //        b.QuestionTag
-                //    }).ToList();
+                message.errorCode = 200;
+                message.status = true;
+                message.data.Add("num", myContext.Questions.Count(b=>b.QuestionVisible==true));
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpGet("time")]
+        public string showQuestionByTime(int page, int page_size = 5)
+        {
+            Message message = new Message();
+            try
+            {
                 var question = myContext.Questions.Where(c => c.QuestionVisible == true)
                     .OrderByDescending(a => a.QuestionDate)
                     .Select(b => new QuestionInfo
@@ -249,19 +252,14 @@ namespace Back_End.Controllers
                         QuestionId = b.QuestionId,
                         //QuestionUserId = b.QuestionUserId,
                         QuestionTitle = b.QuestionTitle,
-                        QuestionApply = (int)b.QuestionApply,
-                        QuestionReward = (decimal)b.QuestionReward,
+                        QuestionApply = b.QuestionApply,
+                        QuestionReward = b.QuestionReward,
                         QuestionDate = b.QuestionDate,
                         //Questiondescription = b.QuestionDescription
-                    }).ToList();
-                //foreach (var val in question)
-                //{
-                //    Question question1 = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
-                //    val.QuestionTag = question1.QuestionTag.Split('-');
-                //    val.Count = myContext.Answers.Count(c => c.QuestionId == val.QuestionId && c.AnswerVisible == true);
-                //}
-                //if (question.Count > 2)
-                //    question.RemoveRange(2, question.Count - 2);
+                    })
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
+                    .ToList();
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
@@ -274,25 +272,11 @@ namespace Back_End.Controllers
         }
 
         [HttpGet("heat")]
-        public string showQuestionByHeat()
+        public string showQuestionByHeat(int page, int page_size = 5)
         {
             Message message = new Message();
             try
             {
-                //var question = myContext.Questions.Where(c => c.QuestionVisible == true)
-                //    .OrderByDescending(a => a.Answers.Count(b => b.AnswerVisible == true))
-                //    .Select(b => new
-                //    {
-                //        b.Answers.Count,
-                //        b.QuestionId,
-                //        b.QuestionUserId,
-                //        b.QuestionTitle,
-                //        b.QuestionApply,
-                //        b.QuestionReward,
-                //        b.QuestionDate,
-                //        b.QuestionDescription,
-                //        b.QuestionTag
-                //    }).ToList();
                 var question = myContext.Questions.Where(c => c.QuestionVisible == true)
                     .OrderByDescending(a => a.Answers.Count(b => b.AnswerVisible == true))
                     .Select(b => new QuestionInfo
@@ -305,15 +289,10 @@ namespace Back_End.Controllers
                         QuestionReward = (decimal)b.QuestionReward,
                         QuestionDate = b.QuestionDate,
                         //Questiondescription = b.QuestionDescription
-                    }).ToList();
-                //foreach (var val in question)
-                //{
-                //    Question question1 = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
-                //    val.QuestionTag = question1.QuestionTag.Split('-');
-                //    val.Count = myContext.Answers.Count(c => c.QuestionId == val.QuestionId && c.AnswerVisible == true);
-                //}
-                //if (question.Count > 2)
-                //    question.RemoveRange(2, question.Count - 2);
+                    })
+                    .Skip(page_size * (page - 1))
+                    .Take(page_size)
+                    .ToList();
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
@@ -347,13 +326,6 @@ namespace Back_End.Controllers
                     val.distance = (double)SimilarityTool.LevenshteinDistancePercent(val.QuestionTitle, target);
                 }
                 question.OrderByDescending(b => b.distance);
-                //for (int i = 0; i < question.Count; i++)
-                //{
-                //    if ((double)SimilarityTool.LevenshteinDistancePercent(question[i].QuestionTitle, target) < 0.3)
-                //    {
-                //        question.Remove(question[i]);
-                //    }
-                //}
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
