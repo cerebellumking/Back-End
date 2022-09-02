@@ -269,6 +269,41 @@ namespace Back_End.Controllers
                 {
                     rank.UniversityUsnewsRank = short.Parse(usnews_rank);
                 }
+
+                //tofel_requirement
+                string tofel_requirement = Request.Form["tofel_requirement"];
+                if (tofel_requirement != null)
+                {
+                    university.UniversityTofelRequirement = byte.Parse(usnews_rank);
+                }
+
+                //ielts_requirement
+                string ielts_requirement = Request.Form["ielts_requirement"];
+                if (ielts_requirement != null)
+                {
+                    university.UniversityIeltsRequirement = decimal.Parse(usnews_rank);
+                }
+
+                //tuition
+                string tuition = Request.Form["tuition"];
+                if (tuition != null)
+                {
+                    university.UniversityTuition = tuition;
+                }
+
+                //introduction
+                string introduction = Request.Form["introduction"];
+                if (ielts_requirement != null)
+                {
+                    university.UniversityIntroduction = introduction;
+                }
+
+                //college
+                string college = Request.Form["college"];
+                if (college != null)
+                {
+                    university.UniversityCollege = college;
+                }
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;

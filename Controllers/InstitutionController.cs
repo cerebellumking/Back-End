@@ -136,16 +136,17 @@ namespace Back_End.Controllers
             Message message = new();
             try
             {
-                string institution_name = front_end_data.GetProperty("institution_name").ToString();
-                string institution_phone = front_end_data.GetProperty("institution_phone").ToString();
-                string institution_qualify = front_end_data.GetProperty("institution_qualify").ToString();
-                string institution_introduction = front_end_data.GetProperty("institution_introduction").ToString();
-                string institution_profile = front_end_data.GetProperty("institution_profile").ToString();
-                string institution_city = front_end_data.GetProperty("institution_city").ToString();
-                string institution_location = front_end_data.GetProperty("institution_location").ToString();
-                string institution_email = front_end_data.GetProperty("institution_email").ToString();
-                string institution_lessons_characteristic = front_end_data.GetProperty("institution_lessons_characteristic").ToString();
-                string institution_lessons = front_end_data.GetProperty("institution_lessons").ToString();
+                string institution_name = front_end_data.GetProperty("name").ToString();
+                string institution_phone = front_end_data.GetProperty("phone").ToString();
+                string institution_qualify = front_end_data.GetProperty("qualify").ToString();
+                string institution_introduction = front_end_data.GetProperty("introduction").ToString();
+                string institution_profile = front_end_data.GetProperty("profile").ToString();
+                string institution_city = front_end_data.GetProperty("city").ToString();
+                string institution_target= front_end_data.GetProperty("target").ToString();
+                string institution_location = front_end_data.GetProperty("location").ToString();
+                string institution_email = front_end_data.GetProperty("email").ToString();
+                string institution_lessons_characteristic = front_end_data.GetProperty("lessons_characteristic").ToString();
+                string institution_lessons = front_end_data.GetProperty("lessons").ToString();
 
                 myContext.DetachAll();
                 Institution institution = new();
@@ -155,6 +156,7 @@ namespace Back_End.Controllers
                 institution.InstitutionIntroduction = institution_introduction;
                 institution.InstitutionProfile = institution_profile;
                 institution.InstitutionCity = institution_city;
+                institution.InstitutionTarget = institution_target;
                 institution.InstitutionLocation = institution_location;
                 institution.InstitutionEmail = institution_email;
                 institution.InstitutionLessonsCharacter = institution_lessons_characteristic;
