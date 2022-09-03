@@ -80,8 +80,15 @@ namespace Back_End.Controllers
                     InstitutionInfo institutionInfo = new InstitutionInfo();
                     institutionInfo.institution_id = institution.InstitutionId;
                     string temp = institution.InstitutionIntroduction;
-                    temp = temp.Substring(0, 140>temp.Length?temp.Length:140);
-                    institutionInfo.institution_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
+                    if (temp.Length > 140)
+                    {
+                        temp = temp.Substring(0, 140 > temp.Length ? temp.Length : 140);
+                        institutionInfo.institution_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
+                    }
+                    else
+                    {
+                        institutionInfo.institution_introduction = temp;
+                    }
                     institutionInfo.institution_name = institution.InstitutionName;
                     institutionInfo.institution_profile = institution.InstitutionProfile;
                     institutionInfos.Add(institutionInfo);
@@ -247,7 +254,7 @@ namespace Back_End.Controllers
                 string institution_introduction = front_end_data.GetProperty("introduction").ToString();
                 string institution_profile = front_end_data.GetProperty("profile").ToString();
                 string institution_city = front_end_data.GetProperty("city").ToString();
-                //string institution_target= front_end_data.GetProperty("target").ToString();
+                string institution_target= front_end_data.GetProperty("target_country").ToString();
                 string institution_location = front_end_data.GetProperty("location").ToString();
                 string institution_email = front_end_data.GetProperty("email").ToString();
                 string institution_lessons_characteristic = front_end_data.GetProperty("lessons_characteristic").ToString();
@@ -262,7 +269,7 @@ namespace Back_End.Controllers
                 //institution.InstitutionProfile = institution_profile;
                 institution.InstitutionCity = institution_city;
                 institution.InstitutionCreatetime = institution_createtime;
-                //institution.InstitutionTarget = institution_target;
+                institution.InstitutionTarget = institution_target;
                 institution.InstitutionLocation = institution_location;
                 institution.InstitutionEmail = institution_email;
                 institution.InstitutionLessonsCharacter = institution_lessons_characteristic;
@@ -292,9 +299,6 @@ namespace Back_End.Controllers
                 client.PutObject(OssHelp.bucketName, path2, stream2);
                 institution.InstitutionQualify = imageurl1;
                 institution.InstitutionProfile = imageurl2;
-
-
-
                 institution.InstitutionId = id;
                 myContext.Institutions.Add(institution);
                 myContext.SaveChanges();
@@ -302,8 +306,9 @@ namespace Back_End.Controllers
                 message.errorCode = 200;
                 message.data.Add("institution_id", id);
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e.ToString());
                 message.status = false;
                 message.errorCode = 500;
             }
