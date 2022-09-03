@@ -37,12 +37,12 @@ namespace Back_End.Controllers
             try
             {
                 myContext.DetachAll();
+                message.errorCode = 200;
                 var user = myContext.Users
                     .Single(b => b.UserPhone == user_phone);
-                if (user != null)
+                if (user.UserPassword == user_password)
                 {
-                    message.errorCode = 200;
-                    if (user.UserPassword == user_password)
+                    if ((bool)user.UserState)
                     {
                         message.status = true;
                         message.data["user_id"] = user.UserId;
@@ -87,8 +87,8 @@ namespace Back_End.Controllers
                             }
                             else
                             {
-                                user.ContinusLogin=(user.ContinusLogin==7)?1: user.ContinusLogin+1;
-                                user.UserExp += user.ContinusLogin*user.ContinusLogin;
+                                user.ContinusLogin = (user.ContinusLogin == 7) ? 1 : user.ContinusLogin + 1;
+                                user.UserExp += user.ContinusLogin * user.ContinusLogin;
                                 if (user.UserExp >= user.UserLevel * user.UserLevel)
                                 {
                                     user.UserExp -= (int)user.UserLevel * (int)user.UserLevel;
@@ -101,10 +101,23 @@ namespace Back_End.Controllers
                         message.data["user_logintime"] = user.UserLogintime;
                         message.data["user_coin"] = user.UserCoin;
                     }
+                    else
+                    {
+                        // 用户被封禁
+                        message.data["errortype"] = 3;
+                    }
                 }
+                else
+                {
+                    // 密码错误
+                    message.data["errortype"] = 2;
+                }
+               
             }
             catch (Exception e)
             {
+                // 用户名不存在
+                message.data["errortype"] = 1;
                 Console.Write(e.ToString());
             }
             return message.ReturnJson();

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
+using System.Reflection.Metadata;
+
 namespace Back_End.Controllers
 {
     [Route("api/[controller]")]
@@ -854,12 +856,18 @@ namespace Back_End.Controllers
                 int answer_id = int.Parse(front_end_data.GetProperty("answer_id").ToString());
                 int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
                 bool result = bool.Parse(front_end_data.GetProperty("result").ToString()); // 只能是通过/不通过
+                bool ifBanned = bool.Parse(front_end_data.GetProperty("ifBanned").ToString()); // 是否封禁用户
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
                 answer.AnswerVisible = !result;
                 Answerreport answerreport = myContext.Answerreports.Single(b => b.ReportId == report_id);
                 answerreport.ReportAnswerDate = DateTime.Now;
                 answerreport.AdministratorId = administrator_id;
                 answerreport.ReportAnswerResult = result;
+                if (ifBanned)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == answer.AnswerUserId);
+                    user.UserState = false; // 用户被封禁
+                }
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
@@ -882,12 +890,18 @@ namespace Back_End.Controllers
                 int answercomment_id = int.Parse(front_end_data.GetProperty("answercomment_id").ToString());
                 int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
                 bool result = bool.Parse(front_end_data.GetProperty("result").ToString()); // 只能是通过/不通过
+                bool ifBanned = bool.Parse(front_end_data.GetProperty("ifBanned").ToString()); // 是否封禁用户
                 Answercomment answercomment = myContext.Answercomments.Single(b => b.AnswerCommentId == answercomment_id);
                 answercomment.AnswerCommentVisible = !result;
                 Answercommentreport answercommentreport = myContext.Answercommentreports.Single(b => b.ReportId == report_id);
                 answercommentreport.ReportAnswerDate = DateTime.Now;
                 answercommentreport.AdministratorId = administrator_id;
                 answercommentreport.ReportAnswerResult = result;
+                if (ifBanned)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == answercomment.AnswerCommentUserId);
+                    user.UserState = false; // 用户被封禁
+                }
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
@@ -910,12 +924,18 @@ namespace Back_End.Controllers
                 int blog_id = int.Parse(front_end_data.GetProperty("blog_id").ToString());
                 int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
                 bool result = bool.Parse(front_end_data.GetProperty("result").ToString()); // 只能是通过/不通过
+                bool ifBanned = bool.Parse(front_end_data.GetProperty("ifBanned").ToString()); // 是否封禁用户
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
                 blog.BlogVisible = !result;
                 Blogreport blogreport = myContext.Blogreports.Single(b => b.ReportId == report_id);
                 blogreport.ReportAnswerDate = DateTime.Now;
                 blogreport.AdministratorId = administrator_id;
                 blogreport.ReportAnswerResult = result;
+                if (ifBanned)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == blog.BlogUserId);
+                    user.UserState = false; // 用户被封禁
+                }
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
@@ -938,12 +958,18 @@ namespace Back_End.Controllers
                 int blogcomment_id = int.Parse(front_end_data.GetProperty("blogcomment_id").ToString());
                 int administrator_id = int.Parse(front_end_data.GetProperty("administrator_id").ToString());
                 bool result = bool.Parse(front_end_data.GetProperty("result").ToString()); // 只能是通过/不通过
+                bool ifBanned = bool.Parse(front_end_data.GetProperty("ifBanned").ToString()); // 是否封禁用户
+
                 Blogcomment blogcomment = myContext.Blogcomments.Single(b => b.BlogCommentId == blogcomment_id);
                 blogcomment.BlogCommentVisible = !result;
                 Blogcommentreport blogcommentreport = myContext.Blogcommentreports.Single(b => b.ReportId == report_id);
                 blogcommentreport.ReportAnswerDate = DateTime.Now;
                 blogcommentreport.AdministratorId = administrator_id;
                 blogcommentreport.ReportAnswerResult = result;
+                if (ifBanned)
+                {
+                    User user = myContext.Users.Single(b => b.UserId == blogcomment.BlogCommentUserId);
+                }
                 myContext.SaveChanges();
                 message.errorCode = 200;
                 message.status = true;
