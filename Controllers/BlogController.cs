@@ -63,7 +63,7 @@ namespace Back_End.Controllers
             Message message = new Message();
             try
             {
-                var bloglist = myContext.Blogs.Where(b => b.BlogId == blog_id && b.BlogVisible == true)
+                var bloglist = myContext.Blogs.Where(b => b.BlogId == blog_id /*&& b.BlogVisible == true*/)
                     .Select(b => new { b.BlogUserId, b.BlogUser.UserName, b.BlogUser.UserProfile, b.BlogTag, b.BlogDate, b.BlogImage, b.BlogLike, b.BlogCoin, b.BlogSummary, b.BlogContent })
                     .ToList();
                 foreach (var blog in bloglist)

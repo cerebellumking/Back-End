@@ -132,7 +132,7 @@ namespace Back_End.Controllers
                    .Select(b => new RecordInfo { change_num = -(int)b.CoinNum, change_time = b.CoinTime, change_reason = "给回答" + b.AnswerId.ToString() + "投币" })
                    .ToList();
                 recordInfos.AddRange(list7);
-
+                recordInfos=recordInfos.OrderByDescending(b => b.change_time).ToList();
                 message.errorCode = 200;
                 message.status = true;
                 User user = myContext.Users.Single(b => b.UserId == user_id);

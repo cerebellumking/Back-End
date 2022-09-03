@@ -325,7 +325,7 @@ namespace Back_End.Controllers
                 {
                     val.distance = (double)SimilarityTool.LevenshteinDistancePercent(val.QuestionTitle, target);
                 }
-                question.OrderByDescending(b => b.distance);
+                question=question.OrderByDescending(b => b.distance).ToList();
                 message.errorCode = 200;
                 message.status = true;
                 message.data.Add("question", question.ToArray());
