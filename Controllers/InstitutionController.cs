@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
-
+using System.Text;
+using System.IO;
 namespace Back_End.Controllers
 {
     public class InstitutionInfo
@@ -227,32 +228,54 @@ namespace Back_End.Controllers
                 string institution_introduction = front_end_data.GetProperty("introduction").ToString();
                 string institution_profile = front_end_data.GetProperty("profile").ToString();
                 string institution_city = front_end_data.GetProperty("city").ToString();
-                string institution_target= front_end_data.GetProperty("target").ToString();
+                //string institution_target= front_end_data.GetProperty("target").ToString();
                 string institution_location = front_end_data.GetProperty("location").ToString();
                 string institution_email = front_end_data.GetProperty("email").ToString();
                 string institution_lessons_characteristic = front_end_data.GetProperty("lessons_characteristic").ToString();
                 string institution_lessons = front_end_data.GetProperty("lessons").ToString();
-
+                DateTime institution_createtime=DateTime.Parse(front_end_data.GetProperty("createtime").ToString());
                 myContext.DetachAll();
                 Institution institution = new();
                 institution.InstitutionName = institution_name;
                 institution.InstitutionPhone = institution_phone;
-                institution.InstitutionQualify = institution_qualify;
+                //institution.InstitutionQualify = institution_qualify;
                 institution.InstitutionIntroduction = institution_introduction;
-                institution.InstitutionProfile = institution_profile;
+                //institution.InstitutionProfile = institution_profile;
                 institution.InstitutionCity = institution_city;
-                institution.InstitutionTarget = institution_target;
+                institution.InstitutionCreatetime = institution_createtime;
+                //institution.InstitutionTarget = institution_target;
                 institution.InstitutionLocation = institution_location;
                 institution.InstitutionEmail = institution_email;
                 institution.InstitutionLessonsCharacter = institution_lessons_characteristic;
                 institution.InstitutionLessons = institution_lessons;
-                institution.InstitutionCreatetime = DateTime.Now;
+                //institution.InstitutionCreatetime = DateTime.Now;
                 int id = 1, count = myContext.Institutions.Count();
                 if(count != 0)
                 {
                     id = myContext.Institutions.Select(b => b.InstitutionId).Max() + 1;
 
                 }
+                //添加图片
+                string type1 = "." + institution_qualify.Split(',')[0].Split(';')[0].Split('/')[1];
+                institution_qualify = institution_qualify.Split("base64,")[1];
+                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(institution_qualify);
+                string type2 = "." + institution_profile.Split(',')[0].Split(';')[0].Split('/')[1];
+                institution_profile = institution_profile.Split("base64,")[1];
+                byte[] img_bytes_photo = Encoding.UTF8.GetBytes(institution_profile);
+                var client = OssHelp.createClient();
+                MemoryStream stream1 = new MemoryStream(img_bytes_badge, 0, img_bytes_badge.Length);
+                MemoryStream stream2 = new MemoryStream(img_bytes_photo, 0, img_bytes_photo.Length);
+                string path1 = "institution/qualify" + id.ToString() + type1;
+                string path2 = "institution/profile" + id.ToString() + type2;
+                string imageurl1 = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path1;
+                string imageurl2 = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path2;
+                client.PutObject(OssHelp.bucketName, path1, stream1);
+                client.PutObject(OssHelp.bucketName, path2, stream2);
+                institution.InstitutionQualify = imageurl1;
+                institution.InstitutionProfile = imageurl2;
+
+
+
                 institution.InstitutionId = id;
                 myContext.Institutions.Add(institution);
                 myContext.SaveChanges();

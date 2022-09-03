@@ -141,10 +141,11 @@ namespace Back_End.Controllers
             string university_website = university_info.GetProperty("university_website").ToString();
             string university_college = university_info.GetProperty("university_college").ToString();
             string university_abbreviation = university_info.GetProperty("university_abbreviation").ToString();
-            //decimal university_address_x = decimal.Parse(university_info.GetProperty("university_address_x").ToString());
-            //decimal university_address_y = decimal.Parse(university_info.GetProperty("university_address_y").ToString());
             short university_teacher_num = short.Parse(university_info.GetProperty("university_teacher_num").ToString());
             string university_tuition = university_info.GetProperty("university_tuition").ToString();
+
+            //decimal university_address_x = decimal.Parse(university_info.GetProperty("university_address_x").ToString());
+            //decimal university_address_y = decimal.Parse(university_info.GetProperty("university_address_y").ToString());
             //string university_photo = university_info.GetProperty("university_photo").ToString();
             //byte unviersity_tofel_requirement = byte.Parse(university_info.GetProperty("unviersity_tofel_requirement").ToString());
             //decimal unviersity_iltes_requirement = decimal.Parse(university_info.GetProperty("unviersity_iltes_requirement").ToString());
@@ -157,8 +158,8 @@ namespace Back_End.Controllers
                 //university.UniversityAddressY = university_address_y;
                 //university.UniversityIeltsRequirement = unviersity_iltes_requirement;
                 //university.UniversityTofelRequirement = unviersity_tofel_requirement;
-                university.UniversityTuition = university_tuition;
                 university.UniversityEmail = university_email;
+                university.UniversityTuition = university_tuition;
                 university.UniversityChName = university_chname;
                 university.UniversityEnName = university_enname;
                 university.UniversityRegion = university_region;
@@ -179,9 +180,9 @@ namespace Back_End.Controllers
                 }
                 university.UniversityId = id;
                 //添加图片
-                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(university_badge);
                 string type1 = "." + university_badge.Split(',')[0].Split(';')[0].Split('/')[1];
                 university_badge = university_badge.Split("base64,")[1];
+                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(university_badge);
                 //string type2 = "." + university_photo.Split(',')[0].Split(';')[0].Split('/')[1];
                 //university_photo = university_photo.Split("base64,")[1];
                 //byte[] img_bytes_photo = Encoding.UTF8.GetBytes(university_photo);
@@ -194,6 +195,7 @@ namespace Back_End.Controllers
                 //string imageurl2 = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path2;
                 client.PutObject(OssHelp.bucketName, path1, stream1);
                 //client.PutObject(OssHelp.bucketName, path2, stream2);
+
                 university.UniversityBadge = imageurl1;
                 //university.UniversityPhoto = imageurl2;
                 myContext.Universities.Add(university);
