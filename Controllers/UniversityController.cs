@@ -191,10 +191,10 @@ namespace Back_End.Controllers
                 //添加图片
                 string type1 = "." + university_badge.Split(',')[0].Split(';')[0].Split('/')[1];
                 university_badge = university_badge.Split("base64,")[1];
-                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(university_badge);
+                byte[] img_bytes_badge = Convert.FromBase64String(university_badge);
                 //string type2 = "." + university_photo.Split(',')[0].Split(';')[0].Split('/')[1];
                 //university_photo = university_photo.Split("base64,")[1];
-                //byte[] img_bytes_photo = Encoding.UTF8.GetBytes(university_photo);
+                //byte[] img_bytes_photo =  Convert.FromBase64String(university_photo);
                 var client = OssHelp.createClient();
                 MemoryStream stream1 = new MemoryStream(img_bytes_badge, 0, img_bytes_badge.Length);
                 //MemoryStream stream2 = new MemoryStream(img_bytes_photo, 0, img_bytes_photo.Length);
@@ -420,9 +420,18 @@ namespace Back_End.Controllers
                     list.university_badge = rank.University.UniversityBadge;
                     list.university_chname = rank.University.UniversityChName;
                     list.university_enname = rank.University.UniversityEnName;
-                    string temp = rank.University.UniversityIntroduction.Substring(0, 90);
+                    string temp="";
+                    if (rank.University.UniversityIntroduction.Length > 90)
+                    {
+                        temp = rank.University.UniversityIntroduction.Substring(0, 90);
+                        list.university_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
+                    }
+                    else
+                    {
+                        list.university_introduction = rank.University.UniversityIntroduction;
+                    }
                     //list.university_introduction = temp;
-                    list.university_introduction = temp.Substring(0, temp.LastIndexOf('，')) + "......";
+                    
                     list.university_location = rank.University.UniversityLocation;
                     list.university_qs_rank = rank.UniversityQsRank;
                     list.university_student_num = rank.University.UniversityStudentNum;

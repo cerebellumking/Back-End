@@ -277,10 +277,10 @@ namespace Back_End.Controllers
                 //添加图片
                 string type1 = "." + institution_qualify.Split(',')[0].Split(';')[0].Split('/')[1];
                 institution_qualify = institution_qualify.Split("base64,")[1];
-                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(institution_qualify);
+                byte[] img_bytes_badge = Convert.FromBase64String(institution_qualify);
                 string type2 = "." + institution_profile.Split(',')[0].Split(';')[0].Split('/')[1];
                 institution_profile = institution_profile.Split("base64,")[1];
-                byte[] img_bytes_photo = Encoding.UTF8.GetBytes(institution_profile);
+                byte[] img_bytes_photo = Convert.FromBase64String(institution_profile);
                 var client = OssHelp.createClient();
                 MemoryStream stream1 = new MemoryStream(img_bytes_badge, 0, img_bytes_badge.Length);
                 MemoryStream stream2 = new MemoryStream(img_bytes_photo, 0, img_bytes_photo.Length);
