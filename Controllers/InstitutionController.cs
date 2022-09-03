@@ -216,6 +216,25 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpDelete]
+        public string deleteInstitution(int institution_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                myContext.Institutions.Remove(myContext.Institutions.Single(b => b.InstitutionId == institution_id));
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
         [HttpPost]
         public string addInstitution(dynamic front_end_data)
         {

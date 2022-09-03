@@ -524,7 +524,7 @@ namespace Back_End.Controllers
                 blog.BlogDate = DateTime.Now;
                 blog.BlogImage = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/user_profile/5.png";
                 blog.BlogSummary = summary;
-                blog.BlogVisible = true;
+                blog.BlogVisible = false;
                 Blogchecking blogchecking = new();
                 blogchecking.AdministratorId = 0;
                 blogchecking.BlogId = id;

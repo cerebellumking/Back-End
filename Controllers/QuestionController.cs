@@ -367,7 +367,7 @@ namespace Back_End.Controllers
                 question.QuestionDescription = imageurl;
                 question.QuestionReward = question_reward;
                 question.QuestionApply = 0;
-                question.QuestionVisible = true; // 为调试方便，先设定为true，后改为false
+                question.QuestionVisible = false; // 为调试方便，先设定为true，后改为false
                 question.QuestionSummary = question_summary;
                 // question不存第一张图，因为不一定有图
 

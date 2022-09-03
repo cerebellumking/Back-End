@@ -143,7 +143,9 @@ namespace Back_End.Controllers
             string university_abbreviation = university_info.GetProperty("university_abbreviation").ToString();
             short university_teacher_num = short.Parse(university_info.GetProperty("university_teacher_num").ToString());
             string university_tuition = university_info.GetProperty("university_tuition").ToString();
-
+            short qs = short.Parse(university_info.GetProperty("qs_rank").ToString());
+            short the = short.Parse(university_info.GetProperty("the_rank").ToString());
+            short usnews = short.Parse(university_info.GetProperty("usnews_rank").ToString());
             //decimal university_address_x = decimal.Parse(university_info.GetProperty("university_address_x").ToString());
             //decimal university_address_y = decimal.Parse(university_info.GetProperty("university_address_y").ToString());
             //string university_photo = university_info.GetProperty("university_photo").ToString();
@@ -179,6 +181,13 @@ namespace Back_End.Controllers
                     id = myContext.Universities.Select(b => b.UniversityId).Max() + 1;
                 }
                 university.UniversityId = id;
+                Rank rank = new();
+                rank.RankYear = 2022;
+                rank.UniversityId = id;
+                rank.UniversityQsRank = qs;
+                rank.UniversityTheRank = the;
+                rank.UniversityUsnewsRank = usnews;
+                myContext.Ranks.Add(rank);
                 //添加图片
                 string type1 = "." + university_badge.Split(',')[0].Split(';')[0].Split('/')[1];
                 university_badge = university_badge.Split("base64,")[1];
@@ -557,5 +566,25 @@ namespace Back_End.Controllers
             }
             return message.ReturnJson();
         }
+
+        [HttpDelete]
+        public string deleteUniversity(int university_id)
+        {
+            Message message = new Message();
+            try
+            {
+                myContext.DetachAll();
+                myContext.Universities.Remove(myContext.Universities.Single(b => b.UniversityId == university_id));
+                myContext.SaveChanges();
+                message.status = true;
+                message.errorCode = 200;
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
     }
 }
