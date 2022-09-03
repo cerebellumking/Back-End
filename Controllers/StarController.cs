@@ -266,6 +266,8 @@ namespace Back_End.Controllers
                 foreach(var val in list)
                 {
                     Question question = myContext.Questions.Single(b => b.QuestionId == val.QuestionId);
+                    if (question.QuestionVisible == false)
+                        continue;
                     StarQuestionInfo star = new();
                     star.question_id = question.QuestionId;
                     star.user_id = (int)question.QuestionUserId;
@@ -323,6 +325,8 @@ namespace Back_End.Controllers
                 foreach(var val in list)
                 {
                     Answer answer = myContext.Answers.Single(b => b.AnswerId == val.AnswerId);
+                    if (answer.AnswerVisible == false)
+                        continue;
                     StarAnswerInfo star = new();
                     User answer_user = myContext.Users.Single(b => b.UserId == answer.AnswerUserId);
                     Question question = myContext.Questions.Single(b => b.QuestionId == answer.QuestionId);
@@ -377,6 +381,8 @@ namespace Back_End.Controllers
                 foreach(var val in list)
                 {
                     Blog blog = myContext.Blogs.Single(b => b.BlogId == val.BlogId);
+                    if (blog.BlogVisible == false)
+                        continue;
                     StarBlogInfo star = new();
                     star.blog_id = blog.BlogId;
                     star.blog_user_id = blog.BlogUserId;
