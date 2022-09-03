@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
+using System.Text;
+using System.IO;
 namespace Back_End.Controllers
 {
     public class UniversityList
@@ -116,12 +118,21 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        //[HttpPost("")]
+        //public string addUniversity(dynamic university_info)
+        //{
+        //    string university_email = university_info.GetProperty("university_email").ToString();
+        //    string university_chname = university_info.GetProperty("university_chname").ToString();
+        //    string university_enname = university_info.GetProperty("university_enname").ToString();
+        //}
+
         [HttpPost]
         public string addUniversity(dynamic university_info)
         {
             string university_email = university_info.GetProperty("university_email").ToString();
             string university_chname = university_info.GetProperty("university_chname").ToString();
             string university_enname = university_info.GetProperty("university_enname").ToString();
+            string university_badge = university_info.GetProperty("university_badge").ToString();
             string university_region = university_info.GetProperty("university_region").ToString();
             string university_country = university_info.GetProperty("university_country").ToString();
             string university_location = university_info.GetProperty("university_location").ToString();
@@ -130,11 +141,23 @@ namespace Back_End.Controllers
             string university_website = university_info.GetProperty("university_website").ToString();
             string university_college = university_info.GetProperty("university_college").ToString();
             string university_abbreviation = university_info.GetProperty("university_abbreviation").ToString();
+            //decimal university_address_x = decimal.Parse(university_info.GetProperty("university_address_x").ToString());
+            //decimal university_address_y = decimal.Parse(university_info.GetProperty("university_address_y").ToString());
+            short university_teacher_num = short.Parse(university_info.GetProperty("university_teacher_num").ToString());
+            string university_tuition = university_info.GetProperty("university_tuition").ToString();
+            //string university_photo = university_info.GetProperty("university_photo").ToString();
+            //byte unviersity_tofel_requirement = byte.Parse(university_info.GetProperty("unviersity_tofel_requirement").ToString());
+            //decimal unviersity_iltes_requirement = decimal.Parse(university_info.GetProperty("unviersity_iltes_requirement").ToString());
             Message message = new Message();
             try
             {
                 myContext.DetachAll();
                 University university = new University();
+                //university.UniversityAddressX = university_address_x;
+                //university.UniversityAddressY = university_address_y;
+                //university.UniversityIeltsRequirement = unviersity_iltes_requirement;
+                //university.UniversityTofelRequirement = unviersity_tofel_requirement;
+                university.UniversityTuition = university_tuition;
                 university.UniversityEmail = university_email;
                 university.UniversityChName = university_chname;
                 university.UniversityEnName = university_enname;
@@ -155,6 +178,24 @@ namespace Back_End.Controllers
                     id = myContext.Universities.Select(b => b.UniversityId).Max() + 1;
                 }
                 university.UniversityId = id;
+                //添加图片
+                byte[] img_bytes_badge = Encoding.UTF8.GetBytes(university_badge);
+                string type1 = "." + university_badge.Split(',')[0].Split(';')[0].Split('/')[1];
+                university_badge = university_badge.Split("base64,")[1];
+                //string type2 = "." + university_photo.Split(',')[0].Split(';')[0].Split('/')[1];
+                //university_photo = university_photo.Split("base64,")[1];
+                //byte[] img_bytes_photo = Encoding.UTF8.GetBytes(university_photo);
+                var client = OssHelp.createClient();
+                MemoryStream stream1 = new MemoryStream(img_bytes_badge, 0, img_bytes_badge.Length);
+                //MemoryStream stream2 = new MemoryStream(img_bytes_photo, 0, img_bytes_photo.Length);
+                string path1 = "university/badge" + id.ToString() + type1;
+                //string path2 = "university/photo" + id.ToString() + type2;
+                string imageurl1 = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path1;
+                //string imageurl2 = "https://houniaoliuxue.oss-cn-shanghai.aliyuncs.com/" + path2;
+                client.PutObject(OssHelp.bucketName, path1, stream1);
+                //client.PutObject(OssHelp.bucketName, path2, stream2);
+                university.UniversityBadge = imageurl1;
+                //university.UniversityPhoto = imageurl2;
                 myContext.Universities.Add(university);
                 myContext.SaveChanges();
                 message.status = true;
@@ -299,11 +340,11 @@ namespace Back_End.Controllers
                 }
 
                 //college
-                //string college = Request.Form["college"];
-                //if (college != null)
-                //{
-                //    university.UniversityCollege = college;
-                //}
+                string college = Request.Form["college"];
+                if (college != null)
+                {
+                    university.UniversityCollege = college;
+                }
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;

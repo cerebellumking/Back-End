@@ -6,7 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Back_End.Models;
 using System.IO;
-
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 namespace Back_End.Controllers
 {
 
@@ -22,10 +23,14 @@ namespace Back_End.Controllers
     [ApiController]
     public class UserInfoController : ControllerBase
     {
+        private readonly IConfiguration _Configuration;//读取配置文件
+        public static IMemoryCache _cache = new MemoryCache(new MemoryCacheOptions());
+
         private readonly ModelContext myContext;
-        public UserInfoController(ModelContext modelContext)
+        public UserInfoController(ModelContext modelContext, IConfiguration configuration)
         {
             myContext = modelContext;
+            _Configuration = configuration;
         }
         [HttpGet]
         public string getUserInfo(int user_id)
@@ -260,12 +265,18 @@ namespace Back_End.Controllers
                 int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
                 string user_password = front_end_data.GetProperty("user_password").ToString();
                 string new_password = front_end_data.GetProperty("new_password").ToString();
-
+                int code = int.Parse(front_end_data.GetProperty("code").ToString());
                 User user = myContext.Users.Single(b => b.UserId == user_id && b.UserPassword == user_password);
-                user.UserPassword = new_password;
-                message.errorCode = 200;
-                message.status = true;
-                myContext.SaveChanges();
+                Console.WriteLine(_cache.TryGetValue(user.UserPhone, out code));
+                Console.WriteLine(_cache.Get(user.UserPhone));
+                if (_cache.TryGetValue(user.UserPhone, out code))
+                {
+                    _cache.Remove(user.UserPhone);
+                    user.UserPassword = new_password;
+                    message.errorCode = 200;
+                    message.status = true;
+                    myContext.SaveChanges();
+                }
             }
             catch
             {
@@ -387,5 +398,73 @@ namespace Back_End.Controllers
             return message.ReturnJson();
         }
 
+        [HttpPut("phone")]
+        public string changePhone(dynamic front_end_data)
+        {
+            Message message = new Message();
+            try
+            {
+                int user_id = int.Parse(front_end_data.GetProperty("user_id").ToString());
+                string phone = front_end_data.GetProperty("user_phone").ToString();
+                int code = int.Parse(front_end_data.GetProperty("code").ToString());
+                User user = myContext.Users.Single(b => b.UserId == user_id);
+                if (_cache.TryGetValue(phone, out code))
+                {
+                    _cache.Remove(phone);
+                    user.UserPhone = phone;
+                    message.errorCode = 200;
+                    message.status = true;
+                    myContext.SaveChanges();
+                }
+            }
+            catch
+            {
+
+            }
+            return message.ReturnJson();
+        }
+
+        [HttpPost("verifycode")]
+        public string sendVerifyCode(dynamic front_end_data)
+        {
+            Message message = new();
+            try
+            {
+                string user_phone = front_end_data.GetProperty("user_phone").ToString();
+                Random random = new Random();
+                int code_ = random.Next(100000, 999999);
+                _cache.Set(user_phone, code_, new TimeSpan(0, 0, 180));
+                string key = _Configuration["MessageAccessKey"];
+                string password = _Configuration["MessageAccessPassword"];
+                var client = CreateClient(key, password);
+                AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest sendReq = new AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsRequest
+                {
+                    PhoneNumbers = user_phone,
+                    SignName = "候鸟留学",
+                    TemplateCode = "SMS_244555845",
+                    TemplateParam = "{\"code\":\"" + code_.ToString() + "\"}"
+                };
+                AlibabaCloud.SDK.Dysmsapi20170525.Models.SendSmsResponse sendResp = client.SendSms(sendReq);
+                string code = sendResp.Body.Code;
+                if (code == "OK")
+                {
+                    message.errorCode = 200;
+                    message.status = true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            return message.ReturnJson();
+        }
+
+        public static AlibabaCloud.SDK.Dysmsapi20170525.Client CreateClient(string accessKeyId, string accessKeySecret)
+        {
+            AlibabaCloud.OpenApiClient.Models.Config config = new AlibabaCloud.OpenApiClient.Models.Config();
+            config.AccessKeyId = accessKeyId;
+            config.AccessKeySecret = accessKeySecret;
+            return new AlibabaCloud.SDK.Dysmsapi20170525.Client(config);
+        }
     }
 }

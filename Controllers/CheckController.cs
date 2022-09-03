@@ -969,6 +969,7 @@ namespace Back_End.Controllers
                 if (ifBanned)
                 {
                     User user = myContext.Users.Single(b => b.UserId == blogcomment.BlogCommentUserId);
+                    user.UserState = false;
                 }
                 myContext.SaveChanges();
                 message.errorCode = 200;
