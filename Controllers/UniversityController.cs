@@ -274,14 +274,14 @@ namespace Back_End.Controllers
                 string tofel_requirement = Request.Form["tofel_requirement"];
                 if (tofel_requirement != null)
                 {
-                    university.UniversityTofelRequirement = byte.Parse(usnews_rank);
+                    university.UniversityTofelRequirement = byte.Parse(tofel_requirement);
                 }
 
                 //ielts_requirement
                 string ielts_requirement = Request.Form["ielts_requirement"];
                 if (ielts_requirement != null)
                 {
-                    university.UniversityIeltsRequirement = decimal.Parse(usnews_rank);
+                    university.UniversityIeltsRequirement = decimal.Parse(ielts_requirement);
                 }
 
                 //tuition
@@ -293,7 +293,7 @@ namespace Back_End.Controllers
 
                 //introduction
                 string introduction = Request.Form["introduction"];
-                if (ielts_requirement != null)
+                if (introduction != null)
                 {
                     university.UniversityIntroduction = introduction;
                 }
