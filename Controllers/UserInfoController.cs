@@ -166,7 +166,7 @@ namespace Back_End.Controllers
             try
             {
                 var questions = myContext.Questions
-                    .Where(c => c.QuestionUserId == user_id)
+                    .Where(c => c.QuestionUserId == user_id && c.Questionchecking.ReviewResult != "deleted")
                     .Select(b => new
                     {
                         b.QuestionId,
@@ -197,7 +197,7 @@ namespace Back_End.Controllers
             try
             {
                 var answers = myContext.Answers
-                    .Where(c => c.AnswerUserId == user_id)
+                    .Where(c => c.AnswerUserId == user_id && c.Answerchecking.ReviewResult != "deleted")
                     .Select(b => new
                     {
                         b.AnswerId,
@@ -230,7 +230,7 @@ namespace Back_End.Controllers
             try
             {
                 var blogs = myContext.Blogs
-                    .Where(c => c.BlogUserId == user_id)
+                    .Where(c => c.BlogUserId == user_id && c.Blogchecking.ReviewResult != "deleted")
                     .Select(b => new
                     {
                         b.BlogId,

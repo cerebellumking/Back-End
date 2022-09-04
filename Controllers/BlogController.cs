@@ -598,6 +598,8 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 Blog blog = myContext.Blogs.Single(b => b.BlogId == blog_id);
                 blog.BlogVisible = false;
+                Blogchecking blogchecking = myContext.Blogcheckings.Single(b => b.BlogId == blog_id);
+                blogchecking.ReviewResult = "deleted";
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;

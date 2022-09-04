@@ -436,10 +436,13 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 Question question = myContext.Questions.Single(b => b.QuestionId == question_id);
                 question.QuestionVisible = false;
+                Questionchecking questionchecking = myContext.Questioncheckings.Single(b => b.QuestionId == question_id);
+                questionchecking.ReviewResult = "deleted";
                 var answer_list = myContext.Answers.Where(b => b.QuestionId == question_id);
                 foreach(Answer answer in answer_list)
                 {
                     answer.AnswerVisible = false;
+                    answer.Answerchecking.ReviewResult = "deleted";
                 }
                 myContext.SaveChanges();
                 message.status = true;

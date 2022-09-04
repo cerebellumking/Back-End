@@ -267,6 +267,8 @@ namespace Back_End.Controllers
                 myContext.DetachAll();
                 Answer answer = myContext.Answers.Single(b => b.AnswerId == answer_id);
                 answer.AnswerVisible = false;
+                Answerchecking answerchecking = myContext.Answercheckings.Single(b => b.AnswerId == answer_id);
+                answerchecking.ReviewResult = "deleted";
                 myContext.SaveChanges();
                 message.status = true;
                 message.errorCode = 200;
